@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AvaloniaPlanner.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:AvaloniaPlanner.ViewModels"
+        xmlns:views="clr-namespace:AvaloniaPlanner.Views"
+		xmlns:dh="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AvaloniaPlanner.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="AvaloniaPlanner"
+		TransparencyLevelHint="None"
+		Background="#222222">
+	<Design.DataContext>
+		<viewModels:MainWindowViewModel/>
+	</Design.DataContext>
+	<Panel>
+		<dh:DialogHost Identifier="MainDialogHost"
+			DialogMargin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+			dh:DialogHostStyle.CornerRadius="8" IsOpen="True" CloseOnClickAway="True">
+			<dh:DialogHost.DialogContent>
+				<StackPanel>
+					<TextBlock Text="{Binding Path=DialogMessage, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=views:MainWindow}}"/>
+					<Button Content="OK!" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dh:DialogHost}, Path=CloseDialogCommand}"/>
+				</StackPanel>
+			</dh:DialogHost.DialogContent>
+			<views:MainView />
+		</dh:DialogHost>
+	</Panel>
+</Window>
