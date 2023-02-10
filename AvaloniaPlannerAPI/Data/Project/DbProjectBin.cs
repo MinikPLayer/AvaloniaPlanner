@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AvaloniaPlannerLib.Data.Project
 {
     [SqlTable("ProjectBins")]
-    public class Bin
+    public class DbProjectBin
     {
         [SQLPrimary]
         public long Id { get; set; } = -1;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvaloniaPlannerLib.Data.Project
 {
-    public enum Status
+    public enum ProjectStatus
     {
         Undefinied,
         Idea,

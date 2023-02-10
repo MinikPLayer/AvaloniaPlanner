@@ -9,7 +9,7 @@ namespace AvaloniaPlannerAPI.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        public static List<Project> GetAllprojectsDB() => DbManager.DB!.GetData<Project>("Projects");
+        public static List<DbProject> GetAllprojectsDB() => DbManager.DB!.GetData<DbProject>("Projects");
 
         [HttpGet]
         public ActionResult GetAllProjects()

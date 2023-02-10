@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AvaloniaPlannerLib.Data.Project
 {
     [SqlTable("Projects")]
-    public class Project
+    public class DbProject
     {
         [SQLPrimary]
         public long Id { get; set; } = -1;
@@ -19,6 +19,6 @@ namespace AvaloniaPlannerLib.Data.Project
         public DateTime CreationDate { get; set; } = DateTime.MinValue;
         public DateTime LastUpdate { get; set; } = DateTime.MinValue;
 
-        public Status Status { get; set; } = Status.Undefinied;
+        public ProjectStatus Status { get; set; } = ProjectStatus.Undefinied;
     }
 }
