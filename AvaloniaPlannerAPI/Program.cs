@@ -1,12 +1,22 @@
 
 using AvaloniaPlannerAPI.Managers;
 using CSUtil.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace AvaloniaPlannerAPI
 {
     public class Program
     {
         const string DatabaseConfigFile = "db.ini";
+
+        // TODO: (critical) Fix keys being static and public
+        public static byte[] Key = new byte[0];
+        public static string Issuer = "";
+        public static string Audience = "";
 
         public static void Main(string[] args)
         {
@@ -23,7 +33,33 @@ namespace AvaloniaPlannerAPI
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
+            });
 
             var app = builder.Build();
 
@@ -32,12 +68,12 @@ namespace AvaloniaPlannerAPI
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                IdentityModelEventSource.ShowPII = true;
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
