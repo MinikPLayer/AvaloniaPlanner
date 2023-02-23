@@ -8,13 +8,13 @@ namespace AvaloniaPlannerLib.Data.Project
 {
     public enum ProjectStatus
     {
-        Undefinied,
-        Idea,
-        Prototype,
-        Defined,
-        InProgress,
-        Abandoned,
-        Completed,
-        Supported,
+        Undefinied = 0,
+        Idea = 1,
+        Prototype = 2,
+        Defined = 3,
+        InProgress = 4,
+        Abandoned = 5,
+        Completed = 6,
+        Supported = 7,
     }
 }
