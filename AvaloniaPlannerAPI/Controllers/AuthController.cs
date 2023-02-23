@@ -14,14 +14,14 @@ namespace AvaloniaPlannerAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static DbUser? GetDbUser(string login) => DbManager.DB!.GetData<DbUser>(DbUser.TABLE_NAME, nameof(DbUser.Login).SQLp(login)).FirstOrDefault();
-        public static DbUser? GetDbUserById(long id) => DbManager.DB!.GetData<DbUser>(
+        public static DbUser? GetDbUser(string login) => DbManager.GetDB().GetData<DbUser>(DbUser.TABLE_NAME, nameof(DbUser.Login).SQLp(login)).FirstOrDefault();
+        public static DbUser? GetDbUserById(long id) => DbManager.GetDB().GetData<DbUser>(
             DbUser.TABLE_NAME, nameof(DbUser.Id).SQLp(id)).FirstOrDefault();
 
         public static DbAuthToken AddUserToken(long id)
         {
             var newToken = new DbAuthToken(id);
-            DbManager.DB!.InsertData(newToken, DbAuthToken.TABLE_NAME);
+            DbManager.GetDB().InsertData(newToken, DbAuthToken.TABLE_NAME);
 
             return newToken;
         }
@@ -29,7 +29,7 @@ namespace AvaloniaPlannerAPI.Controllers
         public static DbAuthToken RefreshUserToken(long id)
         {
             var invalidToken = new DbAuthToken() { Invalidated = true };
-            DbManager.DB!.Update(
+            DbManager.GetDB().Update(
                 invalidToken, DbAuthToken.TABLE_NAME, 
                 typeof(DbAuthToken).GetProperties().Where(x => x.Name == nameof(DbAuthToken.Invalidated)).ToList(),
                 nameof(DbAuthToken.User_id).SQLp(id));
@@ -53,7 +53,7 @@ namespace AvaloniaPlannerAPI.Controllers
 
         static ApiResult<long> AuthUser(string token)
         {
-            var authToken = DbManager.DB!.GetData<DbAuthToken>(
+            var authToken = DbManager.GetDB().GetData<DbAuthToken>(
                 DbAuthToken.TABLE_NAME,
                 nameof(DbAuthToken.Token).SQLp(token)).FirstOrDefault();
             if (authToken == null)
@@ -101,11 +101,11 @@ namespace AvaloniaPlannerAPI.Controllers
         public ActionResult Register(string login, [FromBody] string password, string username, string email)
         {
             if (GetDbUser(login) != null || 
-                DbManager.DB!.GetData<DbUser>("users", nameof(DbUser.Username).SQLp(username)).FirstOrDefault() != null)
+                this.GetDB().GetData<DbUser>("users", nameof(DbUser.Username).SQLp(username)).FirstOrDefault() != null)
                 return BadRequest("You are already registered");
 
             var newUser = new DbUser();
-            newUser.Id = DbManager.DB.GenerateUniqueIdLong("users", nameof(DbUser.Id));
+            newUser.Id = this.GetDB().GenerateUniqueIdLong("users", nameof(DbUser.Id));
             newUser.Login = login;
             newUser.Username = username;
 
@@ -113,7 +113,7 @@ namespace AvaloniaPlannerAPI.Controllers
             newUser.Password = pass.hash;
             newUser.Salt = pass.salt;
 
-            DbManager.DB.InsertData(newUser, "users");
+            this.GetDB().InsertData(newUser, "users");
             var token = RefreshUserToken(newUser.Id);
 
             return Ok(token);

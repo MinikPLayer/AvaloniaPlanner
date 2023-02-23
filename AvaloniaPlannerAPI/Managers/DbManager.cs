@@ -7,11 +7,21 @@ namespace AvaloniaPlannerAPI.Managers
 {
     public static class DbManager
     {
-        public static Database? DB = null;
+        static Database? DB;
 
-        public static void CreateStructure(Database DB)
+        public static Database GetDB()
         {
-            if (DB is null)
+            if (DB == null)
+                throw new NullReferenceException("Database not initialized");
+
+            return DB;
+        }
+
+        public static Database GetDB(this ControllerBase _) => DbManager.GetDB();
+
+        public static void CreateStructure(Database db)
+        {
+            if (db is null)
                 throw new NullReferenceException("Not initialized");
 
             var types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsDefined(typeof(SqlTableAttribute)));
@@ -25,7 +35,7 @@ namespace AvaloniaPlannerAPI.Managers
                 return (attr.TableName, x);
             }).Where(x => !string.IsNullOrEmpty(x.Item1)));
 
-            DB.CreateDBStruct(tables);
+            db.CreateDBStruct(tables);
         }
 
         public static void Initialize(string dbString)

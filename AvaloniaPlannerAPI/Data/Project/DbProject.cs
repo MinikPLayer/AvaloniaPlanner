@@ -21,17 +21,14 @@ namespace AvaloniaPlannerLib.Data.Project
         public DateTime CreationDate { get; set; } = DateTime.Now;
         public DateTime LastUpdate { get; set; } = DateTime.Now;
 
-        public ProjectStatus Status { get; set; } = ProjectStatus.Undefinied;
-
         public DbProject() { }
 
-        public DbProject(long id, string name, string description, long author, ProjectStatus status)
+        public DbProject(long id, string name, string description, long author)
         {
             this.Id = id;
             this.Name = name;
             this.Description = description;
             this.Owner = author;
-            this.Status = status;
 
             this.CreationDate = DateTime.Now;
             this.LastUpdate = this.CreationDate;

@@ -16,6 +16,6 @@ namespace AvaloniaPlannerLib.Data.Project
         public DateTime CreationDate { get; set; } = DateTime.MinValue;
         public DateTime LastUpdate { get; set; } = DateTime.MinValue;
 
-        public ProjectStatus Status { get; set; } = ProjectStatus.Undefinied;
+        public ProjectStatus Status { get; set; } = ProjectStatus.Unknown;
     }
 }

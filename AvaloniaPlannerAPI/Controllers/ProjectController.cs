@@ -16,18 +16,24 @@ namespace AvaloniaPlannerAPI.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        public static List<DbProject> GetAllprojectsDB() => DbManager.DB!.GetData<DbProject>(DbProject.TABLE_NAME);
-        public static List<DbProjectBin> GetProjectBinsDB(long projectId) => DbManager.DB!.GetData<DbProjectBin>(
+        public static List<DbProject> GetAllprojectsDB() => DbManager.GetDB().GetData<DbProject>(DbProject.TABLE_NAME);
+        public static List<DbProjectBin> GetProjectBinsDB(long projectId) => DbManager.GetDB().GetData<DbProjectBin>(
             DbProjectBin.TABLE_NAME, nameof(DbProjectBin.Project_id).SQLp(projectId));
-        public static List<DbProjectTask> GetTasksDB(long binId) => DbManager.DB!.GetData<DbProjectTask>(
+        public static List<DbProjectTask> GetTasksDB(long binId) => DbManager.GetDB().GetData<DbProjectTask>(
             DbProjectTask.TABLE_NAME, nameof(DbProjectTask.Bin_id).SQLp(binId));
 
-        public static DbProject? GetProjectDB(long projectId) => DbManager.DB!.GetData<DbProject>(
+        public static DbProject? GetProjectDB(long projectId) => DbManager.GetDB().GetData<DbProject>(
             DbProject.TABLE_NAME, nameof(DbProject.Id).SQLp(projectId)).FirstOrDefault();
-        public static DbProjectBin? GetProjectBinDB(long binId) => DbManager.DB!.GetData<DbProjectBin>(
+        public static DbProjectBin? GetProjectBinDB(long binId) => DbManager.GetDB().GetData<DbProjectBin>(
             DbProjectBin.TABLE_NAME, nameof(DbProjectBin.Id).SQLp(binId)).FirstOrDefault();
-        public static DbProjectPermissions? GetProjectPermissionsDB(long userId, long projectId) => DbManager.DB!.GetData<DbProjectPermissions>(
+        public static DbProjectPermissions? GetProjectPermissionsDB(long userId, long projectId) => DbManager.GetDB().GetData<DbProjectPermissions>(
             DbProjectPermissions.TABLE_NAME, nameof(DbProjectPermissions.issue_date) + " DESC", nameof(DbProjectPermissions.project_id).SQLp(projectId), nameof(DbProjectPermissions.user_id).SQLp(userId)).FirstOrDefault();
+        
+        public static ProjectStatus GetProjectStatus(long projectId)
+        {
+            var status = DbManager.GetDB().GetData<DbProjectStatus>(DbProjectStatus.TABLE_NAME, nameof(DbProjectStatus.date) + " DESC", nameof(DbProjectStatus.project_id).SQLp(projectId)).FirstOrDefault();
+            return status == null ? ProjectStatus.Unknown : status.status;
+        }
 
         public static bool CanUserWrite(long userId, long projectId)
         {
@@ -48,24 +54,39 @@ namespace AvaloniaPlannerAPI.Controllers
             if (!authData)
                 return authData;
 
-            var existingProject = DbManager.DB!.Count(DbProject.TABLE_NAME, nameof(DbProject.Name).SQLp(name));
+            var existingProject = this.GetDB().Count(DbProject.TABLE_NAME, nameof(DbProject.Name).SQLp(name));
             if (existingProject > 0)
                 return Conflict("Project with this name already exists");
 
-            var id = DbManager.DB!.GenerateUniqueIdLong(DbProject.TABLE_NAME, nameof(DbProject.Id));
-            var newProject = new DbProject(id, name, description, authData.Payload, status);
-            DbManager.DB!.InsertData(newProject, DbProject.TABLE_NAME);
+            var id = this.GetDB().GenerateUniqueIdLong(DbProject.TABLE_NAME, nameof(DbProject.Id));
+            var newProject = new DbProject(id, name, description, authData.Payload);
+            this.GetDB().InsertData(newProject, DbProject.TABLE_NAME);
+            this.GetDB().InsertData(new DbProjectStatus(this.GetDB(), id, status), DbProjectStatus.TABLE_NAME);
 
-            var perms = DbProjectPermissions.All(DbManager.DB!, id, authData.Payload);
-            DbManager.DB!.InsertData(perms, DbProjectPermissions.TABLE_NAME);
+            var perms = DbProjectPermissions.All(this.GetDB(), id, authData.Payload);
+            this.GetDB().InsertData(perms, DbProjectPermissions.TABLE_NAME);
 
             return Ok(ClassCopier.Create<ApiProject>(newProject));
         }
 
-        [HttpDelete("archive_project")]
-        public ActionResult ArchiveProject(long id)
+        [HttpDelete("update_project_status")]
+        public ActionResult UpdateStatus(long projectId, ProjectStatus status)
         {
+            var authData = AuthController.AuthUser(Request);
+            if (!authData)
+                return authData;
 
+            if (!CanUserWrite(authData.Payload, projectId))
+                return ApiConsts.AccessDenied;
+
+            var project = GetProjectDB(projectId);
+            if (project == null)
+                return NotFound("Project not found");
+
+            var newStatus = new DbProjectStatus(this.GetDB(), projectId, status);
+            this.GetDB().InsertData(newStatus, DbProjectStatus.TABLE_NAME);
+
+            return Ok(newStatus);
         }
 
         [HttpPost("update_project_info")]
@@ -79,7 +100,7 @@ namespace AvaloniaPlannerAPI.Controllers
                 return ApiConsts.AccessDenied;
 
             var dbProject = ClassCopier.Create<DbProject>(projectInfo);
-            DbManager.DB!.Update(dbProject, DbProject.TABLE_NAME, nameof(DbProject.Id).SQLp(projectInfo.Id));
+            this.GetDB().Update(dbProject, DbProject.TABLE_NAME, nameof(DbProject.Id).SQLp(projectInfo.Id));
 
             return Ok(projectInfo);
         }

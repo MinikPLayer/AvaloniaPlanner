@@ -17,6 +17,6 @@ namespace AvaloniaPlannerLib.Data.Project
         public long Project_id { get; set; } = -1;
         public long Bin_id { get; set; } = -1;
         public string Name { get; set; } = "";
-        public ProjectStatus Status { get; set; } = ProjectStatus.Undefinied;
+        public ProjectStatus Status { get; set; } = ProjectStatus.Unknown;
     }
 }
