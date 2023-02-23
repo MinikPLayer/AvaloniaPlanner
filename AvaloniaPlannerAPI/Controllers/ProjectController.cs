@@ -58,12 +58,11 @@ namespace AvaloniaPlannerAPI.Controllers
             if (existingProject > 0)
                 return Conflict("Project with this name already exists");
 
-            var id = this.GetDB().GenerateUniqueIdLong(DbProject.TABLE_NAME, nameof(DbProject.Id));
-            var newProject = new DbProject(id, name, description, authData.Payload);
+            var newProject = new DbProject(this.GetDB(), name, description, authData.Payload);
             this.GetDB().InsertData(newProject, DbProject.TABLE_NAME);
-            this.GetDB().InsertData(new DbProjectStatus(this.GetDB(), id, status), DbProjectStatus.TABLE_NAME);
+            this.GetDB().InsertData(new DbProjectStatus(this.GetDB(), newProject.Id, status), DbProjectStatus.TABLE_NAME);
 
-            var perms = DbProjectPermissions.All(this.GetDB(), id, authData.Payload);
+            var perms = DbProjectPermissions.All(this.GetDB(), newProject.Id, authData.Payload);
             this.GetDB().InsertData(perms, DbProjectPermissions.TABLE_NAME);
 
             return Ok(ClassCopier.Create<ApiProject>(newProject));

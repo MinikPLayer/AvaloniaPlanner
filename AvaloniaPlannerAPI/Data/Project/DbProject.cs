@@ -23,15 +23,18 @@ namespace AvaloniaPlannerLib.Data.Project
 
         public DbProject() { }
 
-        public DbProject(long id, string name, string description, long author)
+        public DbProject(long id, string name, string description, long owner)
         {
             this.Id = id;
             this.Name = name;
             this.Description = description;
-            this.Owner = author;
+            this.Owner = owner;
 
             this.CreationDate = DateTime.Now;
             this.LastUpdate = this.CreationDate;
         }
+
+        public DbProject(Database db, string name, string description, long owner)
+            : this(db.GenerateUniqueIdLong(TABLE_NAME, nameof(DbProject.Id)), name, description, owner) { }
     }
 }
