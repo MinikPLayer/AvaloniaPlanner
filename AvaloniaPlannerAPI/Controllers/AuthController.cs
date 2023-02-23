@@ -23,7 +23,10 @@ namespace AvaloniaPlannerAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static DbUser? GetDbUser(string login) => DbManager.DB!.GetData<DbUser>("users", nameof(DbUser.Login).SQLp(login)).FirstOrDefault();
+        public static DbUser? GetDbUser(string login) => DbManager.DB!.GetData<DbUser>(DbUser.TABLE_NAME, nameof(DbUser.Login).SQLp(login)).FirstOrDefault();
+        public static DbUser? GetDbUserById(long id) => DbManager.DB!.GetData<DbUser>(
+            DbUser.TABLE_NAME, nameof(DbUser.Id).SQLp(id)).FirstOrDefault();
+
         public static DbAuthToken AddUserToken(long id)
         {
             var newToken = new DbAuthToken(id);
@@ -57,19 +60,38 @@ namespace AvaloniaPlannerAPI.Controllers
             return new AuthResult<DbUser>(user);
         }
 
-        public static AuthResult<long> AuthUser(string token)
+        static AuthResult<long> AuthUser(string token)
         {
             var authToken = DbManager.DB!.GetData<DbAuthToken>(
                 DbAuthToken.TABLE_NAME,
                 nameof(DbAuthToken.Token).SQLp(token)).FirstOrDefault();
             if (authToken == null)
-                return new (HttpStatusCode.NotFound, "User not found");
+                return new (HttpStatusCode.NotFound, "Invalid token");
 
             if (authToken.Invalidated || DateTime.Now > authToken.Expiration_date)
                 return new (ApiConsts.ExpiredToken.code, ApiConsts.ExpiredToken.msg);
 
             return new (authToken.User_id);
 
+        }
+
+        public static AuthResult<long> AuthUser(HttpRequest request)
+        {
+            if (!request.Headers.TryGetValue("Authorization", out var auth))
+                return new(HttpStatusCode.Unauthorized, "Authorization token required");
+
+            var splitted = auth.ToString().Split(' ');
+            return AuthUser(splitted[^1]);
+        }
+
+        public static bool IsUserRole(DbUser user, string role) => user.Role == role;
+        public static bool IsUserRole(long userId, string role)
+        {
+            var user = GetDbUserById(userId);
+            if (user == null)
+                return false;
+
+            return user.Role == role;
         }
 
         [HttpPost("login")]

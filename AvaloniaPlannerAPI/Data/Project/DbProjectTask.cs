@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace AvaloniaPlannerLib.Data.Project
 {
-    [SqlTable("ProjectTasks")]
+    [SqlTable(TABLE_NAME)]
     public class DbProjectTask
     {
+        public const string TABLE_NAME = "project_tasks";
+
         [SQLPrimary]
         public long Id { get; set; } = -1;
         public long Project_id { get; set; } = -1;

@@ -9,6 +9,7 @@ namespace AvaloniaPlannerLib
 {
     public static class ApiConsts
     {
-        public static (HttpStatusCode code, string msg) ExpiredToken = (HttpStatusCode.NetworkAuthenticationRequired, "!TE");
+        public static (HttpStatusCode code, string msg) ExpiredToken = (HttpStatusCode.NetworkAuthenticationRequired, "!TE!");
+        public static (HttpStatusCode code, string msg) AccessDenied = (HttpStatusCode.Unauthorized, "!AD!");
     }
 }

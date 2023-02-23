@@ -1,5 +1,4 @@
-﻿using CSUtil.DB;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +6,8 @@ using System.Threading.Tasks;
 
 namespace AvaloniaPlannerLib.Data.Project
 {
-    [SqlTable(TABLE_NAME)]
-    public class DbProject
+    public class ApiProject
     {
-        public const string TABLE_NAME = "projects";
-
-        [SQLPrimary]
         public long Id { get; set; } = -1;
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";

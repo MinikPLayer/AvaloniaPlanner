@@ -3,9 +3,11 @@ using CSUtil.DB;
 
 namespace AvaloniaPlannerAPI.Data
 {
-    [SqlTable("users")]
+    [SqlTable(TABLE_NAME)]
     public class DbUser
     {
+        public const string TABLE_NAME = "users";
+
         [SQLPrimary]
         public long Id { get; set; } = -1;
         public string Login { get; set; } = "";
