@@ -11,7 +11,7 @@ namespace AvaloniaPlannerLib.Data.Project
         public long Id { get; set; } = -1;
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
-        public string Author { get; set; } = "";
+        public long Owner { get; set; } = -1;
 
         public DateTime CreationDate { get; set; } = DateTime.MinValue;
         public DateTime LastUpdate { get; set; } = DateTime.MinValue;

@@ -40,6 +40,24 @@ namespace AvaloniaPlannerAPI.Controllers
             return perms != null && perms.can_read;
         }
 
+        [HttpPost("create_new_project")]
+        public ActionResult CreateProject(string name, string description, ProjectStatus status)
+        {
+            var authData = AuthController.AuthUser(Request);
+            if (!authData)
+                return authData;
+
+            var existingProject = DbManager.DB!.Count(DbProject.TABLE_NAME, nameof(DbProject.Name).SQLp(name));
+            if (existingProject > 0)
+                return Conflict("Project with this name already exists");
+
+            var id = DbManager.DB!.GenerateUniqueIdLong(DbProject.TABLE_NAME, nameof(DbProject.Id));
+            var newProject = new DbProject(id, name, description, authData.Payload, status);
+            DbManager.DB!.InsertData(newProject, DbProject.TABLE_NAME);
+
+            return Ok(ClassCopier.Create<ApiProject>(newProject));
+        }
+
         [HttpGet("get_all_projects")]
         public ActionResult GetAllProjects()
         {
@@ -49,8 +67,7 @@ namespace AvaloniaPlannerAPI.Controllers
 
             var projects = GetAllprojectsDB();
             projects.RemoveAll(x => !CanUserRead(authData.Payload, x.Id));
-            ClassCopier.CopyList(projects, out List<ApiProject> apiProjects);
-            return Ok(apiProjects);
+            return Ok(ClassCopier.CreateList<DbProject, ApiProject>(projects));
         }
 
         [HttpGet("get_project_bins")]

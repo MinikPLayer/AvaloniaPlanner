@@ -114,7 +114,7 @@ namespace AvaloniaPlannerAPI.Controllers
                 return BadRequest("You are already registered");
 
             var newUser = new DbUser();
-            newUser.Id = DbManager.DB.GenerateUniqueId("users", nameof(DbUser.Id));
+            newUser.Id = DbManager.DB.GenerateUniqueIdLong("users", nameof(DbUser.Id));
             newUser.Login = login;
             newUser.Username = username;
 
