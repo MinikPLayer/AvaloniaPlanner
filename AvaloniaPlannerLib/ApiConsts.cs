@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CSUtil.Web;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using static CSUtil.Web.Api;
 
 namespace AvaloniaPlannerLib
 {
     public static class ApiConsts
     {
-        public static (HttpStatusCode code, string msg) ExpiredToken = (HttpStatusCode.NetworkAuthenticationRequired, "!TE!");
-        public static (HttpStatusCode code, string msg) AccessDenied = (HttpStatusCode.Unauthorized, "!AD!");
+        public static ApiResult<string> ExpiredToken = new (HttpStatusCode.NetworkAuthenticationRequired, "!TE!");
+        public static ApiResult<string> AccessDenied = new (HttpStatusCode.Unauthorized, "!AD!");
     }
 }

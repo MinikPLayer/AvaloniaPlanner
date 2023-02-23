@@ -1,5 +1,6 @@
 ﻿using AvaloniaPlannerAPI.Data.Project;
 using AvaloniaPlannerAPI.Managers;
+using AvaloniaPlannerLib;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.DB;
 using CSUtil.Reflection;
@@ -55,7 +56,32 @@ namespace AvaloniaPlannerAPI.Controllers
             var newProject = new DbProject(id, name, description, authData.Payload, status);
             DbManager.DB!.InsertData(newProject, DbProject.TABLE_NAME);
 
+            var perms = DbProjectPermissions.All(DbManager.DB!, id, authData.Payload);
+            DbManager.DB!.InsertData(perms, DbProjectPermissions.TABLE_NAME);
+
             return Ok(ClassCopier.Create<ApiProject>(newProject));
+        }
+
+        [HttpDelete("archive_project")]
+        public ActionResult ArchiveProject(long id)
+        {
+
+        }
+
+        [HttpPost("update_project_info")]
+        public ActionResult UpdateProjectInfo(ApiProject projectInfo)
+        {
+            var authData = AuthController.AuthUser(Request);
+            if (!authData)
+                return authData;
+
+            if (!CanUserWrite(authData.Payload, projectInfo.Id))
+                return ApiConsts.AccessDenied;
+
+            var dbProject = ClassCopier.Create<DbProject>(projectInfo);
+            DbManager.DB!.Update(dbProject, DbProject.TABLE_NAME, nameof(DbProject.Id).SQLp(projectInfo.Id));
+
+            return Ok(projectInfo);
         }
 
         [HttpGet("get_all_projects")]

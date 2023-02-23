@@ -4,18 +4,9 @@ using AvaloniaPlannerLib;
 using AvaloniaPlannerLib.Data.Auth;
 using CSUtil.DB;
 using CSUtil.Reflection;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using CSUtil.Web;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Reflection;
-using System.Security.Claims;
-using System.Text;
 
 namespace AvaloniaPlannerAPI.Controllers
 {
@@ -46,21 +37,21 @@ namespace AvaloniaPlannerAPI.Controllers
             return AddUserToken(id);
         }
 
-        public static AuthResult<DbUser> AuthUser(string login, string password)
+        public static ApiResult<DbUser> AuthUser(string login, string password)
         {
             var user = GetDbUser(login);
             if (user == null)
-                return new AuthResult<DbUser>(HttpStatusCode.NotFound, "User not found");
+                return new ApiResult<DbUser>(HttpStatusCode.NotFound, "User not found");
 
             var hashedPassword = CSUtil.Crypto.Password.GetPasswordHash(password, user.Salt);
             var passwordsMatch = CSUtil.Crypto.Password.ComparePasswords(hashedPassword.hash, user.Password);
             if (!passwordsMatch)
-                return new AuthResult<DbUser>(HttpStatusCode.Unauthorized, "Authentication failed - bad password", user);
+                return new ApiResult<DbUser>(HttpStatusCode.Unauthorized, "Authentication failed - bad password", user);
 
-            return new AuthResult<DbUser>(user);
+            return new ApiResult<DbUser>(user);
         }
 
-        static AuthResult<long> AuthUser(string token)
+        static ApiResult<long> AuthUser(string token)
         {
             var authToken = DbManager.DB!.GetData<DbAuthToken>(
                 DbAuthToken.TABLE_NAME,
@@ -69,13 +60,13 @@ namespace AvaloniaPlannerAPI.Controllers
                 return new (HttpStatusCode.NotFound, "Invalid token");
 
             if (authToken.Invalidated || DateTime.Now > authToken.Expiration_date)
-                return new (ApiConsts.ExpiredToken.code, ApiConsts.ExpiredToken.msg);
+                return ApiConsts.ExpiredToken.As<long>();
 
             return new (authToken.User_id);
 
         }
 
-        public static AuthResult<long> AuthUser(HttpRequest request)
+        public static ApiResult<long> AuthUser(HttpRequest request)
         {
             if (!request.Headers.TryGetValue("Authorization", out var auth))
                 return new(HttpStatusCode.Unauthorized, "Authorization token required");
