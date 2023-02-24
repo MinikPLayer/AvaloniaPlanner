@@ -13,17 +13,17 @@ namespace AvaloniaPlannerLib.Data.Project
         public const string TABLE_NAME = "projects";
 
         [SQLPrimary]
-        public long Id { get; set; } = -1;
+        public string Id { get; set; } = "";
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
-        public long Owner { get; set; } = -1;
+        public string Owner { get; set; } = "";
 
         public DateTime CreationDate { get; set; } = DateTime.Now;
         public DateTime LastUpdate { get; set; } = DateTime.Now;
 
         public DbProject() { }
 
-        public DbProject(long id, string name, string description, long owner)
+        public DbProject(StringID id, string name, string description, StringID owner)
         {
             this.Id = id;
             this.Name = name;
@@ -34,7 +34,7 @@ namespace AvaloniaPlannerLib.Data.Project
             this.LastUpdate = this.CreationDate;
         }
 
-        public DbProject(Database db, string name, string description, long owner)
-            : this(db.GenerateUniqueIdLong(TABLE_NAME, nameof(DbProject.Id)), name, description, owner) { }
+        public DbProject(Database db, string name, string description, StringID owner)
+            : this(db.GenerateUniqueIdString(TABLE_NAME, nameof(DbProject.Id)), name, description, owner) { }
     }
 }

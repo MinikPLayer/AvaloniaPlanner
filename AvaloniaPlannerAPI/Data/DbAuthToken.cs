@@ -12,7 +12,7 @@ namespace AvaloniaPlannerAPI.Data
         [SQLPrimary]
         [SQLSize(128)]
         public string Token { get; set; } = "";
-        public long User_id { get; set; } = -1;
+        public string User_id { get; set; } = "";
         public DateTime Issue_date { get; set; } = DateTime.MinValue;
         public DateTime Expiration_date { get; set; } = DateTime.MinValue;
         public bool Invalidated { get; set; } = false;
@@ -22,7 +22,7 @@ namespace AvaloniaPlannerAPI.Data
             this.Invalidated = true;
         }
 
-        public DbAuthToken(long userId)
+        public DbAuthToken(StringID userId)
         {
             this.Token = CSUtil.Crypto.Password.GenerateToken();
             this.User_id = userId;

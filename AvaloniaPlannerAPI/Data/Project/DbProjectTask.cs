@@ -13,9 +13,9 @@ namespace AvaloniaPlannerLib.Data.Project
         public const string TABLE_NAME = "project_tasks";
 
         [SQLPrimary]
-        public long Id { get; set; } = -1;
-        public long Project_id { get; set; } = -1;
-        public long Bin_id { get; set; } = -1;
+        public string Id { get; set; } = "";
+        public string Project_id { get; set; } = "";
+        public string Bin_id { get; set; } = "";
         public string Name { get; set; } = "";
         public ProjectStatus Status { get; set; } = ProjectStatus.Unknown;
     }

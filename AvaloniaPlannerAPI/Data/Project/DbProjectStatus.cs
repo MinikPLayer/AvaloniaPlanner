@@ -9,15 +9,14 @@ namespace AvaloniaPlannerAPI.Data.Project
     {
         public const string TABLE_NAME = "project_status";
 
-        [SQLSize(36)]
         [SQLPrimary]
         public string id { get; set; } = "";
-        public long project_id { get; set; } = -1;
+        public string project_id { get; set; } = "";
         public ProjectStatus status { get; set; } = ProjectStatus.Unknown;
         public DateTime date { get; set; } = DateTime.Now;
 
         public DbProjectStatus() { }
-        public DbProjectStatus(Database db, long projectId, ProjectStatus status)
+        public DbProjectStatus(Database db, StringID projectId, ProjectStatus status)
         {
             this.id = db.GenerateUniqueIdString(TABLE_NAME, nameof(DbProjectStatus.id));
             this.project_id = projectId;

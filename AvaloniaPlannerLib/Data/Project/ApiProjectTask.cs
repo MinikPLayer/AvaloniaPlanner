@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSUtil.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ namespace AvaloniaPlannerLib.Data.Project
 {
     public class ApiProjectTask
     {
-        public long Id { get; set; } = -1;
-        public long Project_id { get; set; } = -1;
-        public long Bin_id { get; set; } = -1;
+        public string Id { get; set; } = "";
+        public string Project_id { get; set; } = "";
+        public string Bin_id { get; set; } = "";
         public string Name { get; set; } = "";
         public ProjectStatus Status { get; set; } = ProjectStatus.Unknown;
     }

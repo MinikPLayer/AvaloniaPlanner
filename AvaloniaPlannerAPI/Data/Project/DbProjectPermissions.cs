@@ -9,16 +9,16 @@ namespace AvaloniaPlannerAPI.Data.Project
         public const string TABLE_NAME = "project_permissions";
 
         [SQLPrimary]
-        public long id { get; set; } = -1;
-        public long project_id { get; set; } = -1;
-        public long user_id { get; set; } = -1;
+        public string id { get; set; } = "";
+        public string project_id { get; set; } = "";
+        public string user_id { get; set; } = "";
         public bool can_read { get; set; } = false;
         public bool can_write { get; set; } = false;
         public DateTime issue_date { get; set; } = DateTime.Now;
 
-        public static DbProjectPermissions All(Database db, long projectId, long userId)
+        public static DbProjectPermissions All(Database db, StringID projectId, StringID userId)
         {
-            var id = db.GenerateUniqueIdLong(TABLE_NAME, nameof(DbProjectPermissions.id));
+            var id = db.GenerateUniqueIdString(TABLE_NAME, nameof(DbProjectPermissions.id));
             return new DbProjectPermissions()
             {
                 id = id,

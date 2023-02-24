@@ -18,7 +18,7 @@ namespace AvaloniaPlannerAPI.Controllers
         public static DbUser? GetDbUserById(long id) => DbManager.GetDB().GetData<DbUser>(
             DbUser.TABLE_NAME, nameof(DbUser.Id).SQLp(id)).FirstOrDefault();
 
-        public static DbAuthToken AddUserToken(long id)
+        public static DbAuthToken AddUserToken(StringID id)
         {
             var newToken = new DbAuthToken(id);
             DbManager.GetDB().InsertData(newToken, DbAuthToken.TABLE_NAME);
@@ -26,7 +26,7 @@ namespace AvaloniaPlannerAPI.Controllers
             return newToken;
         }
 
-        public static DbAuthToken RefreshUserToken(long id)
+        public static DbAuthToken RefreshUserToken(StringID id)
         {
             var invalidToken = new DbAuthToken() { Invalidated = true };
             DbManager.GetDB().Update(
@@ -51,7 +51,7 @@ namespace AvaloniaPlannerAPI.Controllers
             return new ApiResult<DbUser>(user);
         }
 
-        static ApiResult<long> AuthUser(string token)
+        static ApiResult<StringID> AuthUser(string token)
         {
             var authToken = DbManager.GetDB().GetData<DbAuthToken>(
                 DbAuthToken.TABLE_NAME,
@@ -60,13 +60,13 @@ namespace AvaloniaPlannerAPI.Controllers
                 return new (HttpStatusCode.NotFound, "Invalid token");
 
             if (authToken.Invalidated || DateTime.Now > authToken.Expiration_date)
-                return ApiConsts.ExpiredToken.As<long>();
+                return ApiConsts.ExpiredToken.As<StringID>();
 
             return new (authToken.User_id);
 
         }
 
-        public static ApiResult<long> AuthUser(HttpRequest request)
+        public static ApiResult<StringID> AuthUser(HttpRequest request)
         {
             if (!request.Headers.TryGetValue("Authorization", out var auth))
                 return new(HttpStatusCode.Unauthorized, "Authorization token required");
@@ -101,11 +101,11 @@ namespace AvaloniaPlannerAPI.Controllers
         public ActionResult Register(string login, [FromBody] string password, string username, string email)
         {
             if (GetDbUser(login) != null || 
-                this.GetDB().GetData<DbUser>("users", nameof(DbUser.Username).SQLp(username)).FirstOrDefault() != null)
+                this.GetDB().GetData<DbUser>(DbUser.TABLE_NAME, nameof(DbUser.Username).SQLp(username)).FirstOrDefault() != null)
                 return BadRequest("You are already registered");
 
             var newUser = new DbUser();
-            newUser.Id = this.GetDB().GenerateUniqueIdLong("users", nameof(DbUser.Id));
+            newUser.Id = this.GetDB().GenerateUniqueIdString(DbUser.TABLE_NAME, nameof(DbUser.Id));
             newUser.Login = login;
             newUser.Username = username;
 
