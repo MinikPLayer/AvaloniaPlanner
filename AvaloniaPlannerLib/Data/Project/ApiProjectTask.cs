@@ -13,6 +13,6 @@ namespace AvaloniaPlannerLib.Data.Project
         public string Project_id { get; set; } = "";
         public string Bin_id { get; set; } = "";
         public string Name { get; set; } = "";
-        public ProjectStatus Status { get; set; } = ProjectStatus.Unknown;
+        public int Priority { get; set; } = 0;
     }
 }

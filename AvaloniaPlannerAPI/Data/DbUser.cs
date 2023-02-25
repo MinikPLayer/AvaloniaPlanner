@@ -9,6 +9,7 @@ namespace AvaloniaPlannerAPI.Data
         public const string TABLE_NAME = "users";
 
         [SQLPrimary]
+        [SQLSize(36)]
         public string Id { get; set; } = "";
         public string Login { get; set; } = "";
         public string Username { get; set; } = "";

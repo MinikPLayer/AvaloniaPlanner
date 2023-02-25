@@ -13,10 +13,21 @@ namespace AvaloniaPlannerLib.Data.Project
         public const string TABLE_NAME = "project_tasks";
 
         [SQLPrimary]
+        [SQLSize(36)]
         public string Id { get; set; } = "";
         public string Project_id { get; set; } = "";
         public string Bin_id { get; set; } = "";
         public string Name { get; set; } = "";
-        public ProjectStatus Status { get; set; } = ProjectStatus.Unknown;
+        public int Priority { get; set; } = 0;
+
+        public DbProjectTask() { }
+        public DbProjectTask(Database db, string projectId, string binId, string name, int priority)
+        {
+            this.Id = db.GenerateUniqueIdString(TABLE_NAME, nameof(DbProjectTask.Id));
+            this.Project_id = projectId;
+            this.Bin_id = binId;
+            this.Name = name;
+            this.Priority = priority;
+        }
     }
 }

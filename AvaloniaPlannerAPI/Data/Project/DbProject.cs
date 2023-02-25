@@ -13,6 +13,7 @@ namespace AvaloniaPlannerLib.Data.Project
         public const string TABLE_NAME = "projects";
 
         [SQLPrimary]
+        [SQLSize(36)]
         public string Id { get; set; } = "";
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";

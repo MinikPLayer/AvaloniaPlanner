@@ -9,6 +9,7 @@ namespace AvaloniaPlannerAPI.Data.Project
         public const string TABLE_NAME = "project_permissions";
 
         [SQLPrimary]
+        [SQLSize(36)]
         public string id { get; set; } = "";
         public string project_id { get; set; } = "";
         public string user_id { get; set; } = "";
