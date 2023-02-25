@@ -14,5 +14,6 @@ namespace AvaloniaPlannerLib.Data.Project
         public string Bin_id { get; set; } = "";
         public string Name { get; set; } = "";
         public int Priority { get; set; } = 0;
+        public ProjectStatus status { get; set; } = ProjectStatus.Unknown;
     }
 }

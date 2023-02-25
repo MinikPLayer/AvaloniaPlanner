@@ -35,6 +35,12 @@ namespace AvaloniaPlannerAPI.Controllers
             return status == null ? ProjectStatus.Unknown : status.status;
         }
 
+        public static ProjectStatus GetTaskStatus(StringID taskID)
+        {
+            var status = DbManager.GetDB().GetData<DbTaskStatus>(DbTaskStatus.TABLE_NAME, nameof(DbTaskStatus.date), nameof(DbTaskStatus.task_id).SQLp(taskID)).FirstOrDefault();
+            return status == null ? ProjectStatus.Unknown : status.status;
+        }
+
         public static bool CanUserWrite(StringID userId, StringID projectId)
         {
             var perms = GetProjectPermissionsDB(userId, projectId);
@@ -271,6 +277,9 @@ namespace AvaloniaPlannerAPI.Controllers
                 return Forbid($"No permission to read from project");
             
             ClassCopier.CopyList(tasks, out List<ApiProjectTask> apiTasks);
+            foreach (var task in apiTasks)
+                task.status = GetTaskStatus(task.Id);
+
             return Ok(apiTasks);
         }
     }

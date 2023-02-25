@@ -20,7 +20,7 @@ namespace AvaloniaPlannerAPI.Data.Project
         public DbTaskStatus(Database db, string taskId, ProjectStatus status)
         {
             this.id = db.GenerateUniqueIdString(TABLE_NAME, nameof(id));
-            this.task_id = task_id;
+            this.task_id = taskId;
             this.status = status;
             this.date = DateTime.Now;
         }
