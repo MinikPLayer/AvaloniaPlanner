@@ -37,7 +37,7 @@ namespace AvaloniaPlannerAPI.Controllers
 
         public static ProjectStatus GetTaskStatus(StringID taskID)
         {
-            var status = DbManager.GetDB().GetData<DbTaskStatus>(DbTaskStatus.TABLE_NAME, nameof(DbTaskStatus.date), nameof(DbTaskStatus.task_id).SQLp(taskID)).FirstOrDefault();
+            var status = DbManager.GetDB().GetData<DbTaskStatus>(DbTaskStatus.TABLE_NAME, nameof(DbTaskStatus.date) + " DESC", nameof(DbTaskStatus.task_id).SQLp(taskID)).FirstOrDefault();
             return status == null ? ProjectStatus.Unknown : status.status;
         }
 
@@ -243,7 +243,7 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("create_new_task")]
-        public ActionResult CreateNewTask(string binId, string name, ProjectStatus status, int priority)
+        public ActionResult CreateNewTask(string binId, string name, string description, ProjectStatus status, int priority)
         {
             var authData = AuthController.AuthUser(Request);
             if (!authData)
@@ -256,13 +256,64 @@ namespace AvaloniaPlannerAPI.Controllers
             if (!CanUserWrite(authData.Payload, bin.Project_id))
                 return ApiConsts.AccessDenied;
 
-            var newTask = new DbProjectTask(this.GetDB(), bin.Project_id, binId, name, priority);
+            var newTask = new DbProjectTask(this.GetDB(), bin.Project_id, binId, name, description, priority);
             this.GetDB().InsertData(newTask, DbProjectTask.TABLE_NAME);
 
             var newTaskStatus = new DbTaskStatus(this.GetDB(), newTask.Id, status);
             this.GetDB().InsertData(newTaskStatus, DbTaskStatus.TABLE_NAME);
 
             return Ok(newTask);
+        }
+
+        [HttpPost("update_task_info")]
+        public ActionResult UpdateTaskInfo(string taskId, string? name = null, string? description = null, int? priority = null)
+        {
+            var authData = AuthController.AuthUser(Request);
+            if (!authData)
+                return authData;
+
+            var task = this.GetDB().GetData<DbProjectTask>(DbProjectTask.TABLE_NAME, nameof(DbProjectTask.Id).SQLp(taskId)).FirstOrDefault();
+            if (task == null)
+                return NotFound("Task not found");
+
+            if (!CanUserWrite(authData.Payload, task.Project_id))
+                return ApiConsts.AccessDenied;
+
+            if (!string.IsNullOrEmpty(name))
+                task.Name = name;
+
+            if (!string.IsNullOrEmpty(description))
+                task.Description = description;
+
+            if (priority != null)
+                task.Priority = priority.Value;
+
+            this.GetDB().Update(task, DbProjectTask.TABLE_NAME, nameof(DbProjectTask.Id).SQLp(task.Id));
+
+            return Ok(ClassCopier.Create<ApiProjectTask>(task));
+        }
+
+        [HttpPost("update_task_status")]
+        public ActionResult UpdateTaskStatus(string taskId, ProjectStatus status)
+        {
+            var authData = AuthController.AuthUser(Request);
+            if (!authData)
+                return authData;
+
+            var task = this.GetDB().GetData<DbProjectTask>(DbProjectTask.TABLE_NAME, nameof(DbProjectTask.Id).SQLp(taskId)).FirstOrDefault();
+            if (task == null)
+                return NotFound("Task not found");
+
+            if (!CanUserWrite(authData.Payload, task.Project_id))
+                return ApiConsts.AccessDenied;
+
+            var newStatus = new DbTaskStatus(this.GetDB(), taskId, status);
+            this.GetDB().InsertData(newStatus, DbTaskStatus.TABLE_NAME);
+
+            var apiTask = ClassCopier.Create<ApiProjectTask>(task);
+            apiTask.status = status;
+
+            return Ok(apiTask);
         }
 
         [HttpGet("get_tasks")]
