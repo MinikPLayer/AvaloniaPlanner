@@ -14,5 +14,7 @@ namespace AvaloniaPlannerLib.Data.Project
         public string Name { get; set; } = "";
         public bool Archived { get; set; } = false;
         public int Position { get; set; } = 0;
+
+        public List<ApiProjectTask> Tasks { get; set; } = new List<ApiProjectTask>();
     }
 }

@@ -4,12 +4,10 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <TrimmerRootDescriptor Include="Roots.xml" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.0-preview4" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.0-preview4" />
@@ -19,11 +17,19 @@
     <PackageReference Include="DialogHost.Avalonia" Version="0.7.0-preview3" />
     <PackageReference Include="Material.Avalonia" Version="3.0.0-avalonia11-preview3" />
     <PackageReference Include="Material.Icons.Avalonia" Version="2.0.0-preview1" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="7.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\AvaloniaPlannerLib\AvaloniaPlannerLib.csproj" />
     <ProjectReference Include="..\..\CSUtil\CSUtil.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="api.json" ClassName="AvAPI" />
   </ItemGroup>
 </Project>

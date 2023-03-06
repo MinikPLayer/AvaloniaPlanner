@@ -54,6 +54,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("create_new_project")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(typeof(ApiProject), 200)]
         public ActionResult CreateProject(string name, string description, ProjectStatus status)
         {
             var authData = AuthController.AuthUser(Request);
@@ -75,7 +78,10 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("update_project_status")]
-        public ActionResult UpdateStatus(string projectId, ProjectStatus status)
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProjectStatus), 200)]
+        public ActionResult UpdateProjectStatus(string projectId, ProjectStatus status)
         {
             var authData = AuthController.AuthUser(Request);
             if (!authData)
@@ -91,10 +97,13 @@ namespace AvaloniaPlannerAPI.Controllers
             var newStatus = new DbProjectStatus(this.GetDB(), projectId, status);
             this.GetDB().InsertData(newStatus, DbProjectStatus.TABLE_NAME);
 
-            return Ok(newStatus);
+            return Ok(ClassCopier.Create<ApiProjectStatus>(newStatus));
         }
 
         [HttpPost("update_project_info")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProject), 200)]
         public ActionResult UpdateProjectInfo(string id, string name, string description)
         {
             var authData = AuthController.AuthUser(Request);
@@ -119,6 +128,8 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpGet("get_all_projects")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(List<ApiProject>), 200)]
         public ActionResult GetAllProjects()
         {
             var authData = AuthController.AuthUser(Request);
@@ -130,7 +141,36 @@ namespace AvaloniaPlannerAPI.Controllers
             return Ok(ClassCopier.CreateList<DbProject, ApiProject>(projects));
         }
 
+        [HttpGet("get_full_project_data")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProject), 200)]
+        public ActionResult GetFullResultData(string id)
+        {
+            var authData = AuthController.AuthUser(Request);
+            if (!authData)
+                return authData;
+
+            if (!CanUserRead(authData.Payload, id))
+                return Forbid($"Access Denied");
+
+            var dbProject = GetProjectDB(id);
+            if (dbProject == null)
+                return NotFound("Project not found");
+
+            var project = ClassCopier.Create<ApiProject>(dbProject);
+            project.Bins = ClassCopier.CreateList<DbProjectBin, ApiProjectBin>(GetProjectBinsDB(id));
+            foreach (var bin in project.Bins)
+                bin.Tasks = ClassCopier.CreateList<DbProjectTask, ApiProjectTask>(GetTasksDB(bin.Id));
+
+            return Ok(project);
+        }
+
         [HttpGet("get_project_bins")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(List<ApiProjectBin>), 200)]
         public ActionResult GetProjectBins(string id)
         {
             var authData = AuthController.AuthUser(Request);
@@ -146,6 +186,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("create_project_bin")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(typeof(ApiProjectBin), 200)]
         public ActionResult CreateProjectBin(string projectId, string name)
         {
             var authData = AuthController.AuthUser(Request);
@@ -172,6 +215,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("update_project_bin_name")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProjectBin), 200)]
         public ActionResult UpdateProjectBinName(string binId, string newName)
         {
             var authData = AuthController.AuthUser(Request);
@@ -192,6 +238,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("change_project_bin_archive_status")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProjectBin), 200)]
         public ActionResult ChangeProjectBinArchiveStatus(string binId, bool status)
         {
             var authData = AuthController.AuthUser(Request);
@@ -212,6 +261,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("change_project_bin_position")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProjectBin), 200)]
         public ActionResult ChangeProjectBinPosition(string binId, int position)
         {
             var authData = AuthController.AuthUser(Request);
@@ -243,6 +295,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("create_new_task")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProjectTask), 200)]
         public ActionResult CreateNewTask(string binId, string name, string description, ProjectStatus status, int priority)
         {
             var authData = AuthController.AuthUser(Request);
@@ -266,6 +321,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("update_task_info")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProjectTask), 200)]
         public ActionResult UpdateTaskInfo(string taskId, string? name = null, string? description = null, int? priority = null)
         {
             var authData = AuthController.AuthUser(Request);
@@ -294,6 +352,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("update_task_status")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ApiProjectTask), 200)]
         public ActionResult UpdateTaskStatus(string taskId, ProjectStatus status)
         {
             var authData = AuthController.AuthUser(Request);
@@ -317,6 +378,9 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpGet("get_tasks")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(List<ApiProjectTask>), 200)]
         public ActionResult GetTasks(string bin_id)
         {
             var authData = AuthController.AuthUser(Request);

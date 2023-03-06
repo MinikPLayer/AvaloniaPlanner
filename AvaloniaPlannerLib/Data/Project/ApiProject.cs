@@ -16,5 +16,7 @@ namespace AvaloniaPlannerLib.Data.Project
 
         public DateTime CreationDate { get; set; } = DateTime.Now;
         public DateTime LastUpdate { get; set; } = DateTime.Now;
+
+        public List<ApiProjectBin> Bins { get; set; } = new List<ApiProjectBin>();
     }
 }
