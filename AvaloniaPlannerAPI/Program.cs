@@ -6,6 +6,9 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json;
+using Swashbuckle.AspNetCore.Newtonsoft;
+using Newtonsoft.Json.Converters;
 
 namespace AvaloniaPlannerAPI
 {
@@ -30,7 +33,8 @@ namespace AvaloniaPlannerAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(option =>
@@ -60,6 +64,7 @@ namespace AvaloniaPlannerAPI
                     }
                 });
             });
+            builder.Services.AddSwaggerGenNewtonsoftSupport();
 
             var app = builder.Build();
 

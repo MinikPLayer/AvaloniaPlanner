@@ -30,6 +30,11 @@
     <ProjectReference Include="..\..\CSUtil\CSUtil.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="AvAPI">
+      <HintPath>..\AvAPI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
     <None Update="api.json" ClassName="AvAPI" />
   </ItemGroup>
 </Project>
