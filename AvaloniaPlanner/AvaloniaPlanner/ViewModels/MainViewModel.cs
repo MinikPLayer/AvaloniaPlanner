@@ -1,6 +1,10 @@
 ﻿using Avalonia.Controls;
+using AvaloniaPlanner.Models;
+using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.Views;
 using ReactiveUI;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace AvaloniaPlanner.ViewModels
 {
@@ -14,8 +18,31 @@ namespace AvaloniaPlanner.ViewModels
             set => this.RaiseAndSetIfChanged(ref dialogMessage, value);
         }
 
-        public object ContentTest { get; set; } = new TestView();
+        private object currentPage = new HomePage();
+        public object CurrentPage
+        {
+            get => currentPage;
+            set => this.RaiseAndSetIfChanged(ref currentPage, value);
+        }
+
+        private bool isPaneOpened = false;
+        public bool IsPaneOpened
+        {
+            get => isPaneOpened;
+            set => this.RaiseAndSetIfChanged(ref isPaneOpened, value);
+        }
+
+        public ObservableCollection<PaneEntryModel> PaneEntries { get; } = new ObservableCollection<PaneEntryModel>();
+
+        public ICommand PaneOpenedStateChangedCommand { get; init; }
 
         public string Greeting => "Welcome to Avalonia!";
+
+        public MainViewModel()
+        {
+            PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
+
+            PaneEntries.Add(new PaneEntryModel("test name", Material.Icons.MaterialIconKind.Add));
+        }
 	}
 }
