@@ -71,10 +71,13 @@ namespace AvaloniaPlannerAPI
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
                 IdentityModelEventSource.ShowPII = true;
             }
+
+#if DEBUG
+            app.UseSwagger();
+            app.UseSwaggerUI();
+#endif
 
             //app.UseHttpsRedirection();
 

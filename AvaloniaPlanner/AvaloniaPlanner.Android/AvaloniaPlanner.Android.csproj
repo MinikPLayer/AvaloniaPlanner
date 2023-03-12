@@ -24,4 +24,10 @@
   <ItemGroup>
     <ProjectReference Include="..\AvaloniaPlanner\AvaloniaPlanner.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AvAPI">
+      <HintPath>..\AvAPI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

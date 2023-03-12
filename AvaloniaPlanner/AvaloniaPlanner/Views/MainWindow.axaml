@@ -12,20 +12,5 @@
         Title="AvaloniaPlanner"
 		TransparencyLevelHint="None"
 		Background="#222222">
-	<Design.DataContext>
-		<viewModels:MainWindowViewModel/>
-	</Design.DataContext>
-	<Panel>
-		<dh:DialogHost Identifier="MainDialogHost"
-			DialogMargin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-			dh:DialogHostStyle.CornerRadius="8" IsOpen="True" CloseOnClickAway="True">
-			<dh:DialogHost.DialogContent>
-				<StackPanel>
-					<TextBlock Text="{Binding Path=DialogMessage, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=views:MainWindow}}"/>
-					<Button Content="OK!" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dh:DialogHost}, Path=CloseDialogCommand}"/>
-				</StackPanel>
-			</dh:DialogHost.DialogContent>
-			<views:MainView />
-		</dh:DialogHost>
-	</Panel>
+	<views:MainView/>
 </Window>

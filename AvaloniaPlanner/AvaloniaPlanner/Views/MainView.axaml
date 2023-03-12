@@ -3,6 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:AvaloniaPlanner.ViewModels"
+             xmlns:views="clr-namespace:AvaloniaPlanner.Views"
+			 xmlns:dh="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Views.MainView"
              Foreground="White"
@@ -11,8 +13,27 @@
         <viewModels:MainViewModel />
     </Design.DataContext>
 
-	<StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
-		<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-		<Button Content="Load file"/>
-	</StackPanel>
+	<dh:DialogHost x:Name="TestDialog" Identifier="TestDialog"
+		DialogMargin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+		dh:DialogHostStyle.CornerRadius="8">
+		<dh:DialogHost.DialogContent>
+			<StackPanel>
+				<TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=views:MainWindow}, Path=DataContext.DialogMessage, Mode=OneWay}"/>
+				<Button Content="OK!" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dh:DialogHost}, Path=CloseDialogCommand}"/>
+			</StackPanel>
+		</dh:DialogHost.DialogContent>
+		<SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="200">
+			<SplitView.Pane>
+				<TextBlock Text="Test" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+			</SplitView.Pane>
+
+			<StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+				<Button Content="Load file" Click="TestClick"/>
+				<ContentPresenter Content="{Binding ContentTest}"/>
+			</StackPanel>
+		</SplitView>
+
+	</dh:DialogHost>
+
 </UserControl>

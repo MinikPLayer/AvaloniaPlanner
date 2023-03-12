@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="AvAPI">
       <HintPath>..\AvAPI.dll</HintPath>
+      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
   <ItemGroup>
