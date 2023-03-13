@@ -18,6 +18,8 @@ namespace AvaloniaPlanner.ViewModels
             set => this.RaiseAndSetIfChanged(ref dialogMessage, value);
         }
 
+        public string Greeting => "Welcome to Avalonia!";
+
         private object currentPage = new HomePage();
         public object CurrentPage
         {
@@ -33,16 +35,12 @@ namespace AvaloniaPlanner.ViewModels
         }
 
         public ObservableCollection<PaneEntryModel> PaneEntries { get; } = new ObservableCollection<PaneEntryModel>();
-
         public ICommand PaneOpenedStateChangedCommand { get; init; }
-
-        public string Greeting => "Welcome to Avalonia!";
 
         public MainViewModel()
         {
             PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
-
-            PaneEntries.Add(new PaneEntryModel("test name", Material.Icons.MaterialIconKind.Add));
+            PaneEntries.Add(new PaneEntryModel("Test name", Material.Icons.MaterialIconKind.Add));
         }
-	}
+    }
 }

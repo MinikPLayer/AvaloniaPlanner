@@ -4,5 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.HomePage">
-	<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Hello world!</TextBlock>
+	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+		<TextBlock>Hello world!</TextBlock>
+		<Button Content="Test button"/>
+	</StackPanel>
 </UserControl>

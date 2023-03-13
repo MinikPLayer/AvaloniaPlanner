@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using AvaloniaPlanner.ViewModels;
 using AvaloniaPlannerLib;
@@ -22,6 +23,14 @@ namespace AvaloniaPlanner.Views
 
                 return mv;
             } 
+        }
+
+        public void TestPP(object sender, PointerPressedEventArgs e)
+        {
+            var posY = e.GetPosition(this).Y;
+            if (MainWindow.Singleton != null && posY < 30)
+                MainWindow.Singleton.BeginMoveDrag(e);
+            
         }
 
         void LoadFile(string path)

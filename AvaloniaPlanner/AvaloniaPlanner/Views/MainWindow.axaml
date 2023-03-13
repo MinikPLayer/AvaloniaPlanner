@@ -10,7 +10,25 @@
         x:Class="AvaloniaPlanner.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="AvaloniaPlanner"
-		TransparencyLevelHint="None"
-		Background="#222222">
-	<views:MainView/>
+		Background="Transparent"
+		TransparencyLevelHint="AcrylicBlur"
+		ExtendClientAreaChromeHints="PreferSystemChrome"
+		ExtendClientAreaToDecorationsHint="True">
+
+	<Panel>
+		<ExperimentalAcrylicBorder IsHitTestVisible="False">
+			<ExperimentalAcrylicBorder.Material>
+				<ExperimentalAcrylicMaterial
+					 BackgroundSource="Digger"
+					 TintColor="Black"
+					 TintOpacity="1"
+					 MaterialOpacity="0.65" />
+			</ExperimentalAcrylicBorder.Material>
+		</ExperimentalAcrylicBorder>
+
+		<Grid>
+			<views:MainView />
+		</Grid>
+	</Panel>
+
 </Window>

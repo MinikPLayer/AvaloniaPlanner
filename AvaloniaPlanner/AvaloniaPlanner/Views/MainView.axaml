@@ -61,8 +61,10 @@
 					</StackPanel>
 				</Border>
 			</SplitView.Pane>
-			
-			<ContentPresenter Content="{Binding CurrentPage}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+			<Grid PointerPressed="TestPP" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<ContentPresenter Content="{Binding CurrentPage}" />
+			</Grid>
 		</SplitView>
 
 	</dh:DialogHost>
