@@ -11,7 +11,7 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="AvaloniaPlanner"
 		Background="Transparent"
-		TransparencyLevelHint="AcrylicBlur"
+		TransparencyLevelHint="Mica"
 		ExtendClientAreaChromeHints="PreferSystemChrome"
 		ExtendClientAreaToDecorationsHint="True">
 

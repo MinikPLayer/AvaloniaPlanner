@@ -26,40 +26,38 @@
 		</dh:DialogHost.DialogContent>
 		<SplitView IsPaneOpen="{Binding	IsPaneOpened, Mode=TwoWay}"
 				   DisplayMode="CompactOverlay" 
-				   OpenPaneLength="400" CompactPaneLength="45">
-			<SplitView.Styles>
-				<Style Selector="Button">
-					<Setter Property="Padding" Value="5"/>
-					<Setter Property="HorizontalContentAlignment" Value="Left"/>
-				</Style>
-				<Style Selector="Button:not(:pressed):not(:pointerover)">
-					<Setter Property="Background" Value="Transparent"/>
-				</Style>
-			</SplitView.Styles>
+				   OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000">
 			<SplitView.Pane>
-				<Border Background="#40000000">
-					<StackPanel Margin="5">
-						<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
-							<Grid>
-								<icons:MaterialIcon Kind="ArrowCollapseLeft" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
-								<icons:MaterialIcon Kind="ArrowCollapseRight" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
-							</Grid>
-						</Button>
-						<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
-						<ItemsRepeater Items="{Binding PaneEntries}">
-							<ItemsRepeater.ItemTemplate>
-								<DataTemplate DataType="models:PaneEntryModel">
-									<Button HorizontalAlignment="Stretch">
-										<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10">
-											<icons:MaterialIcon Kind="{Binding Icon}" Width="25" Height="25"/>
-											<TextBlock VerticalAlignment="Center" FontSize="20" Text="{Binding Name}" IsVisible="{Binding $parent[views:MainView].DataContext.IsPaneOpened}"/>
-										</StackPanel>
-									</Button>
-								</DataTemplate>
-							</ItemsRepeater.ItemTemplate>
-						</ItemsRepeater>
-					</StackPanel>
-				</Border>
+				<StackPanel Margin="10">
+					<StackPanel.Styles>
+						<Style Selector="Button">
+							<Setter Property="Padding" Value="5"/>
+							<Setter Property="HorizontalContentAlignment" Value="Left"/>
+						</Style>
+						<Style Selector="Button:not(:pressed):not(:pointerover)">
+							<Setter Property="Background" Value="Transparent"/>
+						</Style>
+					</StackPanel.Styles>
+					<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
+						<Grid>
+							<icons:MaterialIcon Kind="ArrowCollapseLeft" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
+							<icons:MaterialIcon Kind="ArrowCollapseRight" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
+						</Grid>
+					</Button>
+					<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
+					<ItemsRepeater Items="{Binding PaneEntries}">
+						<ItemsRepeater.ItemTemplate>
+							<DataTemplate DataType="models:PaneEntryModel">
+								<Button HorizontalAlignment="Stretch">
+									<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10">
+										<icons:MaterialIcon Kind="{Binding Icon}" Width="25" Height="25"/>
+										<TextBlock VerticalAlignment="Center" FontSize="20" Text="{Binding Name}" IsVisible="{Binding $parent[views:MainView].DataContext.IsPaneOpened}"/>
+									</StackPanel>
+								</Button>
+							</DataTemplate>
+						</ItemsRepeater.ItemTemplate>
+					</ItemsRepeater>
+				</StackPanel>
 			</SplitView.Pane>
 
 			<Grid PointerPressed="TestPP" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
