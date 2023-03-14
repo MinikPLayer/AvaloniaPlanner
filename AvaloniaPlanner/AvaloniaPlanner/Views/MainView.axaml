@@ -48,7 +48,7 @@
 					<ItemsRepeater Items="{Binding PaneEntries}">
 						<ItemsRepeater.ItemTemplate>
 							<DataTemplate DataType="models:PaneEntryModel">
-								<Button HorizontalAlignment="Stretch">
+								<Button HorizontalAlignment="Stretch" Command="{Binding	ClickedCommand}">
 									<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10">
 										<icons:MaterialIcon Kind="{Binding Icon}" Width="25" Height="25"/>
 										<TextBlock VerticalAlignment="Center" FontSize="20" Text="{Binding Name}" IsVisible="{Binding $parent[views:MainView].DataContext.IsPaneOpened}"/>

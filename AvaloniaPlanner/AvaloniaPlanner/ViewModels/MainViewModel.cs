@@ -2,8 +2,11 @@
 using AvaloniaPlanner.Models;
 using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.Views;
+using DialogHostAvalonia;
 using ReactiveUI;
+using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace AvaloniaPlanner.ViewModels
@@ -40,7 +43,10 @@ namespace AvaloniaPlanner.ViewModels
         public MainViewModel()
         {
             PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
-            PaneEntries.Add(new PaneEntryModel("Test name", Material.Icons.MaterialIconKind.Add));
+            PaneEntries.Add(new PaneEntryModel("Home", Material.Icons.MaterialIconKind.Home, () => Debug.WriteLine("Home!")));
+            PaneEntries.Add(new PaneEntryModel("Add", Material.Icons.MaterialIconKind.Add));
+            PaneEntries.Add(new PaneEntryModel("Subtract", Material.Icons.MaterialIconKind.Minus));
+            PaneEntries.Add(new PaneEntryModel("Multiply", Material.Icons.MaterialIconKind.Asterisk));
         }
     }
 }
