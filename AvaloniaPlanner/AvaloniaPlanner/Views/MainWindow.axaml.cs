@@ -13,6 +13,7 @@ namespace AvaloniaPlanner.Views
         public MainWindow()
         {
             Singleton = this;
+            this.DataContext = new MainWindowViewModel();
             InitializeComponent();
         }
     }

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlanner", "AvaloniaPlanner\AvaloniaPlanner\AvaloniaPlanner.csproj", "{788CA022-0DC4-4FBD-AE83-B34ABBA77568}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaPlanner.Android", "AvaloniaPlanner\AvaloniaPlanner.Android\AvaloniaPlanner.Android.csproj", "{CECA51DA-6F76-4B64-9AD6-523BAD0BB6C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlanner.Android", "AvaloniaPlanner\AvaloniaPlanner.Android\AvaloniaPlanner.Android.csproj", "{CECA51DA-6F76-4B64-9AD6-523BAD0BB6C4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlanner.Desktop", "AvaloniaPlanner\AvaloniaPlanner.Desktop\AvaloniaPlanner.Desktop.csproj", "{F9440CA3-5AF0-42AA-8D86-E6E874A51ABF}"
 EndProject
@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlannerAPI", "Avalo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSUtil", "CSUtil\CSUtil.csproj", "{56195BA1-6C1D-44DD-93B9-09A429B5165C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaPlannerLib", "AvaloniaPlannerLib\AvaloniaPlannerLib.csproj", "{A1076ADF-5CD0-422E-9620-7B2F901E3253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlannerLib", "AvaloniaPlannerLib\AvaloniaPlannerLib.csproj", "{A1076ADF-5CD0-422E-9620-7B2F901E3253}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaPlanner.Tests", "AvaloniaPlanner\AvaloniaPlanner.Tests\AvaloniaPlanner.Tests.csproj", "{A72E9FE5-4F61-4BE6-A202-1CBFAE3C5C15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{A1076ADF-5CD0-422E-9620-7B2F901E3253}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1076ADF-5CD0-422E-9620-7B2F901E3253}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1076ADF-5CD0-422E-9620-7B2F901E3253}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A72E9FE5-4F61-4BE6-A202-1CBFAE3C5C15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A72E9FE5-4F61-4BE6-A202-1CBFAE3C5C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A72E9FE5-4F61-4BE6-A202-1CBFAE3C5C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A72E9FE5-4F61-4BE6-A202-1CBFAE3C5C15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

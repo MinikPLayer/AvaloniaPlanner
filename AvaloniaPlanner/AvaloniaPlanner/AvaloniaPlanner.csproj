@@ -39,4 +39,8 @@
   <ItemGroup>
     <None Update="api.json" ClassName="AvAPI" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Actions\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
 </Project>

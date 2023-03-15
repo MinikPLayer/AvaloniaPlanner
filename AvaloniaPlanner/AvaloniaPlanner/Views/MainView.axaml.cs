@@ -7,6 +7,7 @@ using AvAPI.Model;
 using DialogHostAvalonia;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
 
@@ -14,12 +15,25 @@ namespace AvaloniaPlanner.Views
 {
     public partial class MainView : UserControl
     {
+        private static MainView? _singleton = null;
+        public static MainView Singleton
+        {
+            get
+            {
+                if (_singleton == null)
+                    throw new ArgumentNullException("Singleton is null");
+
+                return _singleton;
+            }
+            set => _singleton = value;
+        }
+
         public MainViewModel ViewModel 
         { 
             get
             {
                 if (DataContext == null || DataContext is not MainViewModel mv)
-                    throw new Exception("Data context is null or invalid type");
+                    this.DataContext = mv = new MainViewModel();
 
                 return mv;
             } 
@@ -33,6 +47,11 @@ namespace AvaloniaPlanner.Views
             
         }
 
+        public void TestClick(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Test click");
+        }
+
         void LoadFile(string path)
         {
             //var data = File.ReadAllText(path);
@@ -41,6 +60,8 @@ namespace AvaloniaPlanner.Views
 
         public MainView()
         {
+            Singleton = this;
+            this.DataContext = new MainViewModel();
             InitializeComponent();
 
             LoadFile("C:\\Users\\Minik\\Documents\\Projekty\\AvProject.json");

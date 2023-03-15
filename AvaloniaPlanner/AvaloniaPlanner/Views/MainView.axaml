@@ -6,7 +6,7 @@
              xmlns:views="clr-namespace:AvaloniaPlanner.Views"
 			 xmlns:dh="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-			 xmlns:models="clr-namespace:AvaloniaPlanner.Models"
+			 xmlns:controls="clr-namespace:AvaloniaPlanner.Controls"
 			 mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
              x:Class="AvaloniaPlanner.Views.MainView"
              Foreground="White"
@@ -29,39 +29,20 @@
 				   OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000">
 			<SplitView.Pane>
 				<StackPanel Margin="10">
-					<StackPanel.Styles>
-						<Style Selector="Button">
-							<Setter Property="Padding" Value="5"/>
-							<Setter Property="HorizontalContentAlignment" Value="Left"/>
-						</Style>
-						<Style Selector="Button:not(:pressed):not(:pointerover)">
-							<Setter Property="Background" Value="Transparent"/>
-						</Style>
-					</StackPanel.Styles>
 					<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
 						<Grid>
-							<icons:MaterialIcon Kind="ArrowCollapseLeft" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
-							<icons:MaterialIcon Kind="ArrowCollapseRight" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
+							<icons:MaterialIcon Kind="MenuOpen" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
+							<icons:MaterialIcon Kind="Menu" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
 						</Grid>
 					</Button>
 					<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
-					<ItemsRepeater Items="{Binding PaneEntries}">
-						<ItemsRepeater.ItemTemplate>
-							<DataTemplate DataType="models:PaneEntryModel">
-								<Button HorizontalAlignment="Stretch" Command="{Binding	ClickedCommand}">
-									<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10">
-										<icons:MaterialIcon Kind="{Binding Icon}" Width="25" Height="25"/>
-										<TextBlock VerticalAlignment="Center" FontSize="20" Text="{Binding Name}" IsVisible="{Binding $parent[views:MainView].DataContext.IsPaneOpened}"/>
-									</StackPanel>
-								</Button>
-							</DataTemplate>
-						</ItemsRepeater.ItemTemplate>
-					</ItemsRepeater>
+					<ItemsRepeater Items="{Binding PaneEntries}"/>
+					<controls:PaneEntry IconSize="{Binding IconSize}" Clicked="TestClick" EntryName="Test" Icon="Settings"/>
 				</StackPanel>
 			</SplitView.Pane>
 
 			<Grid PointerPressed="TestPP" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<ContentPresenter Content="{Binding CurrentPage}" />
+				<ContentPresenter Content="{Binding CurrentPage}" Margin="10"/>
 			</Grid>
 		</SplitView>
 

@@ -1,9 +1,9 @@
-﻿using AvaloniaPlanner.Models;
-using AvaloniaPlanner.Pages;
+﻿using AvaloniaPlanner.Pages;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,5 +33,10 @@ namespace AvaloniaPlanner.ViewModels
             get => dialogOpened;
             set => this.RaiseAndSetIfChanged(ref dialogOpened, value);
         }
+
+        public ICommand TestCommand { get; set; } = ReactiveCommand.Create(() =>
+        {
+            Debug.WriteLine("TEST");
+        });
     }
 }

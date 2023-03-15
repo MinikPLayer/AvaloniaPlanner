@@ -1,5 +1,5 @@
 ﻿using Avalonia.Controls;
-using AvaloniaPlanner.Models;
+using AvaloniaPlanner.Controls;
 using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.Views;
 using DialogHostAvalonia;
@@ -37,16 +37,24 @@ namespace AvaloniaPlanner.ViewModels
             set => this.RaiseAndSetIfChanged(ref isPaneOpened, value);
         }
 
-        public ObservableCollection<PaneEntryModel> PaneEntries { get; } = new ObservableCollection<PaneEntryModel>();
+        private double _iconSize = 15;
+        public double IconSize
+        {
+            get => _iconSize;
+            set => this.RaiseAndSetIfChanged(ref _iconSize, value);
+        }
+
+
+        public ObservableCollection<PaneEntry> PaneEntries { get; } = new ObservableCollection<PaneEntry>();
         public ICommand PaneOpenedStateChangedCommand { get; init; }
+        public ICommand PaneOpenedStateChangedCommand2 { get; init; }
 
         public MainViewModel()
         {
             PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
-            PaneEntries.Add(new PaneEntryModel("Home", Material.Icons.MaterialIconKind.Home, () => Debug.WriteLine("Home!")));
-            PaneEntries.Add(new PaneEntryModel("Add", Material.Icons.MaterialIconKind.Add));
-            PaneEntries.Add(new PaneEntryModel("Subtract", Material.Icons.MaterialIconKind.Minus));
-            PaneEntries.Add(new PaneEntryModel("Multiply", Material.Icons.MaterialIconKind.Asterisk));
+            PaneOpenedStateChangedCommand2 = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
+            PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage), this));
+            PaneEntries.Add(new PaneEntry("Settings", Material.Icons.MaterialIconKind.Settings, typeof(SettingsPage), this));
         }
     }
 }

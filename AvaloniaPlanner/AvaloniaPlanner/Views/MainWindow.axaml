@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:AvaloniaPlanner.ViewModels"
         xmlns:views="clr-namespace:AvaloniaPlanner.Views"
+        xmlns:controls="clr-namespace:AvaloniaPlanner.Controls"
 		xmlns:dh="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaPlanner.Views.MainWindow"
