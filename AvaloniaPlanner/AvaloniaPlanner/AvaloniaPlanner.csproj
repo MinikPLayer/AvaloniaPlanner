@@ -42,5 +42,6 @@
   <ItemGroup>
     <Folder Include="Actions\" />
     <Folder Include="Models\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 </Project>
