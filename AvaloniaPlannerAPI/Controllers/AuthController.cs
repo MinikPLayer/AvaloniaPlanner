@@ -86,6 +86,10 @@ namespace AvaloniaPlannerAPI.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(511)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(ApiAuthToken), 200)]
         public ActionResult Login(string login, string password)
         {
             var auth = AuthUser(login, password);
@@ -94,10 +98,12 @@ namespace AvaloniaPlannerAPI.Controllers
 
             var user = auth.Payload;
             var token = AddUserToken(user.Id);
-            return Ok(token);
+            return Ok(ClassCopier.Create<ApiAuthToken>(token));
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(ApiAuthToken), 200)]
         public ActionResult Register(string login, [FromBody] string password, string username, string email)
         {
             if (GetDbUser(login) != null || 
@@ -116,7 +122,7 @@ namespace AvaloniaPlannerAPI.Controllers
             this.GetDB().InsertData(newUser, "users");
             var token = RefreshUserToken(newUser.Id);
 
-            return Ok(token);
+            return Ok(ClassCopier.Create<ApiAuthToken>(token));
         }
 
         [HttpPost("invalidate_tokens")]
