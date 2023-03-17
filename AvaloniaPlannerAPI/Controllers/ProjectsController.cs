@@ -6,10 +6,10 @@ namespace AvaloniaPlannerAPI.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        [HttpPost("update_projects")]
-        public IActionResult UpdateProjects()
-        {
+        //[HttpPost("update_projects")]
+        //public IActionResult UpdateProjects()
+        //{
 
-        }
+        //}
     }
 }

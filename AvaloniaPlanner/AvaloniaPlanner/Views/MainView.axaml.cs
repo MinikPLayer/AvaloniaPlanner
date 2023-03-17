@@ -54,6 +54,7 @@ namespace AvaloniaPlanner.Views
 
         void LoadFile(string path)
         {
+            
             //var data = File.ReadAllText(path);
             //var apiProject = JsonConvert.DeserializeObject<ApiProject>(data);
         }
