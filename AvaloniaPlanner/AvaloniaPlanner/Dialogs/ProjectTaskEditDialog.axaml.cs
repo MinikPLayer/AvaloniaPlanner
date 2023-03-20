@@ -9,12 +9,17 @@ namespace AvaloniaPlanner.Dialogs
 {
     public partial class ProjectTaskEditDialog : UserControl
     {
+        private ApiProjectTask ogTask { get; set; }
         public bool Save { get; set; } = false;
 
         public void CloseDialog(object sender, RoutedEventArgs e)
         {
-            if(sender is Control c)
+            if (sender is Control c && this.DataContext is ProjectTaskViewModel vm)
+            {
                 Save = c.Tag is string s && s == "Save";
+                // Copy new data to the new task
+                ClassCopier.Copy(vm.GetTask(), ogTask);
+            }
 
             MainView.Singleton.MainDialog.CloseDialogCommand.Execute(Save);
         }
@@ -22,7 +27,8 @@ namespace AvaloniaPlanner.Dialogs
         public ProjectTaskEditDialog(ApiProjectTask task)
         {
             InitializeComponent();
-            this.DataContext = new ProjectTaskViewModel(task);
+            this.ogTask = task;
+            this.DataContext = new ProjectTaskViewModel(ClassCopier.Create<ApiProjectTask>(task));
             
         }
     }

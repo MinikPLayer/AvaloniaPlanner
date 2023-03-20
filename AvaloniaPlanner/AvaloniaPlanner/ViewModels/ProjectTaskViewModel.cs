@@ -35,7 +35,7 @@ namespace AvaloniaPlanner.ViewModels
 
         public ProjectStatus Status => task.status;
 
-        public ApiProjectTask GetTaskCopy() => ClassCopier.Create<ApiProjectTask>(task);
+        public ApiProjectTask GetTask() => task;
 
         public ProjectStatusModel StatusModel
         {

@@ -15,6 +15,8 @@ namespace AvaloniaPlanner.Pages
         public static OList<ApiProject> Projects { get; set; }
         private static List<ProjectsPage> Pages = new List<ProjectsPage>();
 
+        public static void SignalProjectsChanged() => Projects.OnCollectionChanged?.Invoke(Projects);
+
         static ProjectsPage()
         {
             Projects = new OList<ApiProject>

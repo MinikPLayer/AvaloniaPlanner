@@ -1,10 +1,13 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using AvaloniaPlanner.Dialogs;
+using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.ViewModels;
 using DialogHostAvalonia;
+using DynamicData;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace AvaloniaPlanner.Controls
 {
@@ -16,7 +19,9 @@ namespace AvaloniaPlanner.Controls
             dialogOpened = false;
             var result = e.Parameter;
             if (result is bool b && b == true && e.Session.Content is ProjectTaskEditDialog dialog)
+            {
                 this.DataContext = dialog.DataContext;
+            }
         }
 
         public void StackPanelPointerPressed(object sender, PointerPressedEventArgs e)
@@ -28,7 +33,7 @@ namespace AvaloniaPlanner.Controls
                 return;
 
             dialogOpened = true;
-            DialogHost.Show(new ProjectTaskEditDialog(vm.GetTaskCopy()), closingEventHandler: DialogClosed);
+            DialogHost.Show(new ProjectTaskEditDialog(vm.GetTask()), closingEventHandler: DialogClosed);
         }
 
         public ProjectTaskControl()
