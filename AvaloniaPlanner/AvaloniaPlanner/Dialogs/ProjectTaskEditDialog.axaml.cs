@@ -14,12 +14,15 @@ namespace AvaloniaPlanner.Dialogs
 
         public void CloseDialog(object sender, RoutedEventArgs e)
         {
-            if (sender is Control c && this.DataContext is ProjectTaskViewModel vm)
+            if (sender is Control c && this.DataContext is ProjectTaskViewModel vm && c.Tag is string s && s == "Save")
             {
-                Save = c.Tag is string s && s == "Save";
-
                 // Copy new data to the new task
                 ClassCopier.Copy(vm.GetTask(), ogTask);
+                Save = true;
+            }
+            else
+            {
+                Save = false;
             }
 
             MainView.Singleton.MainDialog.CloseDialogCommand.Execute(Save);

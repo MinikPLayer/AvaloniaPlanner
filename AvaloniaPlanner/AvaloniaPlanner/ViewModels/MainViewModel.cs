@@ -37,11 +37,18 @@ namespace AvaloniaPlanner.ViewModels
             set => this.RaiseAndSetIfChanged(ref isPaneOpened, value);
         }
 
-        private double _iconSize = 15;
+        private double _iconSize = 25;
         public double IconSize
         {
             get => _iconSize;
             set => this.RaiseAndSetIfChanged(ref _iconSize, value);
+        }
+
+        private bool _isSaveAvailable = false;
+        public bool IsSaveAvailable
+        {
+            get => _isSaveAvailable;
+            set => this.RaiseAndSetIfChanged(ref _isSaveAvailable, value);
         }
 
 

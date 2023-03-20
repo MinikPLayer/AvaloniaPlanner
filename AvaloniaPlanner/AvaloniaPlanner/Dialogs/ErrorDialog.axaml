@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaPlanner.Dialogs.ErrorDialog">
+	<Grid ColumnDefinitions="30, *" RowDefinitions="*, 10, 30">
+		<icons:MaterialIcon Kind="Error" Height="25" Width="25" Margin="5"/>
+		<TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{Binding Message}" 
+				   HorizontalAlignment="Center" VerticalAlignment="Center"
+				   FontWeight="ExtraBlack"/>
+		
+		<Button Grid.Column="0" Grid.ColumnSpan="2" Content="Close" Grid.Row="2" Click="CloseButtonClicked"
+				HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	</Grid>
+</UserControl>

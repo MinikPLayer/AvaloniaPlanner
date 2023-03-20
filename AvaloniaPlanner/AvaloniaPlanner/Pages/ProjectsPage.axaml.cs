@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using AvaloniaPlanner.Controls;
 using AvaloniaPlannerLib.Data.Project;
 using System.Linq;
+using AvaloniaPlanner.Views;
+using Newtonsoft.Json;
+using DynamicData;
 
 namespace AvaloniaPlanner.Pages
 {
@@ -15,17 +18,39 @@ namespace AvaloniaPlanner.Pages
         public static OList<ApiProject> Projects { get; set; }
         private static List<ProjectsPage> Pages = new List<ProjectsPage>();
 
-        public static void SignalProjectsChanged() => Projects.OnCollectionChanged?.Invoke(Projects);
+        public static void SignalProjectsChanged()
+        {
+            Projects.OnCollectionChanged?.Invoke(Projects);
+            MainView.Singleton.ViewModel.IsSaveAvailable = true;
+        }
+
+        public static string SerializeProjects()
+        {
+            var ret = JsonConvert.SerializeObject(Projects, Formatting.Indented);
+            return ret;
+        }
+
+        public static bool LoadProjectsFromString(string data)
+        {
+            var ret = JsonConvert.DeserializeObject<IEnumerable<ApiProject>>(data);
+            if (ret == null)
+                return false;
+
+            Projects.Clear();
+            Projects.AddRange(ret);
+            return true;
+        }
 
         static ProjectsPage()
         {
-            Projects = new OList<ApiProject>
-            {
-                // Test project
-                new ApiProject { Name = "Test project", Owner = "Test author", Description = "This is a test project, nothing less, nothing more", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "To-Do", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 1", status = ProjectStatus.Supported }, new ApiProjectTask() { Name = "Task 2", status = ProjectStatus.Defined } } }, new ApiProjectBin { Name = "In Progress", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 3", status = ProjectStatus.InProgress } } } } },
-                new ApiProject { Name = "Test project 2", Owner = "Test author", Description = "This is also a test project, but does it matter? I don't really think so. It's just data, the same type of data. That's what matters", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "In Progress" }, new ApiProjectBin { Name = "Done" }, new ApiProjectBin { Name = "Archived" } } }
-            };
+            //Projects = new OList<ApiProject>
+            //{
+            //    // Test project
+            //    new ApiProject { Name = "Test project", Owner = "Test author", Description = "This is a test project, nothing less, nothing more", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "To-Do", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 1", status = ProjectStatus.Supported }, new ApiProjectTask() { Name = "Task 2", status = ProjectStatus.Defined } } }, new ApiProjectBin { Name = "In Progress", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 3", status = ProjectStatus.InProgress } } } } },
+            //    new ApiProject { Name = "Test project 2", Owner = "Test author", Description = "This is also a test project, but does it matter? I don't really think so. It's just data, the same type of data. That's what matters", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "In Progress" }, new ApiProjectBin { Name = "Done" }, new ApiProjectBin { Name = "Archived" } } }
+            //};
 
+            Projects = new OList<ApiProject>();
             Projects.OnItemAdded += (list, ind, item) => Pages.ForEach(p => p.ProjectsPanel.Children.Add(new ProjectControl(item)));
             Projects.OnItemRemoved += (list, ind, item) =>
             {

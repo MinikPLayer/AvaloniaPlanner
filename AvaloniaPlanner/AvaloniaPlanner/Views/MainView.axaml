@@ -28,17 +28,28 @@
 				   DisplayMode="CompactOverlay" 
 				   OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000">
 			<SplitView.Pane>
-				<StackPanel Margin="10">
-					<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
-						<Grid>
-							<icons:MaterialIcon Kind="MenuOpen" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
-							<icons:MaterialIcon Kind="Menu" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
-						</Grid>
-					</Button>
-					<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
-					<ItemsRepeater Items="{Binding PaneEntries}"/>
-					<controls:PaneEntry IconSize="{Binding IconSize}" Clicked="TestClick" EntryName="Test" Icon="Settings"/>
-				</StackPanel>
+				<Grid RowDefinitions="*, 35, 35" Margin="10">
+					<StackPanel>
+						<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
+							<Grid>
+								<icons:MaterialIcon Kind="MenuOpen" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
+								<icons:MaterialIcon Kind="Menu" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
+							</Grid>
+						</Button>
+						<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
+						<ItemsRepeater Items="{Binding PaneEntries}"/>
+					</StackPanel>
+
+					<controls:PaneEntry Grid.Row="1"
+										EntryName="Save project" Icon="ContentSave" 
+										IsEnabled="{Binding DataContext.IsSaveAvailable, RelativeSource={RelativeSource	FindAncestor, AncestorType=views:MainView}}"
+										Clicked="SaveProjectClick"/>
+
+					<controls:PaneEntry Grid.Row="2"
+										EntryName="Settings" Icon="Settings"
+										Clicked="TestClick"/>
+				</Grid>
+
 			</SplitView.Pane>
 
 			<Grid PointerPressed="TestPP" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
