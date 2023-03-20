@@ -17,6 +17,7 @@ namespace AvaloniaPlanner.Dialogs
             if (sender is Control c && this.DataContext is ProjectTaskViewModel vm)
             {
                 Save = c.Tag is string s && s == "Save";
+
                 // Copy new data to the new task
                 ClassCopier.Copy(vm.GetTask(), ogTask);
             }

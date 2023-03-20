@@ -21,6 +21,7 @@ namespace AvaloniaPlanner.Controls
             if (result is bool b && b == true && e.Session.Content is ProjectTaskEditDialog dialog)
             {
                 this.DataContext = dialog.DataContext;
+                ProjectsPage.SignalProjectsChanged();
             }
         }
 
