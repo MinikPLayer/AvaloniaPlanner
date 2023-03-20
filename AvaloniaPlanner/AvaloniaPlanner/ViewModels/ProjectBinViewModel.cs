@@ -1,4 +1,6 @@
 ﻿using AvaloniaPlannerLib.Data.Project;
+using CSUtil.Data;
+using DynamicData;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -22,8 +24,14 @@ namespace AvaloniaPlanner.ViewModels
             }
         }
 
+        public OList<ProjectTaskViewModel> Tasks { get; set; }
+
         public ProjectBinViewModel(ApiProjectBin bin)
         {
+            Tasks = new OList<ProjectTaskViewModel>();
+            Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
+            Tasks.OnCollectionChanged += (c) => this.RaisePropertyChanged(nameof(Tasks));
+
             this.bin = bin;
         }
     }

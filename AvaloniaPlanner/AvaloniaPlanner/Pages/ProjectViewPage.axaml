@@ -3,8 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:AvaloniaPlanner.ViewModels"
+			 xmlns:converters="using:AvaloniaPlanner.Converters"
+			 xmlns:models="using:AvaloniaPlanner.Models"
+			 xmlns:controls="using:AvaloniaPlanner.Controls"
+			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.ProjectViewPage">
+	
 	<Grid Margin="5">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="35"/>
@@ -21,9 +26,16 @@
 			<ListBox.ItemTemplate>
 				<DataTemplate DataType="vm:ProjectBinViewModel">
 					<Border Background="#40000000" CornerRadius="5">
-						<StackPanel>
+						<StackPanel Margin="10" PointerPressed="StatusComboBoxPointerPressed">
 							<TextBlock Text="{Binding BinName}" FontSize="20" FontWeight="Bold" Margin="5, 5, 5, 0"/>
 							<Separator Height="5"/>
+							<ListBox Items="{Binding Tasks}">
+								<ListBox.ItemTemplate>
+									<DataTemplate DataType="vm:ProjectTaskViewModel">
+										<controls:ProjectTaskControl/>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
 						</StackPanel>
 					</Border>
 				</DataTemplate>

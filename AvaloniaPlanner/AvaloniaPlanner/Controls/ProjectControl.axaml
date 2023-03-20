@@ -5,9 +5,9 @@
 			 xmlns:vm="using:AvaloniaPlanner.ViewModels"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Controls.ProjectControl">
-	<Design.DataContext>
+	<!--<Design.DataContext>
 		<vm:ProjectViewModel/>
-	</Design.DataContext>
+	</Design.DataContext>-->
 
 	<UserControl.Styles>
 		<Style Selector="Button">

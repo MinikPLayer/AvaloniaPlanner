@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.ViewModels;
 using AvaloniaPlannerLib;
-using AvAPI.Model;
 using DialogHostAvalonia;
 using Newtonsoft.Json;
 using System;
@@ -59,13 +59,21 @@ namespace AvaloniaPlanner.Views
             //var apiProject = JsonConvert.DeserializeObject<ApiProject>(data);
         }
 
+        void TestStartup()
+        {
+            PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
+        }
+
         public MainView()
         {
             Singleton = this;
             this.DataContext = new MainViewModel();
             InitializeComponent();
 
-            LoadFile("C:\\Users\\Minik\\Documents\\Projekty\\AvProject.json");
+            //LoadFile("C:\\Users\\Minik\\Documents\\Projekty\\AvProject.json");
+#if DEBUG
+            TestStartup();
+#endif
         }
     }
 }

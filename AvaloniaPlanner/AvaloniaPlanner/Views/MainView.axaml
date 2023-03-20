@@ -15,9 +15,9 @@
         <viewModels:MainViewModel />
     </Design.DataContext>
 	
-	<dh:DialogHost x:Name="TestDialog" Identifier="TestDialog"
+	<dh:DialogHost x:Name="MainDialog" Identifier="MainDialog"
 		DialogMargin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-		dh:DialogHostStyle.CornerRadius="8">
+		dh:DialogHostStyle.CornerRadius="8" OverlayBackground="Black">
 		<dh:DialogHost.DialogContent>
 			<StackPanel>
 				<TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=views:MainWindow}, Path=DataContext.DialogMessage, Mode=OneWay}"/>

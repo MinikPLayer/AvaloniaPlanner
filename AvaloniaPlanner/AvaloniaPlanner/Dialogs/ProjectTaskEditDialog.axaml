@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:models="using:AvaloniaPlanner.Models"
+			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaPlanner.Dialogs.ProjectTaskEditDialog">
+	<Grid ColumnDefinitions="*, *" RowDefinitions="*, *, 10, 30">
+		<TextBlock Text="Name: " Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"/>
+		<TextBox Text="{Binding	TaskName, Mode=TwoWay}" Grid.Column="1" Grid.Row="0"/>
+		
+		<TextBlock Text="Status: " Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
+		<ComboBox Items="{x:Static models:ProjectStatusModel.Statuses}" SelectedItem="{Binding StatusModel}" Grid.Column="1" Grid.Row="1">
+			<ComboBox.ItemTemplate>
+				<DataTemplate DataType="models:ProjectStatusModel">
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<icons:MaterialIcon Kind="{Binding Icon}"/>
+						<TextBlock Text="{Binding Status}" VerticalAlignment="Center"/>
+					</StackPanel>
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>
+		
+		<Separator Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"/>
+		<Button Content="Save" Grid.Column="0" Grid.Row="3" Click="CloseDialog" Tag="Save"/>
+		<Button Content="Cancel" Grid.Column="1" Grid.Row="3" Click="CloseDialog" Tag="Cancel"/>
+	</Grid>
+</UserControl>

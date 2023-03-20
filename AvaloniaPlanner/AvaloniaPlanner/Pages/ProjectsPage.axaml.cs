@@ -20,7 +20,7 @@ namespace AvaloniaPlanner.Pages
             Projects = new OList<ApiProject>
             {
                 // Test project
-                new ApiProject { Name = "Test project", Owner = "Test author", Description = "This is a test project, nothing less, nothing more", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "To-Do" }, new ApiProjectBin { Name = "In Progress" } } },
+                new ApiProject { Name = "Test project", Owner = "Test author", Description = "This is a test project, nothing less, nothing more", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "To-Do", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 1", status = ProjectStatus.Supported }, new ApiProjectTask() { Name = "Task 2", status = ProjectStatus.Defined } } }, new ApiProjectBin { Name = "In Progress", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 3", status = ProjectStatus.InProgress } } } } },
                 new ApiProject { Name = "Test project 2", Owner = "Test author", Description = "This is also a test project, but does it matter? I don't really think so. It's just data, the same type of data. That's what matters", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "In Progress" }, new ApiProjectBin { Name = "Done" }, new ApiProjectBin { Name = "Archived" } } }
             };
 

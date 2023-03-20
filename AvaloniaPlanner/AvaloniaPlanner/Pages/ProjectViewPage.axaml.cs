@@ -1,9 +1,13 @@
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using AvaloniaPlanner.ViewModels;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.Data;
 using DynamicData;
 using ReactiveUI;
+using System;
 using System.Linq;
 
 namespace AvaloniaPlanner.Pages
@@ -39,6 +43,37 @@ namespace AvaloniaPlanner.Pages
 
     public partial class ProjectViewPage : UserControl
     {
+        public void StatusComboBoxPointerPressed(object sender, PointerPressedEventArgs e)
+        {
+            if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
+            {
+                e.Handled = true;
+                foreach (var cb in this.GetVisualDescendants().OfType<ComboBox>())
+                    cb.IsDropDownOpen = true;
+            }
+
+            base.OnPointerPressed(e);
+        }
+
+        public void ProjectStatusComboBoxDropDownOpened(object sender, EventArgs e)
+        {
+            //if (sender is not ComboBox cb)
+            //    return;
+
+            //cb.IsDropDownOpen = false;
+        }
+
+        public void ListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is not ListBox lb)
+                return;
+
+            if (lb.SelectedItem is not ProjectTaskViewModel ptvm)
+                return;
+
+            ptvm.StatusComboBoxDropDownOpened = true;
+        }
+
         public ProjectViewPage(ApiProject p)
         {
             this.DataContext = new ProjectViewViewModel(p);
