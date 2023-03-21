@@ -51,7 +51,11 @@ namespace AvaloniaPlanner.Pages
             //};
 
             Projects = new OList<ApiProject>();
-            Projects.OnItemAdded += (list, ind, item) => Pages.ForEach(p => p.ProjectsPanel.Children.Add(new ProjectControl(item)));
+            Projects.OnItemAdded += (list, ind, item) => Pages.ForEach(p =>
+            {
+                p.ProjectsPanel.Children.Add(new ProjectControl(item));
+                p.ApplySearchFilter("");
+            });
             Projects.OnItemRemoved += (list, ind, item) =>
             {
                 foreach(var page in Pages)
@@ -61,6 +65,18 @@ namespace AvaloniaPlanner.Pages
                 }
             };
         }
+
+        public void ApplySearchFilter(string? term)
+        {
+            ProjectsPanel.Children.Clear();
+            IEnumerable<ApiProject> projects = Projects;
+            if(!string.IsNullOrEmpty(term))
+                projects = projects.Where(p => p.Name.Contains(term));
+
+            ProjectsPanel.Children.AddRange(projects.Select(p => new ProjectControl(p)));
+        }
+
+        public void ProjectSearchRequested(object sender, SearchEventArgs e) => ApplySearchFilter(e.SearchTerm);
 
         public ProjectsPage()
         {

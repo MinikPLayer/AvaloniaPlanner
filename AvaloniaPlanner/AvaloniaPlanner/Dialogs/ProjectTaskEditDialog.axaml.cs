@@ -32,8 +32,7 @@ namespace AvaloniaPlanner.Dialogs
         {
             InitializeComponent();
             this.ogTask = task;
-            this.DataContext = new ProjectTaskViewModel(ClassCopier.Create<ApiProjectTask>(task));
-            
+            this.DataContext = new ProjectTaskViewModel(ClassCopier.Create<ApiProjectTask>(task));           
         }
     }
 }

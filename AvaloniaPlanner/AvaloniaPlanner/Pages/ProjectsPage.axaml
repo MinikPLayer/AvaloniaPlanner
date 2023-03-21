@@ -2,8 +2,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 xmlns:vm="using:AvaloniaPlanner.ViewModels"
+			 xmlns:controls="using:AvaloniaPlanner.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.ProjectsPage">
-	<WrapPanel x:Name="ProjectsPanel" Orientation="Horizontal"/>
+	<Grid RowDefinitions="30, *">
+		<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+			<controls:SearchControl Width="200" SearchRequested="ProjectSearchRequested"/>
+			<Button>
+				<icons:MaterialIcon Kind="Add"/>
+			</Button>
+		</StackPanel>
+		<WrapPanel Grid.Row="1" x:Name="ProjectsPanel" Orientation="Horizontal"/>
+	</Grid>
 </UserControl>
