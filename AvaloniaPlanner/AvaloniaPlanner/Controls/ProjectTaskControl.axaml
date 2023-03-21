@@ -6,7 +6,7 @@
 			 xmlns:models="using:AvaloniaPlanner.Models"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Controls.ProjectTaskControl">
-	<StackPanel Orientation="Horizontal" PointerPressed="StackPanelPointerPressed">
+	<StackPanel Orientation="Horizontal">
 		<icons:MaterialIcon Kind="{Binding StatusModel.Icon}"/>
 		<TextBlock Text="{Binding TaskName}" Margin="5, 0" VerticalAlignment="Center"/>
 	</StackPanel>
