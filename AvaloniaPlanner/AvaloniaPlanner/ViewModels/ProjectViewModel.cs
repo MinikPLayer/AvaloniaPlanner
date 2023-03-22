@@ -51,6 +51,7 @@ namespace AvaloniaPlanner.ViewModels
 
         public ICommand ProjectClickedCommand { get; set; }
 
+        public ApiProject GetProject() => project;
         public bool IsProject(ApiProject p) => p == project;
 
         public ProjectViewModel(ApiProject? p = null)

@@ -14,6 +14,9 @@ using AvaloniaPlanner.Utils;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using AvaloniaPlanner.Dialogs;
+using DialogHostAvalonia;
+using System;
 
 namespace AvaloniaPlanner.Pages
 {
@@ -52,7 +55,10 @@ namespace AvaloniaPlanner.Pages
             Projects.CollectionChanged += (sender, e) =>
             {
                 if (e.NewItems != null && e.NewItems.Count > 0)
-                    Pages.ForEach(p => p.ApplySearchFilter(""));
+                    Pages.ForEach(p => p.SearchInputControl.ResetSearch(null, null));
+
+                Pages.ForEach(p => p.SearchInputControl.RaiseSearchEvent());
+
             };
         }
 
@@ -66,11 +72,59 @@ namespace AvaloniaPlanner.Pages
             ProjectsPanel.Children.AddRange(projects.Select(p => new ProjectControl(p)));
         }
 
+        private static bool dialogOpened = false;
+        public static void RemoveProject(ApiProject project)
+        {
+            if (dialogOpened)
+                return;
+
+            dialogOpened = true;
+            DialogHost.Show(new ConfirmDialog("Are you sure you want to delete project " + project.Name + "?"), closingEventHandler: (s, e) =>
+            {
+                var result = e.Parameter;
+                if (result is bool b && b == true)
+                {
+                    var ret = Projects.Remove(project);
+                    SignalProjectsChanged(project.Id);
+                }
+
+                dialogOpened = false;
+            });
+        }
+
+        public static void EditProject(ApiProject project)
+        {
+            if (dialogOpened)
+                return;
+
+            dialogOpened = true;
+            DialogHost.Show(new ProjectEditDialog(project), closingEventHandler: (s, e) =>
+            {
+                var result = e.Parameter;
+                if (result is bool b && b == true && e.Session.Content is ProjectEditDialog dialog)
+                {
+                    if (dialog.DataContext is not ProjectViewModel newProjectVm)
+                        throw new Exception("Dialog data context is an invalid type");
+
+                    // ObservableCollection.Replace() is not working properly (entry disappears only to reappear after next refresh)
+                    // So we need to use .Replace() twice to refresh after disappearing
+                    var newProject = newProjectVm.GetProject();
+                    Projects.Replace(project, newProject);
+                    Projects.Replace(newProject, newProject);
+                    SignalProjectsChanged(newProject.Id);
+                }
+
+                dialogOpened = false;
+            });
+        }
+
         public void AddProjectButtonClicked(object sender, RoutedEventArgs e)
         {
-            var project = new ApiProject().GenerateID();
+            var project = new ApiProject() { Name = "New project", Description = "New project description" }.Populate();
             Projects.Add(project);
             SignalProjectsChanged(project.Id);
+
+            EditProject(project);
         }
 
         public void ProjectSearchRequested(object sender, SearchEventArgs e) => ApplySearchFilter(e.SearchTerm);

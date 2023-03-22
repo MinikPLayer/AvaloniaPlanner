@@ -32,7 +32,7 @@ namespace AvaloniaPlanner.Controls
             RaiseEvent(new SearchEventArgs(SearchRequestedEvent, SearchTextBox.Text));
         }
 
-        public void ResetSearch(object sender, RoutedEventArgs e)
+        public void ResetSearch(object? sender, RoutedEventArgs? e)
         {
             SearchTextBox.Text = "";
             RaiseSearchEvent();

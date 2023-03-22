@@ -9,11 +9,13 @@
              x:Class="AvaloniaPlanner.Pages.ProjectsPage">
 	<Grid RowDefinitions="30, *">
 		<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
-			<controls:SearchControl Width="200" SearchRequested="ProjectSearchRequested"/>
-			<Button Click="AddProjectButtonClicked">
+			<controls:SearchControl x:Name="SearchInputControl" Width="200" SearchRequested="ProjectSearchRequested"/>
+			<Button ClickMode="Press" Click="AddProjectButtonClicked">
 				<icons:MaterialIcon Kind="Add"/>
 			</Button>
 		</StackPanel>
-		<WrapPanel Grid.Row="1" x:Name="ProjectsPanel" Orientation="Horizontal"/>
+		<ScrollViewer Grid.Row="1"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+			<WrapPanel x:Name="ProjectsPanel" Orientation="Horizontal"/>
+		</ScrollViewer>
 	</Grid>
 </UserControl>

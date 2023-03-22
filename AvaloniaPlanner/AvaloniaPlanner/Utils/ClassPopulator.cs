@@ -8,15 +8,17 @@ using System.Threading.Tasks;
 
 namespace AvaloniaPlanner.Utils
 {
-    public static class IdGenerator
+    public static class ClassPopulator
     {
-        public static ApiProject GenerateID(this ApiProject p)
+        public static ApiProject Populate(this ApiProject p)
         {
             do
             {
                 p.Id = Guid.NewGuid().ToString();
             } while (ProjectsPage.Projects.Any(x => x.Id == p.Id));
 
+            p.CreationDate = DateTime.Now;
+            p.LastUpdate = DateTime.Now;
             return p;
         }
     }
