@@ -49,7 +49,20 @@ namespace AvaloniaPlanner.Views
         {
             var posY = e.GetPosition(this).Y;
             if (MainWindow.Singleton != null && posY < 30)
-                MainWindow.Singleton.BeginMoveDrag(e);
+            {
+                if(e.ClickCount == 2)
+                {
+                    var state = MainWindow.Singleton.WindowState;
+                    if (state == WindowState.Maximized)
+                        MainWindow.Singleton.WindowState = WindowState.Normal;
+                    else if (state == WindowState.Normal)
+                        MainWindow.Singleton.WindowState = WindowState.Maximized;            
+                }
+                else
+                {
+                    MainWindow.Singleton.BeginMoveDrag(e);
+                }
+            }
             
         }
 
