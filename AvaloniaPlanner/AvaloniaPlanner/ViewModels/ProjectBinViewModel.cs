@@ -56,7 +56,9 @@ namespace AvaloniaPlanner.ViewModels
                     ProjectsPage.SignalProjectsChanged();
                 }
                 else
+                {
                     TempBinName = BinName;
+                }
 
                 InEditMode = !InEditMode;
             });

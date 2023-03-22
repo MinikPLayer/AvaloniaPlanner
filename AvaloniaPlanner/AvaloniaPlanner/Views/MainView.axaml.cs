@@ -109,7 +109,7 @@ namespace AvaloniaPlanner.Views
 
         void TestStartup()
         {
-            //PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
+            PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
         }
 
         public MainView()
