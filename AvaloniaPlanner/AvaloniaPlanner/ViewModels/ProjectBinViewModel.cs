@@ -5,6 +5,7 @@ using DynamicData;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,16 @@ namespace AvaloniaPlanner.ViewModels
     public class ProjectBinViewModel : ReactiveObject
     {
         private ApiProjectBin bin;
+
+        public string Id
+        {
+            get => bin.Id;
+            set
+            {
+                bin.Id = value;
+                this.RaisePropertyChanged();
+            }
+        }
 
         public string BinName
         {
@@ -44,7 +55,7 @@ namespace AvaloniaPlanner.ViewModels
         public ICommand BinEditCommand { get; set; }
         public ICommand BinEditCancelCommand { get; set; }
 
-        public OList<ProjectTaskViewModel> Tasks { get; set; }
+        public ObservableCollection<ProjectTaskViewModel> Tasks { get; set; }
 
         public ProjectBinViewModel(ApiProjectBin bin)
         {
@@ -53,7 +64,7 @@ namespace AvaloniaPlanner.ViewModels
                 if (InEditMode)
                 {
                     BinName = TempBinName;
-                    ProjectsPage.SignalProjectsChanged();
+                    ProjectsPage.SignalProjectsChanged(bin.Project_id);
                 }
                 else
                 {
@@ -65,9 +76,8 @@ namespace AvaloniaPlanner.ViewModels
 
             BinEditCancelCommand = ReactiveCommand.Create(() => InEditMode = false);
 
-            Tasks = new OList<ProjectTaskViewModel>();
+            Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
-            Tasks.OnCollectionChanged += (c) => this.RaisePropertyChanged(nameof(Tasks));
 
             this.bin = bin;
         }

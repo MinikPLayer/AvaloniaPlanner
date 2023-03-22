@@ -52,7 +52,7 @@
 								</Button>
 							</Grid>
 							<Separator Height="5"/>
-							<ListBox Items="{Binding Tasks}" SelectionChanged="TasksListSelectionChanged">
+							<ListBox Items="{Binding Tasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
 								<ListBox.ItemTemplate>
 									<DataTemplate DataType="vm:ProjectTaskViewModel">
 										<controls:ProjectTaskControl/>

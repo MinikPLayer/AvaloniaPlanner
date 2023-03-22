@@ -1,4 +1,5 @@
-﻿using AvaloniaPlanner.Models;
+﻿using AvaloniaPlanner.Controls;
+using AvaloniaPlanner.Models;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.Reflection;
 using Material.Icons;
@@ -14,6 +15,7 @@ namespace AvaloniaPlanner.ViewModels
 {
     public class ProjectTaskViewModel : ReactiveObject
     {
+
         private ApiProjectTask task;
 
         private bool _statusComboBoxDropDownOpened = false;

@@ -10,7 +10,7 @@
 	<Grid RowDefinitions="30, *">
 		<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
 			<controls:SearchControl Width="200" SearchRequested="ProjectSearchRequested"/>
-			<Button>
+			<Button Click="AddProjectButtonClicked">
 				<icons:MaterialIcon Kind="Add"/>
 			</Button>
 		</StackPanel>

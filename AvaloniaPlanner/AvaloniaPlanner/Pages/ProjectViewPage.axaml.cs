@@ -10,6 +10,8 @@ using DialogHostAvalonia;
 using DynamicData;
 using ReactiveUI;
 using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace AvaloniaPlanner.Pages
@@ -28,7 +30,7 @@ namespace AvaloniaPlanner.Pages
             }
         }
 
-        public OList<ProjectBinViewModel> Bins { get; set; }
+        public ObservableCollection<ProjectBinViewModel> Bins { get; set; }
 
         public ProjectViewViewModel(ApiProject? p = null)
         {
@@ -39,7 +41,6 @@ namespace AvaloniaPlanner.Pages
 
             Bins = new();
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
-            Bins.OnCollectionChanged += (list) => this.RaisePropertyChanged(nameof(Bins));
         }
     }
 
@@ -58,33 +59,37 @@ namespace AvaloniaPlanner.Pages
         }
 
         private static bool dialogOpened = false;
-        private void DialogClosed(object sender, DialogClosingEventArgs e)
-        {
-            dialogOpened = false;
-            var result = e.Parameter;
-            if (result is bool b && b == true && e.Session.Content is ProjectTaskEditDialog dialog)
-            {
-                this.DataContext = dialog.DataContext;
-                ProjectsPage.SignalProjectsChanged();
-            }
-        }
-
         public void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0)
+            if (dialogOpened || sender is not ListBox lb || e.AddedItems.Count == 0 || e.AddedItems[0] is not ProjectTaskViewModel oldTask)
                 return;
 
-            if (e.AddedItems[0] is not ProjectTaskViewModel vm)
+            if (lb.DataContext is not ProjectBinViewModel binVm)
+            {
+                Debug.WriteLine("[WARNING] Tasks listbox DataContext is not a ProjectBinViewModel type");
                 return;
-
-            if (dialogOpened)
-                return;
+            }
 
             dialogOpened = true;
-            DialogHost.Show(new ProjectTaskEditDialog(vm.GetTask()), closingEventHandler: DialogClosed);
+            DialogHost.Show(new ProjectTaskEditDialog(oldTask.GetTask()), closingEventHandler: (s, e) =>
+            {
+                var result = e.Parameter;
+                if (result is bool b && b == true && e.Session.Content is ProjectTaskEditDialog dialog)
+                {
+                    if (dialog.DataContext is not ProjectTaskViewModel newTask)
+                        throw new Exception("Dialog data context is an invalid type");
 
-            if (sender is ListBox lb)
-                lb.SelectedItem = null;
+                    // ObservableCollection.Replace() is not working properly (entry disappears only to reappear after next refresh)
+                    // So we need to use .Replace() twice to refresh after disappearing
+                    binVm.Tasks.Replace(oldTask, newTask);
+                    binVm.Tasks.Replace(newTask, newTask);
+                    ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
+                }
+
+                dialogOpened = false;
+            });
+
+            lb.SelectedItem = null;
         }
 
         public void ListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)

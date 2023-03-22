@@ -9,19 +9,24 @@ using System.Linq;
 using AvaloniaPlanner.Views;
 using Newtonsoft.Json;
 using DynamicData;
+using Avalonia.Interactivity;
+using AvaloniaPlanner.Utils;
+using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace AvaloniaPlanner.Pages
 {
 
     public partial class ProjectsPage : UserControl
     {
-        public static OList<ApiProject> Projects { get; set; }
+        public static ObservableCollection<ApiProject> Projects { get; set; }
         private static List<ProjectsPage> Pages = new List<ProjectsPage>();
 
-        public static void SignalProjectsChanged()
+        public static void SignalProjectsChanged(string id)
         {
-            Projects.OnCollectionChanged?.Invoke(Projects);
             MainView.Singleton.ViewModel.IsSaveAvailable = true;
+            Debug.WriteLine("Updated project " + id);
         }
 
         public static string SerializeProjects()
@@ -43,26 +48,11 @@ namespace AvaloniaPlanner.Pages
 
         static ProjectsPage()
         {
-            //Projects = new OList<ApiProject>
-            //{
-            //    // Test project
-            //    new ApiProject { Name = "Test project", Owner = "Test author", Description = "This is a test project, nothing less, nothing more", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "To-Do", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 1", status = ProjectStatus.Supported }, new ApiProjectTask() { Name = "Task 2", status = ProjectStatus.Defined } } }, new ApiProjectBin { Name = "In Progress", Tasks = new List<ApiProjectTask>() { new ApiProjectTask() { Name = "Task 3", status = ProjectStatus.InProgress } } } } },
-            //    new ApiProject { Name = "Test project 2", Owner = "Test author", Description = "This is also a test project, but does it matter? I don't really think so. It's just data, the same type of data. That's what matters", Bins = new List<ApiProjectBin>() { new ApiProjectBin { Name = "In Progress" }, new ApiProjectBin { Name = "Done" }, new ApiProjectBin { Name = "Archived" } } }
-            //};
-
-            Projects = new OList<ApiProject>();
-            Projects.OnItemAdded += (list, ind, item) => Pages.ForEach(p =>
+            Projects = new ObservableCollection<ApiProject>();
+            Projects.CollectionChanged += (sender, e) =>
             {
-                p.ProjectsPanel.Children.Add(new ProjectControl(item));
-                p.ApplySearchFilter("");
-            });
-            Projects.OnItemRemoved += (list, ind, item) =>
-            {
-                foreach(var page in Pages)
-                {
-                    var toRemove = page.ProjectsPanel.Children.OfType<ProjectControl>().Where(x => x.IsProject(item));
-                    page.ProjectsPanel.Children.RemoveAll(toRemove);
-                }
+                if (e.NewItems != null && e.NewItems.Count > 0)
+                    Pages.ForEach(p => p.ApplySearchFilter(""));
             };
         }
 
@@ -74,6 +64,13 @@ namespace AvaloniaPlanner.Pages
                 projects = projects.Where(p => p.Name.Contains(term));
 
             ProjectsPanel.Children.AddRange(projects.Select(p => new ProjectControl(p)));
+        }
+
+        public void AddProjectButtonClicked(object sender, RoutedEventArgs e)
+        {
+            var project = new ApiProject().GenerateID();
+            Projects.Add(project);
+            SignalProjectsChanged(project.Id);
         }
 
         public void ProjectSearchRequested(object sender, SearchEventArgs e) => ApplySearchFilter(e.SearchTerm);
