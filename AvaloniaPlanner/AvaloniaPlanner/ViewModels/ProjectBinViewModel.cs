@@ -52,6 +52,8 @@ namespace AvaloniaPlanner.ViewModels
             set => this.RaiseAndSetIfChanged(ref _inEditMode, value);
         }
 
+        public ApiProjectBin GetBin() => bin;
+
         public ICommand BinEditCommand { get; set; }
         public ICommand BinEditCancelCommand { get; set; }
 

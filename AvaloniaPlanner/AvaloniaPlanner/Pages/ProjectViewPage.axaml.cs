@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using AvaloniaPlanner.Dialogs;
 using AvaloniaPlanner.ViewModels;
+using AvaloniaPlanner.Views;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.Data;
 using DialogHostAvalonia;
@@ -58,10 +59,19 @@ namespace AvaloniaPlanner.Pages
             base.OnPointerPressed(e);
         }
 
-        private static bool dialogOpened = false;
+        public void DeleteBinCommand(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
+                return;
+
+            var pVm = (ProjectViewViewModel)this.DataContext!;
+            pVm.Bins.Remove(vm);
+            ProjectsPage.SignalProjectsChanged(vm.GetBin().Project_id);
+        }
+
         public void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (dialogOpened || sender is not ListBox lb || e.AddedItems.Count == 0 || e.AddedItems[0] is not ProjectTaskViewModel oldTask)
+            if (sender is not ListBox lb || e.AddedItems.Count == 0 || e.AddedItems[0] is not ProjectTaskViewModel oldTask)
                 return;
 
             if (lb.DataContext is not ProjectBinViewModel binVm)
@@ -70,8 +80,7 @@ namespace AvaloniaPlanner.Pages
                 return;
             }
 
-            dialogOpened = true;
-            DialogHost.Show(new ProjectTaskEditDialog(oldTask.GetTask()), closingEventHandler: (s, e) =>
+            MainView.OpenDialog(new ProjectTaskEditDialog(oldTask.GetTask()), (s, e) =>
             {
                 var result = e.Parameter;
                 if (result is bool b && b == true && e.Session.Content is ProjectTaskEditDialog dialog)
@@ -85,8 +94,6 @@ namespace AvaloniaPlanner.Pages
                     binVm.Tasks.Replace(newTask, newTask);
                     ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
                 }
-
-                dialogOpened = false;
             });
 
             lb.SelectedItem = null;

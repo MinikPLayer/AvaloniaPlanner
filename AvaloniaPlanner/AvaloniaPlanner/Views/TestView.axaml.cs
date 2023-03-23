@@ -9,7 +9,7 @@ namespace AvaloniaPlanner.Views
         public async void TestClick2(object sender, RoutedEventArgs args)
         {
             var contents = new TextBlock() { Text = "TEST" };
-            await DialogHost.Show(contents, "TestDialog");
+            await MainView.OpenDialog(contents);
         }
 
         public TestView()

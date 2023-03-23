@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using AvaloniaPlanner.Dialogs;
 using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.ViewModels;
@@ -12,6 +13,7 @@ using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace AvaloniaPlanner.Views
@@ -22,6 +24,10 @@ namespace AvaloniaPlanner.Views
 
         private string _currentFilePath = "";
         private static MainView? _singleton = null;
+
+        private Task lastDialogOpenTask = Task.FromResult(true);
+        private object dialogTaskMutex = new object();
+
         public static MainView Singleton
         {
             get
@@ -44,6 +50,20 @@ namespace AvaloniaPlanner.Views
                 return mv;
             } 
         }
+
+        private Task _OpenDialog(object content, DialogClosingEventHandler? handler)
+        {
+            Task newTask;
+            lock(dialogTaskMutex)
+            {
+                newTask = lastDialogOpenTask.ContinueWith(async t => await Dispatcher.UIThread.InvokeAsync(() => DialogHost.Show(content, MainDialog, closingEventHandler: handler!)));
+                lastDialogOpenTask = newTask;
+            }
+            return newTask;
+        }
+
+        public static Task OpenDialog(object content, DialogClosingEventHandler? handler = null) 
+            => Singleton._OpenDialog(content, handler);
 
         public void TestPP(object sender, PointerPressedEventArgs e)
         {
@@ -73,9 +93,9 @@ namespace AvaloniaPlanner.Views
 
         public void SaveProjectClick(object sender, RoutedEventArgs e)
         {
-            if(!SaveFile())
+            if (!SaveFile())
             {
-                DialogHost.Show(new ErrorDialog("Cannot save the output file"));
+                MainView.OpenDialog(new ErrorDialog("Cannot save the output file"));
                 return;
             }
             ViewModel.IsSaveAvailable = false;
@@ -122,7 +142,7 @@ namespace AvaloniaPlanner.Views
 
         void TestStartup()
         {
-            PageManager.Navigate<ProjectsPage>();
+            PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
         }
 
         public MainView()

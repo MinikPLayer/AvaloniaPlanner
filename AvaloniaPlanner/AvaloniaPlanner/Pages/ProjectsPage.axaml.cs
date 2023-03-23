@@ -72,14 +72,9 @@ namespace AvaloniaPlanner.Pages
             ProjectsPanel.Children.AddRange(projects.Select(p => new ProjectControl(p)));
         }
 
-        private static bool dialogOpened = false;
         public static void RemoveProject(ApiProject project)
         {
-            if (dialogOpened)
-                return;
-
-            dialogOpened = true;
-            DialogHost.Show(new ConfirmDialog("Are you sure you want to delete project " + project.Name + "?"), closingEventHandler: (s, e) =>
+            MainView.OpenDialog(new ConfirmDialog("Are you sure you want to delete project " + project.Name + "?"), (s, e) =>
             {
                 var result = e.Parameter;
                 if (result is bool b && b == true)
@@ -87,18 +82,12 @@ namespace AvaloniaPlanner.Pages
                     var ret = Projects.Remove(project);
                     SignalProjectsChanged(project.Id);
                 }
-
-                dialogOpened = false;
             });
         }
 
         public static void EditProject(ApiProject project)
         {
-            if (dialogOpened)
-                return;
-
-            dialogOpened = true;
-            DialogHost.Show(new ProjectEditDialog(project), closingEventHandler: (s, e) =>
+            MainView.OpenDialog(new ProjectEditDialog(project), (s, e) =>
             {
                 var result = e.Parameter;
                 if (result is bool b && b == true && e.Session.Content is ProjectEditDialog dialog)
@@ -113,8 +102,6 @@ namespace AvaloniaPlanner.Pages
                     Projects.Replace(newProject, newProject);
                     SignalProjectsChanged(newProject.Id);
                 }
-
-                dialogOpened = false;
             });
         }
 

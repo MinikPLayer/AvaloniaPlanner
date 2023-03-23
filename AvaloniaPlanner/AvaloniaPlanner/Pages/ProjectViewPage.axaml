@@ -26,6 +26,20 @@
 			<ListBox.ItemTemplate>
 				<DataTemplate DataType="vm:ProjectBinViewModel">
 					<Border Background="#40000000" CornerRadius="5">
+						<Border.ContextFlyout>
+							<MenuFlyout>
+								<MenuItem Header="Edit" Command="{Binding BinEditCommand}" IsVisible="{Binding !InEditMode}">
+									<MenuItem.Icon>
+										<icons:MaterialIcon Kind="Edit" Width="25" Height="25"/>
+									</MenuItem.Icon>
+								</MenuItem>
+								<MenuItem Header="Delete" Click="DeleteBinCommand" IsVisible="{Binding !InEditMode}">
+									<MenuItem.Icon>
+										<icons:MaterialIcon Kind="Delete" Width="25" Height="25"/>
+									</MenuItem.Icon>
+								</MenuItem>
+							</MenuFlyout>
+						</Border.ContextFlyout>
 						<StackPanel Margin="10" PointerPressed="StatusComboBoxPointerPressed">
 							<Grid ColumnDefinitions="*, 40, 40"  Margin="5, 5, 5, 0">
 								<Grid.Styles>
@@ -36,9 +50,6 @@
 								
 								<!-- Normal mode -->
 								<TextBlock Grid.Column="0" Grid.ColumnSpan="2" IsVisible="{Binding !InEditMode}" Text="{Binding BinName}" FontSize="20" FontWeight="Bold" Height="25"/>
-								<Button Grid.Column="2" IsVisible="{Binding	!InEditMode}" Command="{Binding	BinEditCommand}" Margin="5, 0">
-									<icons:MaterialIcon Kind="Edit"/>
-								</Button>
 
 								<!-- Edit mode -->
 								<TextBox IsVisible="{Binding InEditMode}" Background="#A0000000"
