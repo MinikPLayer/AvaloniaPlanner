@@ -25,7 +25,7 @@
 			</Button>
 		</StackPanel>
 
-		<ListBox Items="{Binding Bins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged">
+		<ListBox Items="{Binding VisibleBins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<VirtualizingStackPanel Orientation="Horizontal" VerticalAlignment="Top"/>

@@ -44,6 +44,7 @@ namespace AvaloniaPlanner.Pages
         public void SetNormalBackground() => BinsBackground = new SolidColorBrush(Color.FromArgb(0x40, 0, 0, 0));
         public void SetHighlightedBackground() => BinsBackground = new SolidColorBrush(Color.FromArgb(64, 255, 0, 0));
 
+        public ObservableCollection<ProjectBinViewModel> VisibleBins { get; }
         public ObservableCollection<ProjectBinViewModel> Bins { get; set; }
 
         public ProjectViewViewModel(ApiProject? p = null)
@@ -54,6 +55,17 @@ namespace AvaloniaPlanner.Pages
             project = p;
 
             Bins = new();
+            VisibleBins = new();
+            Bins.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                    VisibleBins.AddRange(e.NewItems.OfType<ProjectBinViewModel>());
+
+                if (e.OldItems != null)
+                    foreach (var item in e.OldItems.OfType<ProjectBinViewModel>())
+                        VisibleBins.Remove(item);
+            };
+
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
             Bins.ConnectToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
         }
@@ -75,7 +87,16 @@ namespace AvaloniaPlanner.Pages
 
         public void BinSearchRequested(object sender, SearchEventArgs e)
         {
-            throw new NotImplementedException();   
+            var pVm = (ProjectViewViewModel)this.DataContext!;
+            pVm.VisibleBins.Clear();
+            if (string.IsNullOrEmpty(e.SearchTerm))
+            {
+                pVm.VisibleBins.AddRange(pVm.Bins);
+            }
+            else
+            {
+                pVm.VisibleBins.AddRange(pVm.Bins.Where(x => x.BinName.Contains(e.SearchTerm)));
+            }
         }
 
         public void StatusComboBoxPointerPressed(object sender, PointerPressedEventArgs e)
