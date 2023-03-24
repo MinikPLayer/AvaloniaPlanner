@@ -122,19 +122,52 @@ namespace AvaloniaPlanner.Pages
             });
         }
 
-        public async void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        public async void EditTaskClicked(object sender, RoutedEventArgs e)
         {
-            if (sender is not ListBox lb || e.AddedItems.Count == 0 || e.AddedItems[0] is not ProjectTaskViewModel oldTask)
+            if (sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
                 return;
 
-            if (lb.DataContext is not ProjectBinViewModel binVm)
+            var bin = ((ProjectViewViewModel)this.DataContext!).Bins.Where(b => b.Tasks.Contains(task)).FirstOrDefault();
+            if (bin == null)
             {
-                Debug.WriteLine("[WARNING] Tasks listbox DataContext is not a ProjectBinViewModel type");
+                await MainView.OpenDialog(new ErrorDialog("Internal error, cannot find task's bin"));
                 return;
             }
 
+            await EditTask(task, bin);
+        }
+
+        public void MoveTaskClicked(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async void DeleteTaskClicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
+                return;
+
+            var bin = ((ProjectViewViewModel)this.DataContext!).Bins.Where(b => b.Tasks.Contains(task)).FirstOrDefault();
+            if (bin == null)
+            {
+                await MainView.OpenDialog(new ErrorDialog("Internal error, cannot find task's bin"));
+                return;
+            }
+
+            await MainView.OpenDialog(new ConfirmDialog(), handler: (s, e) =>
+            {
+                if (e.Parameter is bool b && b == true)
+                    bin.Tasks.Remove(task);
+            });
+        }
+
+        // Mitigate animation lag in ListBox ripple effect
+        public void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is not ListBox lb)
+                return;
+
             lb.SelectedItem = null;
-            await EditTask(oldTask, binVm);
         }
 
         public ProjectViewPage(ApiProject p)

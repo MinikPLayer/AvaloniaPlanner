@@ -15,7 +15,6 @@ namespace AvaloniaPlanner.ViewModels
 {
     public class ProjectTaskViewModel : ReactiveObject
     {
-
         private ApiProjectTask task;
 
         public string TaskName
