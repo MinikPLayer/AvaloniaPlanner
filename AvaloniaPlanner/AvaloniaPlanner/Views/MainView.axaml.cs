@@ -16,6 +16,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using Avalonia.Platform;
 
 namespace AvaloniaPlanner.Views
 {
@@ -66,8 +67,12 @@ namespace AvaloniaPlanner.Views
         public static Task OpenDialog(object content, Action<object, MessageDialogEventArgs>? handler = null) 
             => Singleton._OpenDialog(content, handler);
 
+        public static RuntimePlatformInfo RuntimePlatformInfo { get; } = AvaloniaLocator.Current.GetService<IRuntimePlatform>().GetRuntimeInfo();
         public void TestPP(object sender, PointerPressedEventArgs e)
         {
+            if (RuntimePlatformInfo.IsMobile)
+                return;
+
             var posY = e.GetPosition(this).Y;
             if (MainWindow.Singleton != null && posY < 30)
             {
@@ -143,8 +148,8 @@ namespace AvaloniaPlanner.Views
 
         void TestStartup()
         {
-            PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
-            //PageManager.Navigate(new ProjectsPage());
+            //PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
+            PageManager.Navigate(new ProjectsPage());
         }
 
         public MainView()

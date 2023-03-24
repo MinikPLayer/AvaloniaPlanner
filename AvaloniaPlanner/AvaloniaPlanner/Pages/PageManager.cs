@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Threading;
 using AvaloniaPlanner.Views;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,10 @@ namespace AvaloniaPlanner.Pages
         public static void Navigate(UserControl instance)
         {
             MainView.Singleton.ViewModel.CurrentPage = instance;
+
+            // Bug on android preventing the switch
+            if(MainView.RuntimePlatformInfo.IsMobile)
+                MainView.Singleton.MainContent.Content = instance;
         }
 
         public static void Navigate(Type t)

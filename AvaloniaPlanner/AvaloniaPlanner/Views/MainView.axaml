@@ -55,7 +55,7 @@
 				</SplitView.Pane>
 
 				<Grid PointerPressed="TestPP" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-					<ContentPresenter Content="{Binding CurrentPage}" Margin="10"/>
+					<ContentPresenter Content="{Binding CurrentPage, Mode=OneWay}" Margin="10" x:Name="MainContent"/>
 				</Grid>
 			</SplitView>
 		</controls:MessageDialog.Child>
