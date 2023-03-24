@@ -57,7 +57,7 @@ namespace AvaloniaPlannerAPI.Controllers
                 DbAuthToken.TABLE_NAME,
                 nameof(DbAuthToken.Token).SQLp(token)).FirstOrDefault();
             if (authToken == null)
-                return new (HttpStatusCode.NotFound, "Invalid token");
+                return new (HttpStatusCode.Unauthorized, "Invalid token");
 
             if (authToken.Invalidated || DateTime.Now > authToken.Expiration_date)
                 return ApiConsts.ExpiredToken.As<StringID>();
@@ -87,7 +87,6 @@ namespace AvaloniaPlannerAPI.Controllers
 
         [HttpPost("login")]
         [ProducesResponseType(511)]
-        [ProducesResponseType(404)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(ApiAuthToken), 200)]
         public ActionResult Login(string login, string password)
@@ -103,6 +102,7 @@ namespace AvaloniaPlannerAPI.Controllers
 
         [HttpPost("register")]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         [ProducesResponseType(typeof(ApiAuthToken), 200)]
         public ActionResult Register(string login, [FromBody] string password, string username, string email)
         {
