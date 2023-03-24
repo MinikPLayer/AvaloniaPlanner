@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using AvaloniaPlanner.ViewModels;
 
 namespace AvaloniaPlanner.Pages
 {
@@ -7,6 +8,7 @@ namespace AvaloniaPlanner.Pages
         public SettingsPage()
         {
             InitializeComponent();
+            this.DataContext = new SettingsViewModel();
         }
     }
 }

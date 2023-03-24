@@ -104,7 +104,7 @@ namespace AvaloniaPlannerAPI.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(ApiAuthToken), 200)]
-        public ActionResult Register(string login, [FromBody] string password, string username, string email)
+        public ActionResult Register(string login, string password, string username, string email)
         {
             if (GetDbUser(login) != null || 
                 this.GetDB().GetData<DbUser>(DbUser.TABLE_NAME, nameof(DbUser.Username).SQLp(username)).FirstOrDefault() != null)

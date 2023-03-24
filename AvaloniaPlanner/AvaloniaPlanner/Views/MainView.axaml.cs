@@ -92,10 +92,7 @@ namespace AvaloniaPlanner.Views
             
         }
 
-        public void TestClick(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("Test click");
-        }
+        public void SettingsPageClick(object sender, RoutedEventArgs e) => PageManager.Navigate<SettingsPage>();
 
         public void SaveProjectClick(object sender, RoutedEventArgs e)
         {

@@ -4,5 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.SettingsPage">
-  Welcome to Avalonia!
+	<StackPanel Margin="10" Spacing="10" IsEnabled="{Binding !IsLocked}">
+		<StackPanel Orientation="Horizontal" Spacing="5">
+			<TextBlock Text="Sync login status: "/>
+			<TextBlock Text="{Binding IsLoggedIn}"/>
+		</StackPanel>
+		
+		<StackPanel Orientation="Horizontal" Spacing="5">
+			<Button Content="Login" Command="{Binding LoginCommand}"/>
+			<Button Content="Register" Command="{Binding RegisterCommand}"/>
+		</StackPanel>
+	</StackPanel>
 </UserControl>

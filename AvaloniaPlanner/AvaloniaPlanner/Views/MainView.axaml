@@ -49,7 +49,7 @@
 
 						<controls:PaneEntry Grid.Row="2"
 											EntryName="Settings" Icon="Settings"
-											Clicked="TestClick"/>
+											Clicked="SettingsPageClick"/>
 					</Grid>
 
 				</SplitView.Pane>
