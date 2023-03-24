@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:AvaloniaPlanner.ViewModels"
              xmlns:views="clr-namespace:AvaloniaPlanner.Views"
-			 xmlns:dh="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 xmlns:controls="clr-namespace:AvaloniaPlanner.Controls"
+			 xmlns:utils="clr-namespace:AvaloniaPlanner.Utils"
 			 mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="540"
              x:Class="AvaloniaPlanner.Views.MainView"
              Foreground="White"
@@ -15,48 +15,50 @@
         <viewModels:MainViewModel />
     </Design.DataContext>
 	
-	<dh:DialogHost x:Name="MainDialog" Identifier="MainDialog"
+	<!--<dh:DialogHost x:Name="MainDialog" Identifier="MainDialog"
 		DialogMargin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-		dh:DialogHostStyle.CornerRadius="8" OverlayBackground="Black">
-		<dh:DialogHost.DialogContent>
+		dh:DialogHostStyle.CornerRadius="8" OverlayBackground="Black">-->
+	<controls:MessageDialog x:Name="MainDialog">
+		<controls:MessageDialog.DialogContent>
 			<StackPanel>
 				<TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=views:MainWindow}, Path=DataContext.DialogMessage, Mode=OneWay}"/>
-				<Button Content="OK!" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dh:DialogHost}, Path=CloseDialogCommand}"/>
+				<Button Content="OK!" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=controls:MessageDialog}, Path=CloseDialogCommand}"/>
 			</StackPanel>
-		</dh:DialogHost.DialogContent>
-		<SplitView IsPaneOpen="{Binding	IsPaneOpened, Mode=TwoWay}"
-				   DisplayMode="CompactOverlay" 
-				   OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000">
-			<SplitView.Pane>
-				<Grid RowDefinitions="*, 35, 35" Margin="10">
-					<StackPanel>
-						<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
-							<Grid>
-								<icons:MaterialIcon Kind="MenuOpen" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
-								<icons:MaterialIcon Kind="Menu" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
-							</Grid>
-						</Button>
-						<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
-						<ItemsRepeater Items="{Binding PaneEntries}"/>
-					</StackPanel>
+		</controls:MessageDialog.DialogContent>
+		<controls:MessageDialog.Child>
+			<SplitView IsPaneOpen="{Binding	IsPaneOpened, Mode=TwoWay}"
+						DisplayMode="CompactOverlay"
+						OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000" x:Name="NavigationViewSplitView">
+				<SplitView.Pane>
+					<Grid RowDefinitions="*, 35, 35" Margin="10">
+						<StackPanel>
+							<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
+								<Grid>
+									<icons:MaterialIcon Kind="MenuOpen" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
+									<icons:MaterialIcon Kind="Menu" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
+								</Grid>
+							</Button>
+							<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
+							<ItemsRepeater Items="{Binding PaneEntries}"/>
+						</StackPanel>
 
-					<controls:PaneEntry Grid.Row="1"
-										EntryName="Save project" Icon="ContentSave" 
-										IsEnabled="{Binding DataContext.IsSaveAvailable, RelativeSource={RelativeSource	FindAncestor, AncestorType=views:MainView}}"
-										Clicked="SaveProjectClick"/>
+						<controls:PaneEntry Grid.Row="1"
+											EntryName="Save project" Icon="ContentSave"
+											IsEnabled="{Binding DataContext.IsSaveAvailable, RelativeSource={RelativeSource	FindAncestor, AncestorType=views:MainView}}"
+											Clicked="SaveProjectClick"/>
 
-					<controls:PaneEntry Grid.Row="2"
-										EntryName="Settings" Icon="Settings"
-										Clicked="TestClick"/>
+						<controls:PaneEntry Grid.Row="2"
+											EntryName="Settings" Icon="Settings"
+											Clicked="TestClick"/>
+					</Grid>
+
+				</SplitView.Pane>
+
+				<Grid PointerPressed="TestPP" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+					<ContentPresenter Content="{Binding CurrentPage}" Margin="10"/>
 				</Grid>
-
-			</SplitView.Pane>
-
-			<Grid PointerPressed="TestPP" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-				<ContentPresenter Content="{Binding CurrentPage}" Margin="10"/>
-			</Grid>
-		</SplitView>
-
-	</dh:DialogHost>
+			</SplitView>
+		</controls:MessageDialog.Child>
+	</controls:MessageDialog>
 
 </UserControl>

@@ -2,7 +2,6 @@
 using AvaloniaPlanner.Controls;
 using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.Views;
-using DialogHostAvalonia;
 using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;

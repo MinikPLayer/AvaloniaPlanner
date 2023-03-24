@@ -4,11 +4,12 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using AvaloniaPlanner.Controls;
 using AvaloniaPlanner.Dialogs;
 using AvaloniaPlanner.Pages;
+using AvaloniaPlanner.Utils;
 using AvaloniaPlanner.ViewModels;
 using AvaloniaPlannerLib;
-using DialogHostAvalonia;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -51,18 +52,18 @@ namespace AvaloniaPlanner.Views
             } 
         }
 
-        private Task _OpenDialog(object content, DialogClosingEventHandler? handler)
+        private Task _OpenDialog(object content, Action<object, MessageDialogEventArgs>? handler)
         {
             Task newTask;
             lock(dialogTaskMutex)
             {
-                newTask = lastDialogOpenTask.ContinueWith(async t => await Dispatcher.UIThread.InvokeAsync(() => DialogHost.Show(content, MainDialog, closingEventHandler: handler!)));
+                newTask = lastDialogOpenTask.ContinueWith(async t => await Dispatcher.UIThread.InvokeAsync(async () => await MainDialog.ShowDialog(content, handler))).Unwrap();
                 lastDialogOpenTask = newTask;
             }
             return newTask;
         }
 
-        public static Task OpenDialog(object content, DialogClosingEventHandler? handler = null) 
+        public static Task OpenDialog(object content, Action<object, MessageDialogEventArgs>? handler = null) 
             => Singleton._OpenDialog(content, handler);
 
         public void TestPP(object sender, PointerPressedEventArgs e)
@@ -142,14 +143,15 @@ namespace AvaloniaPlanner.Views
 
         void TestStartup()
         {
-            PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
+            //PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
+            PageManager.Navigate(new ProjectsPage());
         }
 
         public MainView()
         {
             Singleton = this;
-            this.DataContext = new MainViewModel();
             InitializeComponent();
+            NavigationViewSplitView.DataContext = this.DataContext = new MainViewModel();     
 
             // If file doesn't exists, create one
             SaveFile(path: DefaultSavePath, overwrite: false);

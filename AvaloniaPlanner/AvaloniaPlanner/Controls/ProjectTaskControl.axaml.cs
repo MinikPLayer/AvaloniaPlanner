@@ -3,7 +3,6 @@ using Avalonia.Input;
 using AvaloniaPlanner.Dialogs;
 using AvaloniaPlanner.Pages;
 using AvaloniaPlanner.ViewModels;
-using DialogHostAvalonia;
 using DynamicData;
 using System;
 using System.Diagnostics;

@@ -5,6 +5,7 @@ using AvaloniaPlanner.Views;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.Reflection;
 using ReactiveUI;
+using System.Threading.Tasks;
 
 namespace AvaloniaPlanner.Dialogs
 {
@@ -33,6 +34,18 @@ namespace AvaloniaPlanner.Dialogs
             var tag = (sender as Control)?.Tag as string;
             Result = tag == null ? false : tag == "yes";
             MainView.Singleton.MainDialog.CloseDialogCommand.Execute(Result);
+        }
+
+        public static async Task<bool> ShowDialog(string text = "Are you sure?")
+        {
+            var result = false;
+            await MainView.OpenDialog(new ConfirmDialog(text), (s, e) =>
+            {
+                if (e.Parameter is bool b)
+                    result = b;
+            });
+
+            return result;
         }
 
         public ConfirmDialog(string confirmationText = "Are you sure?")

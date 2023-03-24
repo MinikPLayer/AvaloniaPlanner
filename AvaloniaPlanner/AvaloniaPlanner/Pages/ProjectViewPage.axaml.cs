@@ -7,7 +7,6 @@ using AvaloniaPlanner.ViewModels;
 using AvaloniaPlanner.Views;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.Data;
-using DialogHostAvalonia;
 using DynamicData;
 using ReactiveUI;
 using System;
@@ -59,14 +58,17 @@ namespace AvaloniaPlanner.Pages
             base.OnPointerPressed(e);
         }
 
-        public void DeleteBinCommand(object sender, RoutedEventArgs e)
+        public async void DeleteBinCommand(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
                 return;
 
-            var pVm = (ProjectViewViewModel)this.DataContext!;
-            pVm.Bins.Remove(vm);
-            ProjectsPage.SignalProjectsChanged(vm.GetBin().Project_id);
+            if(await ConfirmDialog.ShowDialog())
+            {
+                var pVm = (ProjectViewViewModel)this.DataContext!;
+                pVm.Bins.Remove(vm);
+                ProjectsPage.SignalProjectsChanged(vm.GetBin().Project_id);
+            }
         }
 
         public void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -83,7 +85,7 @@ namespace AvaloniaPlanner.Pages
             MainView.OpenDialog(new ProjectTaskEditDialog(oldTask.GetTask()), (s, e) =>
             {
                 var result = e.Parameter;
-                if (result is bool b && b == true && e.Session.Content is ProjectTaskEditDialog dialog)
+                if (result is bool b && b == true && e.Content is ProjectTaskEditDialog dialog)
                 {
                     if (dialog.DataContext is not ProjectTaskViewModel newTask)
                         throw new Exception("Dialog data context is an invalid type");

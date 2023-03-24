@@ -15,7 +15,6 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using AvaloniaPlanner.Dialogs;
-using DialogHostAvalonia;
 using System;
 
 namespace AvaloniaPlanner.Pages
@@ -90,7 +89,7 @@ namespace AvaloniaPlanner.Pages
             MainView.OpenDialog(new ProjectEditDialog(project), (s, e) =>
             {
                 var result = e.Parameter;
-                if (result is bool b && b == true && e.Session.Content is ProjectEditDialog dialog)
+                if (result is bool b && b == true && e.Content is ProjectEditDialog dialog)
                 {
                     if (dialog.DataContext is not ProjectViewModel newProjectVm)
                         throw new Exception("Dialog data context is an invalid type");

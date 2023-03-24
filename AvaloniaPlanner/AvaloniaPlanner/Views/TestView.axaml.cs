@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using DialogHostAvalonia;
 
 namespace AvaloniaPlanner.Views
 {
