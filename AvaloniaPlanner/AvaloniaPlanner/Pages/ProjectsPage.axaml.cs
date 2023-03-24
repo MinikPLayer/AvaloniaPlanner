@@ -65,8 +65,10 @@ namespace AvaloniaPlanner.Pages
         {
             ProjectsPanel.Children.Clear();
             IEnumerable<ApiProject> projects = Projects;
+
+            term = term.ToLower();
             if(!string.IsNullOrEmpty(term))
-                projects = projects.Where(p => p.Name.Contains(term));
+                projects = projects.Where(p => p.Name.ToLower().Contains(term));
 
             ProjectsPanel.Children.AddRange(projects.Select(p => new ProjectControl(p)));
         }

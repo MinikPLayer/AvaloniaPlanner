@@ -89,13 +89,15 @@ namespace AvaloniaPlanner.Pages
         {
             var pVm = (ProjectViewViewModel)this.DataContext!;
             pVm.VisibleBins.Clear();
+
             if (string.IsNullOrEmpty(e.SearchTerm))
             {
                 pVm.VisibleBins.AddRange(pVm.Bins);
             }
             else
             {
-                pVm.VisibleBins.AddRange(pVm.Bins.Where(x => x.BinName.Contains(e.SearchTerm)));
+                var term = e.SearchTerm.ToLower();
+                pVm.VisibleBins.AddRange(pVm.Bins.Where(x => x.BinName.ToLower().Contains(term) || x.Tasks.Any(x => x.TaskName.ToLower().Contains(term))));
             }
         }
 

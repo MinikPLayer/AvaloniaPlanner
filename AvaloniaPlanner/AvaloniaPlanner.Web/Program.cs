@@ -1,6 +1,6 @@
 ﻿using Avalonia;
+using Avalonia.Browser;
 using Avalonia.ReactiveUI;
-using Avalonia.Web;
 using AvaloniaPlanner;
 using System.Runtime.Versioning;
 
