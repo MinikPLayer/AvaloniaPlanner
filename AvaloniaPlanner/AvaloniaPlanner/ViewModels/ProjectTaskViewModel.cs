@@ -18,13 +18,6 @@ namespace AvaloniaPlanner.ViewModels
 
         private ApiProjectTask task;
 
-        private bool _statusComboBoxDropDownOpened = false;
-        public bool StatusComboBoxDropDownOpened
-        {
-            get => _statusComboBoxDropDownOpened;
-            set => this.RaiseAndSetIfChanged(ref _statusComboBoxDropDownOpened, value);
-        }
-
         public string TaskName
         {
             get => task.Name;

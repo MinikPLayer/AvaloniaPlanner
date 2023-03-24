@@ -10,6 +10,7 @@ namespace AvaloniaPlanner.Utils
 {
     public static class ClassPopulator
     {
+
         public static ApiProject Populate(this ApiProject p)
         {
             do
@@ -30,6 +31,16 @@ namespace AvaloniaPlanner.Utils
             } while (ProjectsPage.Projects.SelectMany(x => x.Bins).Any(x => x.Id == b.Id));
 
             return b;
+        }
+
+        public static ApiProjectTask Populate(this ApiProjectTask task)
+        {
+            do
+            {
+                task.Id = Guid.NewGuid().ToString();
+            } while (ProjectsPage.Projects.SelectMany(x => x.Bins).SelectMany(b => b.Tasks).Any(t => t.Id == task.Id));
+
+            return task;
         }
     }
 }

@@ -57,6 +57,7 @@ namespace AvaloniaPlanner.ViewModels
 
         public ICommand BinEditCommand { get; set; }
         public ICommand BinEditCancelCommand { get; set; }
+        public ICommand AddTaskCommand { get; set; }
 
         public ObservableCollection<ProjectTaskViewModel> Tasks { get; set; }
 
@@ -76,11 +77,11 @@ namespace AvaloniaPlanner.ViewModels
 
                 InEditMode = !InEditMode;
             });
-
             BinEditCancelCommand = ReactiveCommand.Create(() => InEditMode = false);
 
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
+            AddTaskCommand = ReactiveCommand.Create(() => Tasks.Add(new ProjectTaskViewModel(new ApiProjectTask() { Name = "New task" }.Populate())));
 
             Tasks.CollectionChanged += (s, e) => e.FillToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
 

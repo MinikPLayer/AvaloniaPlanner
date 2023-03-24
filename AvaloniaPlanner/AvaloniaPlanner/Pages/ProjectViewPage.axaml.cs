@@ -15,6 +15,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AvaloniaPlanner.Pages
 {
@@ -79,7 +80,7 @@ namespace AvaloniaPlanner.Pages
             base.OnPointerPressed(e);
         }
 
-        public async void DeleteBinCommand(object sender, RoutedEventArgs e)
+        public async void DeleteBinClicked(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
                 return;
@@ -92,7 +93,36 @@ namespace AvaloniaPlanner.Pages
             }
         }
 
-        public void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        public async void AddTaskClicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
+                return;
+
+            var task = new ApiProjectTask() { Name = "New task" }.Populate();
+            var newTask = new ProjectTaskViewModel(task);
+            vm.Tasks.Add(newTask);
+            ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
+
+            await EditTask(newTask, vm);
+        }
+
+        public async Task EditTask(ProjectTaskViewModel task, ProjectBinViewModel bin)
+        {
+            await MainView.OpenDialog(new ProjectTaskEditDialog(task.GetTask()), (s, e) =>
+            {
+                var result = e.Parameter;
+                if (result is bool b && b == true && e.Content is ProjectTaskEditDialog dialog)
+                {
+                    if (dialog.DataContext is not ProjectTaskViewModel newTask)
+                        throw new Exception("Dialog data context is an invalid type");
+
+                    bin.Tasks.Replace(task, newTask);
+                    ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
+                }
+            });
+        }
+
+        public async void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is not ListBox lb || e.AddedItems.Count == 0 || e.AddedItems[0] is not ProjectTaskViewModel oldTask)
                 return;
@@ -103,34 +133,8 @@ namespace AvaloniaPlanner.Pages
                 return;
             }
 
-            MainView.OpenDialog(new ProjectTaskEditDialog(oldTask.GetTask()), (s, e) =>
-            {
-                var result = e.Parameter;
-                if (result is bool b && b == true && e.Content is ProjectTaskEditDialog dialog)
-                {
-                    if (dialog.DataContext is not ProjectTaskViewModel newTask)
-                        throw new Exception("Dialog data context is an invalid type");
-
-                    // ObservableCollection.Replace() is not working properly (entry disappears only to reappear after next refresh)
-                    // So we need to use .Replace() twice to refresh after disappearing
-                    binVm.Tasks.Replace(oldTask, newTask);
-                    binVm.Tasks.Replace(newTask, newTask);
-                    ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
-                }
-            });
-
             lb.SelectedItem = null;
-        }
-
-        public void ListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (sender is not ListBox lb)
-                return;
-
-            if (lb.SelectedItem is not ProjectTaskViewModel ptvm)
-                return;
-
-            ptvm.StatusComboBoxDropDownOpened = true;
+            await EditTask(oldTask, binVm);
         }
 
         public ProjectViewPage(ApiProject p)
