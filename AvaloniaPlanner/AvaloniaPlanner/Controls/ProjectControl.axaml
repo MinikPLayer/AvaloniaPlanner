@@ -41,7 +41,11 @@
 				<TextBlock Text="{Binding Name}"
 						   FontSize="30" FontWeight="ExtraBlack"
 						   HorizontalAlignment="Center"/>
-				<TextBlock Text="{Binding Owner}" HorizontalAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
+					<icons:MaterialIcon Kind="{Binding StatusModel.Icon}"/>
+					<TextBlock Text="{Binding Owner}"/>
+				</StackPanel>
+
 				<Separator Height="10" />
 				<TextBlock Text="{Binding Description}" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="300" TextWrapping="Wrap"/>
 			</StackPanel>

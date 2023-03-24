@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using AvaloniaPlanner.Controls;
+using AvaloniaPlanner.Models;
 using AvaloniaPlanner.Pages;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.Data;
@@ -45,6 +46,17 @@ namespace AvaloniaPlanner.ViewModels
             set
             {
                 project.Owner = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public ProjectStatus Status => project.Status;
+        public ProjectStatusModel StatusModel
+        {
+            get => ProjectStatusModel.Get(Status);
+            set
+            {
+                project.Status = value.Status;
                 this.RaisePropertyChanged();
             }
         }
