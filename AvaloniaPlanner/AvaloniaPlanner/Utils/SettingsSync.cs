@@ -2,10 +2,12 @@
 using AvaloniaPlanner.Dialogs;
 using AvaloniaPlanner.Views;
 using AvaloniaPlannerLib.Data.Auth;
+using CSUtil.Crypto;
 using CSUtil.Web;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,11 +16,70 @@ namespace AvaloniaPlanner.Utils
 {
     public class SettingsSync
     {
-        public static string? SettingsSyncToken = null;
+        static string DefaultTokenSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AvPlanner", "avplanner");
+
+        static void SaveSyncToken(string? token)
+        {
+            if (token == null)
+                return;
+
+            var path = Path.GetDirectoryName(DefaultTokenSavePath);
+            if (path == null)
+                throw new Exception("Invalid path, cannot extract a directory - " + DefaultTokenSavePath);
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var keys = AesCryptor.GenerateRandomKey();
+            var data = AesCryptor.Encrypt(token, keys.key, keys.iv);
+            var finalData = new List<byte>(keys.key.Length + keys.iv.Length + data.Length);
+            finalData.AddRange(keys.key);
+            finalData.AddRange(keys.iv);
+            finalData.AddRange(data);
+
+            File.WriteAllBytes(DefaultTokenSavePath, finalData.ToArray());
+        }
+
+        static bool TryLoadSyncToken()
+        {
+            if(File.Exists(DefaultTokenSavePath))
+            {
+                var bytes = File.ReadAllBytes(DefaultTokenSavePath);
+                if (bytes.Length < 32)
+                    return false;
+
+                var key = new byte[16];
+                var iv = new byte[16];
+                var data = new byte[bytes.Length - 32];
+
+                Array.Copy(bytes, key, 16);
+                Array.Copy(bytes, 16, iv, 0, 16);
+                Array.Copy(bytes, 32, data, 0, data.Length);
+
+                var token = AesCryptor.DecryptString(data, key, iv);
+                SettingsSyncToken = token;
+                return true;
+            }
+
+            return false;
+        }
+
+        static string? _settingsSyncToken = null;
+        public static string? SettingsSyncToken
+        {
+            get => _settingsSyncToken;
+            set
+            {
+                _settingsSyncToken = value;
+                SaveSyncToken(value);
+            }
+        }
 
         static SettingsSync()
         {
             Api.port = 5072;
+
+            TryLoadSyncToken();
         }
 
         public static async Task Login()
