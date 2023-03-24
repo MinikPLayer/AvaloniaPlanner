@@ -81,7 +81,6 @@ namespace AvaloniaPlanner.ViewModels
 
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
-            AddTaskCommand = ReactiveCommand.Create(() => Tasks.Add(new ProjectTaskViewModel(new ApiProjectTask() { Name = "New task" }.Populate())));
 
             Tasks.CollectionChanged += (s, e) => e.FillToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
 
