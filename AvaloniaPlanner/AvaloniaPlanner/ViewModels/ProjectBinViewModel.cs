@@ -1,4 +1,5 @@
 ﻿using AvaloniaPlanner.Pages;
+using AvaloniaPlanner.Utils;
 using AvaloniaPlannerLib.Data.Project;
 using CSUtil.Data;
 using DynamicData;
@@ -80,6 +81,8 @@ namespace AvaloniaPlanner.ViewModels
 
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
+
+            Tasks.CollectionChanged += (s, e) => e.FillToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
 
             this.bin = bin;
         }

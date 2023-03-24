@@ -16,7 +16,14 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		
-		<TextBlock Text="{Binding ProjectName}" Grid.Row="0" FontSize="28" FontWeight="ExtraBold"/>
+		<TextBlock Text="{Binding ProjectName}" Grid.Row="0" HorizontalAlignment="Center" FontSize="28" FontWeight="ExtraBold"/>
+		<StackPanel Grid.Row="0" HorizontalAlignment="Left" Orientation="Horizontal" Spacing="5">
+			<controls:SearchControl x:Name="SearchInputControl" Width="200" SearchRequested="BinSearchRequested"/>
+			<Button ClickMode="Press" Click="AddBinButtonClicked">
+				<icons:MaterialIcon Kind="Add"/>
+			</Button>
+		</StackPanel>
+
 		<ListBox Items="{Binding Bins}" Grid.Row="1" Margin="0, 5, 0, 0">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>

@@ -104,6 +104,8 @@ namespace AvaloniaPlanner.Pages
             });
         }
 
+        public static ApiProject? GetProject(string id) => Projects.FirstOrDefault(x => x.Id == id);
+
         public void AddProjectButtonClicked(object sender, RoutedEventArgs e)
         {
             var project = new ApiProject() { Name = "New project", Description = "New project description" }.Populate();

@@ -21,5 +21,15 @@ namespace AvaloniaPlanner.Utils
             p.LastUpdate = DateTime.Now;
             return p;
         }
+
+        public static ApiProjectBin Populate(this ApiProjectBin b)
+        {
+            do
+            {
+                b.Id = Guid.NewGuid().ToString();
+            } while (ProjectsPage.Projects.SelectMany(x => x.Bins).Any(x => x.Id == b.Id));
+
+            return b;
+        }
     }
 }

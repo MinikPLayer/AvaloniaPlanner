@@ -4,25 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Controls.MessageDialog">
-	<Panel>
-		<Panel.Styles>
-			<Style Selector="Border.popup">
-				<Style.Animations>
-					<Animation Duration="0:0:1">
-						<KeyFrame Cue="0%">
-							<Setter Property="Opacity" Value="0.0"/>
-						</KeyFrame>
-						<KeyFrame Cue="100%">
-							<Setter Property="Opacity" Value="100.0"/>
-						</KeyFrame>
-					</Animation>
-				</Style.Animations>
-			</Style>
-		</Panel.Styles>
-		
+	<Panel>	
 		<ContentPresenter Content="{Binding	Child}" ZIndex="0"/>
 		<Border x:Name="DialogMainBorder" Background="#A0000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsVisible="{Binding IsOpen}" ZIndex="1" Opacity="{Binding DialogOpacity}">
-			<Border Background="#404040" CornerRadius="10" BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="{Binding DialogOpacity}">
+			<Border Background="#303030" CornerRadius="10" BorderBrush="{DynamicResource PrimaryHueMidBrush}" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="{Binding DialogOpacity}">
 				<ContentPresenter Content="{Binding DialogContent}" Margin="25"/>
 			</Border>
 		</Border>

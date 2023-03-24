@@ -2,7 +2,9 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using AvaloniaPlanner.Controls;
 using AvaloniaPlanner.Dialogs;
+using AvaloniaPlanner.Utils;
 using AvaloniaPlanner.ViewModels;
 using AvaloniaPlanner.Views;
 using AvaloniaPlannerLib.Data.Project;
@@ -41,11 +43,30 @@ namespace AvaloniaPlanner.Pages
 
             Bins = new();
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
+
+            Bins.CollectionChanged += (s, e) => e.FillToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
         }
     }
 
     public partial class ProjectViewPage : UserControl
     {
+        public void AddBinButtonClicked(object sender, RoutedEventArgs e)
+        {
+            var pVm = (ProjectViewViewModel)this.DataContext!;
+            var bin = new ApiProjectBin() { Name = "New bin" }.Populate();
+
+            var newBin = new ProjectBinViewModel(bin);
+            newBin.BinEditCommand.Execute(null);
+            pVm.Bins.Add(newBin);
+
+            ProjectsPage.SignalProjectsChanged(newBin.GetBin().Project_id);
+        }
+
+        public void BinSearchRequested(object sender, SearchEventArgs e)
+        {
+            throw new NotImplementedException();   
+        }
+
         public void StatusComboBoxPointerPressed(object sender, PointerPressedEventArgs e)
         {
             if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
