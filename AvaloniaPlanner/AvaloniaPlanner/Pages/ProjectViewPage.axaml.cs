@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 using AvaloniaPlanner.Controls;
 using AvaloniaPlanner.Dialogs;
@@ -32,6 +33,16 @@ namespace AvaloniaPlanner.Pages
                 this.RaisePropertyChanged();
             }
         }
+
+        private SolidColorBrush binsBackground = new SolidColorBrush(Color.FromArgb(0x40, 0, 0, 0));
+        public SolidColorBrush BinsBackground
+        {
+            get => binsBackground;
+            set => this.RaiseAndSetIfChanged(ref binsBackground, value);
+        }
+
+        public void SetNormalBackground() => BinsBackground = new SolidColorBrush(Color.FromArgb(0x40, 0, 0, 0));
+        public void SetHighlightedBackground() => BinsBackground = new SolidColorBrush(Color.FromArgb(64, 255, 0, 0));
 
         public ObservableCollection<ProjectBinViewModel> Bins { get; set; }
 
@@ -93,6 +104,8 @@ namespace AvaloniaPlanner.Pages
             }
         }
 
+        public ProjectBinViewModel? GetBinByTask(ProjectTaskViewModel task) => ((ProjectViewViewModel)this.DataContext!).Bins.Where(b => b.Tasks.Contains(task)).FirstOrDefault();
+
         public async void AddTaskClicked(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
@@ -127,7 +140,7 @@ namespace AvaloniaPlanner.Pages
             if (sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
                 return;
 
-            var bin = ((ProjectViewViewModel)this.DataContext!).Bins.Where(b => b.Tasks.Contains(task)).FirstOrDefault();
+            var bin = GetBinByTask(task);
             if (bin == null)
             {
                 await MainView.OpenDialog(new ErrorDialog("Internal error, cannot find task's bin"));
@@ -137,9 +150,14 @@ namespace AvaloniaPlanner.Pages
             await EditTask(task, bin);
         }
 
+        private ProjectTaskViewModel? SelectedTaskToMove = null;
         public void MoveTaskClicked(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            if(sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
+                return;
+
+            ((ProjectViewViewModel)this.DataContext!).SetHighlightedBackground();
+            SelectedTaskToMove = task;
         }
 
         public async void DeleteTaskClicked(object sender, RoutedEventArgs e)
@@ -147,7 +165,7 @@ namespace AvaloniaPlanner.Pages
             if (sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
                 return;
 
-            var bin = ((ProjectViewViewModel)this.DataContext!).Bins.Where(b => b.Tasks.Contains(task)).FirstOrDefault();
+            var bin = GetBinByTask(task);
             if (bin == null)
             {
                 await MainView.OpenDialog(new ErrorDialog("Internal error, cannot find task's bin"));
@@ -161,11 +179,35 @@ namespace AvaloniaPlanner.Pages
             });
         }
 
-        // Mitigate animation lag in ListBox ripple effect
+        // Mitigate animation getting stuck in ListBox ripple effect
         public void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is not ListBox lb)
                 return;
+
+            lb.SelectedItem = null;
+        }        
+        
+        public void BinSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is not ListBox lb)
+                return;
+
+            if(SelectedTaskToMove != null && e.AddedItems.Count > 0 && e.AddedItems[0] is ProjectBinViewModel newBin)
+            {
+                var bin = GetBinByTask(SelectedTaskToMove);
+                if (bin == null)
+                {
+                    _ = MainView.OpenDialog(new ErrorDialog("Internal error, cannot find task's bin"));
+                    return;
+                }
+
+                bin.Tasks.Remove(SelectedTaskToMove);
+                newBin.Tasks.Add(SelectedTaskToMove);
+                SelectedTaskToMove = null;
+
+                ((ProjectViewViewModel)this.DataContext!).SetNormalBackground();
+            }
 
             lb.SelectedItem = null;
         }
