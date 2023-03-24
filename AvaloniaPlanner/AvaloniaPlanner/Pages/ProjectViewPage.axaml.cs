@@ -55,8 +55,7 @@ namespace AvaloniaPlanner.Pages
 
             Bins = new();
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
-
-            Bins.CollectionChanged += (s, e) => e.FillToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
+            Bins.ConnectToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
         }
     }
 

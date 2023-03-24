@@ -81,8 +81,7 @@ namespace AvaloniaPlanner.ViewModels
 
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
-
-            Tasks.CollectionChanged += (s, e) => e.FillToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
+            Tasks.ConnectToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
 
             this.bin = bin;
         }
