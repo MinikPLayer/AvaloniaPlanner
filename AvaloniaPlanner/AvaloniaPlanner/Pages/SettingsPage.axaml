@@ -2,17 +2,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:conv="using:AvaloniaPlanner.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.SettingsPage">
+	<UserControl.Resources>
+		<conv:StringToBrushConverter x:Key="String2Brush"/>
+	</UserControl.Resources>
+	
 	<StackPanel Margin="10" Spacing="10" IsEnabled="{Binding !IsLocked}">
 		<StackPanel Orientation="Horizontal" Spacing="5">
-			<TextBlock Text="Sync login status: "/>
+			<TextBlock Text="Sync token saved: "/>
 			<TextBlock Text="{Binding IsLoggedIn}"/>
 		</StackPanel>
 		
 		<StackPanel Orientation="Horizontal" Spacing="5">
-			<Button Content="Login" Command="{Binding LoginCommand}"/>
+			<Button Content="Login" Command="{Binding LoginCommand}" IsVisible="{Binding !IsLoggedIn}"/>
+			<Button Content="Logout" Command="{Binding LogoutCommand}" IsVisible="{Binding IsLoggedIn}"/>
 			<Button Content="Register" Command="{Binding RegisterCommand}"/>
 		</StackPanel>
+
+		<Separator Height="10"/>
+		<StackPanel Orientation="Horizontal" Spacing="5">
+			<TextBlock Text="Connection status:"/>
+			<TextBlock Text="{Binding ConnectionStatus}" Foreground="{Binding ConnectionStatus, Converter={StaticResource String2Brush}}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal" Spacing="5">
+			<TextBlock Text="Login status:"/>
+			<TextBlock Text="{Binding LoginStatus}" Foreground="{Binding LoginStatus, Converter={StaticResource String2Brush}}"/>
+		</StackPanel>
+		<Button Content="Test Connection" HorizontalAlignment="Left" Command="{Binding TestConnectionCommand}"/>
+		
 	</StackPanel>
 </UserControl>

@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="300"
              x:Class="AvaloniaPlanner.Dialogs.LoginDialog">
 	<Grid ColumnDefinitions="*, 5, *" RowDefinitions="30, *, *, 10, 30">
 		<TextBlock Text="Login" Grid.Column="0" Grid.Row="0" FontWeight="ExtraBlack" FontSize="24"/>

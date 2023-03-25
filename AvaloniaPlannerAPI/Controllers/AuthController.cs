@@ -85,6 +85,23 @@ namespace AvaloniaPlannerAPI.Controllers
             return user.Role == role;
         }
 
+        [HttpGet("test_connection")]
+        [ProducesResponseType(200)]
+        public ActionResult TestConnection() => Ok("OK");
+
+        [HttpGet("get_user_id")]
+        [ProducesResponseType(511)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(string), 200)]
+        public ActionResult GetUserId()
+        {
+            var auth = AuthUser(Request);
+            if (!auth)
+                return auth;
+
+            return Ok(auth.Payload);
+        }
+
         [HttpPost("login")]
         [ProducesResponseType(511)]
         [ProducesResponseType(401)]

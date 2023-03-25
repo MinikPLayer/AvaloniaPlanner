@@ -25,8 +25,24 @@ namespace AvaloniaPlanner.ViewModels
             set => this.RaiseAndSetIfChanged(ref isLoggedIn, value);
         }
 
+        private string _loginStatus = "";
+        public string LoginStatus
+        {
+            get => _loginStatus;
+            set => this.RaiseAndSetIfChanged(ref _loginStatus, value);
+        }
+
+        private string _connectionStatus = "";
+        public string ConnectionStatus
+        {
+            get => _connectionStatus;
+            set => this.RaiseAndSetIfChanged(ref _connectionStatus, value);
+        }
+
         public ICommand LoginCommand { get; set; }
+        public ICommand LogoutCommand { get; set; }
         public ICommand RegisterCommand { get; set; }
+        public ICommand TestConnectionCommand { get; set; }
 
         public SettingsViewModel()
         {
@@ -40,12 +56,32 @@ namespace AvaloniaPlanner.ViewModels
                 IsLoggedIn = SettingsSync.SettingsSyncToken != null;
             });
 
+            LogoutCommand = ReactiveCommand.Create(() =>
+            {
+                SettingsSync.Logout();
+                IsLoggedIn = SettingsSync.SettingsSyncToken != null;
+            });
+
             RegisterCommand = ReactiveCommand.Create(async () =>
             {
                 IsLocked = true;
                 await SettingsSync.Register();
                 IsLocked = false;
                 IsLoggedIn = SettingsSync.SettingsSyncToken != null;
+            });
+
+            TestConnectionCommand = ReactiveCommand.Create(async () =>
+            {
+                LoginStatus = "";
+                ConnectionStatus = "...";
+                IsLocked = true;
+                var result = await SettingsSync.TestConnection();
+                ConnectionStatus = result.ToString();
+
+                LoginStatus = "...";
+                var loginResult = await SettingsSync.TestLogin();
+                LoginStatus = loginResult == null ? "False" : "True";
+                IsLocked = false;
             });
         }
     }

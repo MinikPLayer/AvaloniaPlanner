@@ -3,6 +3,7 @@ using AvaloniaPlanner.Dialogs;
 using AvaloniaPlanner.Views;
 using AvaloniaPlannerLib.Data.Auth;
 using CSUtil.Crypto;
+using CSUtil.Logging;
 using CSUtil.Web;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,11 @@ namespace AvaloniaPlanner.Utils
         static void SaveSyncToken(string? token)
         {
             if (token == null)
+            {
+                if (File.Exists(DefaultTokenSavePath))
+                    File.Delete(DefaultTokenSavePath);
                 return;
+            }
 
             var path = Path.GetDirectoryName(DefaultTokenSavePath);
             if (path == null)
@@ -71,6 +76,7 @@ namespace AvaloniaPlanner.Utils
             set
             {
                 _settingsSyncToken = value;
+                Api.token = value;
                 SaveSyncToken(value);
             }
         }
@@ -80,6 +86,26 @@ namespace AvaloniaPlanner.Utils
             Api.port = 5072;
 
             TryLoadSyncToken();
+        }
+
+        public static async Task<bool> TestConnection()
+        {
+            var result = await Api.Get<string>("api/Auth/test_connection");
+            return (bool)result;
+        }
+
+        public static async Task<string?> TestLogin()
+        {
+            var result = await Api.Get<string>("api/Auth/get_user_id");
+            if (result)
+                return result.Payload;
+            else
+                return null;
+        }
+
+        public static void Logout()
+        {
+            SettingsSyncToken = null;
         }
 
         public static async Task Login()
@@ -96,6 +122,8 @@ namespace AvaloniaPlanner.Utils
             var result = await Api.Post<ApiAuthToken>("api/Auth/login", "login".ToApiParam(login), "password".ToApiParam(password));
             if (result && result.Payload != null)
                 SettingsSyncToken = result.Payload.Token;
+            else
+                SettingsSyncToken = null;
         }
 
         public static async Task Register()
@@ -116,6 +144,8 @@ namespace AvaloniaPlanner.Utils
 
             if (result && result.Payload != null)
                 SettingsSyncToken = result.Payload.Token;
+            else
+                SettingsSyncToken = null;
         }
     }
 }
