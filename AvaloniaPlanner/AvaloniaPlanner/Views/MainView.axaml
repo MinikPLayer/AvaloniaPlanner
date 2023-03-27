@@ -15,9 +15,6 @@
         <viewModels:MainViewModel />
     </Design.DataContext>
 	
-	<!--<dh:DialogHost x:Name="MainDialog" Identifier="MainDialog"
-		DialogMargin="16" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-		dh:DialogHostStyle.CornerRadius="8" OverlayBackground="Black">-->
 	<controls:MessageDialog x:Name="MainDialog">
 		<controls:MessageDialog.DialogContent>
 			<StackPanel>
@@ -32,11 +29,14 @@
 				<SplitView.Pane>
 					<Grid RowDefinitions="*, 35, 35" Margin="10">
 						<StackPanel>
-							<Button Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
+							<Button Margin="0, 5" Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
 								<Grid>
 									<icons:MaterialIcon Kind="MenuOpen" IsVisible="{Binding IsPaneOpened}" Width="25" Height="25"/>
 									<icons:MaterialIcon Kind="Menu" IsVisible="{Binding !IsPaneOpened}" Width="25" Height="25"/>
 								</Grid>
+							</Button>
+							<Button Margin="0, 5" IsEnabled="{Binding CanGoBack}" Command="{Binding PaneGoBackCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
+								<icons:MaterialIcon Kind="ArrowLeft" Width="25" Height="25"/>
 							</Button>
 							<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
 							<ItemsRepeater Items="{Binding PaneEntries}"/>

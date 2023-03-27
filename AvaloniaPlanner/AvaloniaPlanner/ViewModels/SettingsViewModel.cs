@@ -2,6 +2,7 @@
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,12 +55,14 @@ namespace AvaloniaPlanner.ViewModels
                 await SettingsSync.Login();
                 IsLocked = false;
                 IsLoggedIn = SettingsSync.SettingsSyncToken != null;
+                LoginStatus = IsLoggedIn.ToString();
             });
 
             LogoutCommand = ReactiveCommand.Create(() =>
             {
                 SettingsSync.Logout();
                 IsLoggedIn = SettingsSync.SettingsSyncToken != null;
+                LoginStatus = IsLoggedIn.ToString();
             });
 
             RegisterCommand = ReactiveCommand.Create(async () =>

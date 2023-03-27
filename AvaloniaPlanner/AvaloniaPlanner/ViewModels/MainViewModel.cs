@@ -50,15 +50,24 @@ namespace AvaloniaPlanner.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isSaveAvailable, value);
         }
 
+        private bool _canGoBack = false;
+        public bool CanGoBack
+        {
+            get => _canGoBack;
+            set => this.RaiseAndSetIfChanged(ref _canGoBack, value);
+        }
+
 
         public ObservableCollection<PaneEntry> PaneEntries { get; } = new ObservableCollection<PaneEntry>();
         public ICommand PaneOpenedStateChangedCommand { get; init; }
         public ICommand PaneOpenedStateChangedCommand2 { get; init; }
+        public ICommand PaneGoBackCommand { get; set; }
 
         public MainViewModel()
         {
             PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
             PaneOpenedStateChangedCommand2 = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
+            PaneGoBackCommand = ReactiveCommand.Create(PageManager.GoBack);
             PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage), this));
             PaneEntries.Add(new PaneEntry("Projects", Material.Icons.MaterialIconKind.Package, typeof(ProjectsPage), this));
         }

@@ -74,7 +74,7 @@ namespace AvaloniaPlanner.Views
                 return;
 
             var posY = e.GetPosition(this).Y;
-            if (MainWindow.Singleton != null && posY < 30)
+            if (MainWindow.Singleton != null && posY < 30 && posY != 0) // In comboBox posY == 0, it won't in MainWindow
             {
                 if(e.ClickCount == 2)
                 {
@@ -146,7 +146,7 @@ namespace AvaloniaPlanner.Views
         void TestStartup()
         {
             //PageManager.Navigate(new ProjectViewPage(ProjectsPage.Projects[0]));
-            PageManager.Navigate(new ProjectsPage());
+            //PageManager.Navigate(new ProjectsPage());
         }
 
         public MainView()

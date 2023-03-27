@@ -74,7 +74,7 @@ namespace AvaloniaPlanner.Pages
                 projects = projects.Where(p => p.Name.ToLower().Contains(term));
             }
 
-            ProjectsPanel.Children.AddRange(projects.Select(p => new ProjectControl(p)));
+            ProjectsPanel.Children.AddRange(projects.OrderByDescending(x => x.LastUpdate).Select(p => new ProjectControl(p)));
         }
 
         public static void RemoveProject(ApiProject project)
@@ -127,7 +127,7 @@ namespace AvaloniaPlanner.Pages
         {
             InitializeComponent();
             Pages.Add(this);
-            this.ProjectsPanel.Children.AddRange(Projects.Select(x => new ProjectControl(x)));
+            ApplySearchFilter(null);
         }
 
         ~ProjectsPage()

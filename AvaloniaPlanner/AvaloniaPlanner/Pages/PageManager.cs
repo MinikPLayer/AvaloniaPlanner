@@ -11,13 +11,34 @@ namespace AvaloniaPlanner.Pages
 {
     public static class PageManager
     {
-        public static void Navigate(UserControl instance)
+        private static Stack<UserControl> _pages = new Stack<UserControl>();
+
+        public static bool CanGoBack() => _pages.Count > 0;
+
+        private static void ChangePage(UserControl instance)
         {
             MainView.Singleton.ViewModel.CurrentPage = instance;
 
             // Bug on android preventing the switch
-            if(MainView.RuntimePlatformInfo.IsMobile)
+            if (MainView.RuntimePlatformInfo.IsMobile)
                 MainView.Singleton.MainContent.Content = instance;
+
+            MainView.Singleton.ViewModel.CanGoBack = CanGoBack();
+        }
+
+        public static UserControl GoBack()
+        {
+            var instance = _pages.Pop();
+            ChangePage(instance); 
+            return instance;
+        }
+
+        public static void Navigate(UserControl instance)
+        {
+            var curPage = MainView.Singleton.ViewModel.CurrentPage as UserControl;
+            if(curPage is not null)
+                _pages.Push(curPage);
+            ChangePage(instance);
         }
 
         public static void Navigate(Type t)
