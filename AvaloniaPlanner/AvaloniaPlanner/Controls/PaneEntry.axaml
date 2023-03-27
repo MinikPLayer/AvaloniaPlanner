@@ -23,8 +23,8 @@
 	
 	<Button Click="EntryClicked">
 		<StackPanel Orientation="Horizontal" Spacing="5">
-			<icons:MaterialIcon Kind="{Binding Icon}" Width="{Binding IconSize, Mode=OneWay}" Height="{Binding IconSize, Mode=OneWay}"/>
-			<TextBlock Text="{Binding EntryName}" FontSize="20" IsVisible="{Binding IsExpanded}"/>
+			<icons:MaterialIcon x:Name="EntryIcon" Foreground="{Binding IconBrush}" Kind="{Binding Icon}" Width="{Binding IconSize, Mode=OneWay}" Height="{Binding IconSize, Mode=OneWay}"/>
+			<TextBlock Foreground="{Binding	IconBrush}" Text="{Binding EntryName}" FontSize="20"/>
 		</StackPanel>
 	</Button>
 	

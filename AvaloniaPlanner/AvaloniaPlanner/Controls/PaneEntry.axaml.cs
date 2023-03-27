@@ -14,6 +14,7 @@ using System.Data.Common;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using System.ComponentModel;
+using Avalonia.Media;
 
 namespace AvaloniaPlanner.Controls
 {
@@ -25,6 +26,12 @@ namespace AvaloniaPlanner.Controls
         public Material.Icons.MaterialIconKind Icon => Parent.Icon;
         public double IconSize => Parent.IconSize;
 
+        private Brush iconBrush = new SolidColorBrush(Colors.White);
+        public Brush IconBrush
+        {
+            get => iconBrush;
+            set => this.RaiseAndSetIfChanged(ref iconBrush, value);
+        }
 
         private bool _isExpanded;
         public bool IsExpanded
@@ -102,22 +109,13 @@ namespace AvaloniaPlanner.Controls
 
         public void EntryClicked(object sender, RoutedEventArgs e) => RaiseEvent(new RoutedEventArgs(ClickedEvent));
 
-        public PaneEntry() : this(null) { }
-
-        public PaneEntry(MainViewModel? vm) 
+        public PaneEntry() 
         {
             InitializeComponent();
             this.DataContext = new PaneEntryModel(this);
-
-            var source = vm != null ? vm : MainView.Singleton.ViewModel;
-            var cmd = source.PaneOpenedStateChangedCommand as ReactiveCommand<System.Reactive.Unit, bool>;
-            if (cmd == null)
-                throw new ArgumentNullException("Cannot get pane state changed command or invalid type");
-
-            cmd.Subscribe(x => ViewModel.IsExpanded = x);
         }
 
-        public PaneEntry(string name, Material.Icons.MaterialIconKind icon, Action<PaneEntry>? clickedAction = null, MainViewModel? vm = null) :this(vm)
+        public PaneEntry(string name, Material.Icons.MaterialIconKind icon, Action<PaneEntry>? clickedAction = null) :this()
         {
             this.EntryName = name;
             this.Icon = icon;
@@ -125,7 +123,7 @@ namespace AvaloniaPlanner.Controls
                 this.Clicked += (s, e) => clickedAction(this);
         }
 
-        public PaneEntry(string name, Material.Icons.MaterialIconKind icon, Type pageType, MainViewModel? vm = null)
-            : this(name, icon, (entry) => PageManager.Navigate(pageType), vm) { }
+        public PaneEntry(string name, Material.Icons.MaterialIconKind icon, Type pageType)
+            : this(name, icon, (entry) => PageManager.Navigate(pageType)) { }
     }
 }

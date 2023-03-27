@@ -104,6 +104,7 @@ namespace AvaloniaPlanner.Views
             ViewModel.IsSaveAvailable = false;
         }
 
+        public string LastSaveData = "";
         bool LoadFile(string? path = null)
         {
             if (path == null)
@@ -113,8 +114,9 @@ namespace AvaloniaPlanner.Views
                 return false;
 
             var data = File.ReadAllText(path);
-            if(ProjectsPage.LoadProjectsFromString(data))
+            if (ProjectsPage.LoadProjectsFromString(data))
             {
+                LastSaveData = data;
                 _currentFilePath = path;
                 return true;
             }
@@ -137,6 +139,7 @@ namespace AvaloniaPlanner.Views
             Directory.CreateDirectory(dir);
 
             var data = ProjectsPage.SerializeProjects();
+            LastSaveData = data;
             File.WriteAllText(path, data);
 
             _currentFilePath = path;

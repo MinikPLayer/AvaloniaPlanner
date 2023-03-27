@@ -68,8 +68,8 @@ namespace AvaloniaPlanner.ViewModels
             PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
             PaneOpenedStateChangedCommand2 = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
             PaneGoBackCommand = ReactiveCommand.Create(PageManager.GoBack);
-            PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage), this));
-            PaneEntries.Add(new PaneEntry("Projects", Material.Icons.MaterialIconKind.Package, typeof(ProjectsPage), this));
+            PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage)));
+            PaneEntries.Add(new PaneEntry("Projects", Material.Icons.MaterialIconKind.Package, typeof(ProjectsPage)));
         }
     }
 }

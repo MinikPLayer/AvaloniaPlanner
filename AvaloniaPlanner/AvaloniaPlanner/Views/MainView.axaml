@@ -27,7 +27,7 @@
 						DisplayMode="CompactOverlay"
 						OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000" x:Name="NavigationViewSplitView">
 				<SplitView.Pane>
-					<Grid RowDefinitions="*, 35, 35" Margin="10">
+					<Grid RowDefinitions="*, 35, 35, 35" Margin="10">
 						<StackPanel>
 							<Button Margin="0, 5" Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
 								<Grid>
@@ -47,7 +47,9 @@
 											IsEnabled="{Binding DataContext.IsSaveAvailable, RelativeSource={RelativeSource	FindAncestor, AncestorType=views:MainView}}"
 											Clicked="SaveProjectClick"/>
 
-						<controls:PaneEntry Grid.Row="2"
+						<controls:ProjectsSyncControl Grid.Row="2"/>
+						
+						<controls:PaneEntry Grid.Row="3"
 											EntryName="Settings" Icon="Settings"
 											Clicked="SettingsPageClick"/>
 					</Grid>
