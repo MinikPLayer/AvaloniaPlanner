@@ -17,6 +17,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 using Avalonia.Platform;
+using DynamicData;
 
 namespace AvaloniaPlanner.Views
 {
@@ -105,7 +106,7 @@ namespace AvaloniaPlanner.Views
         }
 
         public string LastSaveData = "";
-        bool LoadFile(string? path = null)
+        public bool LoadFile(string? path = null)
         {
             if (path == null)
                 path = DefaultSavePath;
@@ -114,8 +115,12 @@ namespace AvaloniaPlanner.Views
                 return false;
 
             var data = File.ReadAllText(path);
-            if (ProjectsPage.LoadProjectsFromString(data))
+            var projects = ProjectsPage.LoadProjectsFromString(data);
+            if(projects != null)
             {
+                ProjectsPage.Projects.Clear();
+                ProjectsPage.Projects.AddRange(projects);
+
                 LastSaveData = data;
                 _currentFilePath = path;
                 return true;
@@ -124,7 +129,7 @@ namespace AvaloniaPlanner.Views
             return false;
         }
 
-        bool SaveFile(string? path = null, bool overwrite = true)
+        public bool SaveFile(string? path = null, bool overwrite = true)
         {
             if (path == null)
                 path = _currentFilePath;

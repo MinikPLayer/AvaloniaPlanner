@@ -39,15 +39,13 @@ namespace AvaloniaPlanner.Pages
             return ret;
         }
 
-        public static bool LoadProjectsFromString(string data)
+        public static IEnumerable<ApiProject>? LoadProjectsFromString(string data)
         {
             var ret = JsonConvert.DeserializeObject<IEnumerable<ApiProject>>(data);
             if (ret == null)
-                return false;
+                return null;
 
-            Projects.Clear();
-            Projects.AddRange(ret);
-            return true;
+            return ret;
         }
 
         static ProjectsPage()
