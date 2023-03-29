@@ -1,35 +1,119 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using AvaloniaPlanner.Dialogs;
 using AvaloniaPlanner.Utils;
 using AvaloniaPlanner.ViewModels;
 using AvaloniaPlanner.Views;
 using CSUtil.Web;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace AvaloniaPlanner.Pages
 {
     public partial class SettingsPage : UserControl
     {
-
-        public struct ConfigData
+        public class ConfigData
         {
-            public string IP { get; set; }
-            public short Port { get; set; }
+            public struct ServerData
+            {
+                public string IP { get; set; }
+                public short Port { get; set; }
+
+                public ServerData()
+                {
+                    IP = "mtomecki.pl";
+                    Port = 25110;
+                }
+            }
+
+            private ServerData _server = new ServerData();
+            public ServerData Server
+            {
+                get => _server;
+                set
+                {
+                    _server = value;
+                    Api.baseUrl = _server.IP;
+                    Api.port = _server.Port;
+                }
+            }
+
+            public ConfigData()
+            {
+                Server = new ServerData();
+            }
+        }
+
+        static string DefaultConfigSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AvPlanner", "config.json");
+        public static ConfigData Config { get; set; } = new ConfigData();
+
+        public static void LoadConfig()
+        {
+            var config = DeserializeConfigFromFile();
+            if (config != null)
+                Config = config;
+        }
+
+        public static ConfigData? DeserializeConfigFromFile(string? filePath = null)
+        {
+            if (filePath == null)
+                filePath = DefaultConfigSavePath;
+
+            if (!File.Exists(filePath))
+                return null;
+            try
+            {
+                var data = File.ReadAllText(filePath);
+                var config = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigData>(data);
+                return config;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Cannot load config from file - " + ex.Message);
+                return null;
+            }
+        }
+
+        public static bool SaveConfig(string? filePath = null)
+        {
+            if (filePath == null)
+                filePath = DefaultConfigSavePath;
+            
+            var path = Path.GetDirectoryName(filePath);
+            if (path == null)
+                throw new Exception("Invalid path, cannot extract a directory - " + filePath);
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            try
+            {
+                File.WriteAllText(filePath, Newtonsoft.Json.JsonConvert.SerializeObject(Config));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Cannot save config to file - " + ex.Message);
+                return false;
+            }
         }
 
         public async void SaveServerInfoClicked(object sender, RoutedEventArgs e)
         {
+            var serverData = new ConfigData.ServerData();
             if(short.TryParse(ServerPortTextBox.Text, out short ret))
             {
-                Api.port = ret;
+                serverData.Port = ret;
             }
             else
             {
                 await MainView.OpenDialog(new ErrorDialog("Invalid port, cannot convert to integer"));
                 return;
             }
-            Api.baseUrl = ServerIpTextBox.Text!;
+            serverData.IP = ServerIpTextBox.Text!;
 
+            Config.Server = serverData;
             ((SettingsViewModel)this.DataContext!).IsLocked = true;
             var con = await SettingsSync.TestConnection();
             if(!con)
@@ -39,8 +123,9 @@ namespace AvaloniaPlanner.Pages
             }
             else
             {
-                _ = MainView.OpenDialog(new ErrorDialog("Connected to the server"));
+                _ = MainView.OpenDialog(new ErrorDialog("Connected to the server", Material.Icons.MaterialIconKind.Check, Colors.LightGreen));
                 ((SettingsViewModel)this.DataContext).ConnectionStatus = true.ToString();
+                SaveConfig();
             }
 
             ((SettingsViewModel)this.DataContext).IsLocked = false;
@@ -51,8 +136,8 @@ namespace AvaloniaPlanner.Pages
             InitializeComponent();
             this.DataContext = new SettingsViewModel();
 
-            ServerPortTextBox.Text = Api.port.ToString();
-            ServerIpTextBox.Text = Api.baseUrl;
+            ServerPortTextBox.Text = Config.Server.Port.ToString();
+            ServerIpTextBox.Text = Config.Server.IP;
         }
     }
 }

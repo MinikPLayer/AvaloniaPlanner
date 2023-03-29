@@ -23,7 +23,7 @@ namespace AvaloniaPlanner.Views
 {
     public partial class MainView : UserControl
     {
-        public static readonly string DefaultSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "AvPlanner", "projects.json");
+        public static readonly string DefaultSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AvPlanner", "projects.json");
 
         private string _currentFilePath = "";
         private static MainView? _singleton = null;
@@ -177,6 +177,8 @@ namespace AvaloniaPlanner.Views
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center 
                 };
             }
+
+            SettingsPage.LoadConfig();
 #if DEBUG
             TestStartup();
 #endif
