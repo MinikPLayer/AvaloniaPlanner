@@ -46,7 +46,7 @@ namespace AvaloniaPlanner.Utils
             File.WriteAllBytes(DefaultTokenSavePath, finalData.ToArray());
         }
 
-        static bool TryLoadSyncToken()
+        public static bool TryLoadSyncToken()
         {
             if(File.Exists(DefaultTokenSavePath))
             {
@@ -82,13 +82,6 @@ namespace AvaloniaPlanner.Utils
             }
         }
 
-        static SettingsSync()
-        {
-            Api.port = 5072;
-
-            TryLoadSyncToken();
-        }
-
         public static async Task<bool> TestConnection()
         {
             var result = await Api.Get<string>("api/Auth/test_connection");
@@ -98,7 +91,7 @@ namespace AvaloniaPlanner.Utils
         public static async Task<string?> TestLogin()
         {
             var result = await Api.Get<string>("api/Auth/get_user_id");
-            if (result)
+            if (result.IsOk())
                 return result.Payload;
             else
                 return null;
@@ -121,7 +114,7 @@ namespace AvaloniaPlanner.Utils
             var password = dialog.Password;
 
             var result = await Api.Post<ApiAuthToken>("api/Auth/login", "login".ToApiParam(login), "password".ToApiParam(password));
-            if (result && result.Payload != null)
+            if (result.IsOk() && result.Payload != null)
                 SettingsSyncToken = result.Payload.Token;
             else
                 SettingsSyncToken = null;
@@ -143,7 +136,7 @@ namespace AvaloniaPlanner.Utils
             var result = await Api.Post<ApiAuthToken>("api/Auth/register", 
                 "login".ToApiParam(login), "password".ToApiParam(password), "username".ToApiParam(username), "email".ToApiParam(email));
 
-            if (result && result.Payload != null)
+            if (result.IsOk() && result.Payload != null)
                 SettingsSyncToken = result.Payload.Token;
             else
                 SettingsSyncToken = null;

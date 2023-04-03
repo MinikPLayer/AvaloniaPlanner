@@ -44,8 +44,8 @@ namespace AvaloniaPlanner.Controls
         async Task<string?> DownloadData()
         {
             var projectsData = await Api.Get<string>("api/project/get_user_projects");
-            if (!projectsData)
-                return projectsData.Message;
+            if (!projectsData.IsOk())
+                return Api.GetErrorCodesMeaning(projectsData!);
 
             var projects = ProjectsPage.LoadProjectsFromString(projectsData.Payload!);
             if (projects == null)
@@ -107,13 +107,13 @@ namespace AvaloniaPlanner.Controls
                 });
 
                 var serverLastUpdate = await Api.Get<DateTime>("api/project/get_last_modification_date");
-                if(!serverLastUpdate)
+                if(!serverLastUpdate.IsOk())
                 {
                     isWaiting = false;
                     syncInProgress = false;
                     this.Icon = FAILURE_ICON;
                     this.ViewModel.IconBrush = FAILURE_BRUSH;
-                    this.EntryName = serverLastUpdate.Message!;
+                    this.EntryName = Api.GetErrorCodesMeaning(serverLastUpdate!);
                     return;
                 }
 
@@ -161,11 +161,11 @@ namespace AvaloniaPlanner.Controls
                 var curSyncCounter = syncCounter;
                 syncInProgress = false;
 
-                if (continueUpload && !uploadResult!)
+                if (continueUpload && !uploadResult!.IsOk())
                 {
                     this.Icon = FAILURE_ICON;
                     this.ViewModel.IconBrush = FAILURE_BRUSH;
-                    this.EntryName = uploadResult!.Message!;
+                    this.EntryName = Api.GetErrorCodesMeaning(uploadResult!);
                     return;
                 }
                 else if(continueUpload)

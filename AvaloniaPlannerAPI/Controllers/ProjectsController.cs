@@ -36,7 +36,7 @@ namespace AvaloniaPlannerAPI.Controllers
         public ActionResult UpdateUserResults(string data)
         {
             var authData = AuthController.AuthUser(Request);
-            if (!authData)
+            if (!authData.IsOk())
                 return authData;
 
             var path = Path.Combine(ProjectsPath, authData.Payload!);
@@ -55,7 +55,7 @@ namespace AvaloniaPlannerAPI.Controllers
         public ActionResult GetLastModificationDate()
         {
             var authData = AuthController.AuthUser(Request);
-            if (!authData)
+            if (!authData.IsOk())
                 return authData;
 
             var data = ReadLastProjectSave(authData.Payload!);
@@ -80,7 +80,7 @@ namespace AvaloniaPlannerAPI.Controllers
         public ActionResult GetUserProjects()
         {
             var authData = AuthController.AuthUser(Request);
-            if (!authData)
+            if (!authData.IsOk())
                 return authData;
 
             var data = ReadLastProjectSave(authData.Payload!);
@@ -97,7 +97,7 @@ namespace AvaloniaPlannerAPI.Controllers
         public ActionResult GetUserProjectsAllVersions()
         {
             var authData = AuthController.AuthUser(Request);
-            if (!authData)
+            if (!authData.IsOk())
                 return authData;
 
             var path = Path.Combine(ProjectsPath, authData.Payload!);

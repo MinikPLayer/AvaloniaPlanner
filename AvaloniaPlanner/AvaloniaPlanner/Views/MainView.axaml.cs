@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using Avalonia.Platform;
 using DynamicData;
+using CSUtil.Web;
+using AvaloniaPlannerLib.Data.Auth;
 
 namespace AvaloniaPlanner.Views
 {
@@ -179,9 +181,26 @@ namespace AvaloniaPlanner.Views
             }
 
             SettingsPage.LoadConfig();
+            SettingsSync.TryLoadSyncToken();
+
+            Api.OnTokenExpired += RefreshToken;
 #if DEBUG
             TestStartup();
 #endif
+        }
+
+        private async Task<bool> RefreshToken()
+        {
+            var token = await Api.Post<ApiAuthToken>("api/Auth/refresh_token");
+            if (token.IsOk() && token.Payload != null && !string.IsNullOrEmpty(token.Payload.Token))
+            {
+                SettingsSync.SettingsSyncToken = token.Payload.Token;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
