@@ -27,6 +27,16 @@ namespace AvaloniaPlanner.ViewModels
             }
         }
 
+        public DateTime Deadline
+        {
+            get => task.Deadline;
+            set
+            {
+                task.Deadline = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         public ProjectStatus Status => task.status;
 
         public ApiProjectTask GetTask() => task;

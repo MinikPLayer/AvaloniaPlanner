@@ -12,8 +12,20 @@
              x:Class="AvaloniaPlanner.Pages.ProjectViewPage">
 	
 	<Grid Margin="5">
+		<Grid.Styles>
+			<Style Selector="ListBoxItem">
+				<Setter Property="Margin" Value="0"/>
+				<Setter Property="Padding" Value="0"/>
+				<Setter Property="MinHeight" Value="0"/>
+				<Setter Property="VerticalAlignment" Value="Top"/>
+			</Style>
+			<Style Selector="ListBox.binsbox > ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="Transparent" />
+			</Style>
+		</Grid.Styles>
+		
 		<Grid.RowDefinitions>
-			<RowDefinition Height="35"/>
+			<RowDefinition Height="30"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		
@@ -25,7 +37,7 @@
 			</Button>
 		</StackPanel>
 
-		<ListBox Items="{Binding VisibleBins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged">
+		<ListBox Classes="binsbox" Items="{Binding VisibleBins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<VirtualizingStackPanel Orientation="Horizontal" VerticalAlignment="Top"/>
@@ -62,7 +74,7 @@
 								</Grid.Styles>
 								
 								<!-- Normal mode -->
-								<TextBlock Grid.Column="0" Grid.ColumnSpan="2" IsVisible="{Binding !InEditMode}" Text="{Binding BinName}" FontSize="20" FontWeight="Bold" Height="25"/>
+								<TextBlock IsHitTestVisible="False" Grid.Column="0" Grid.ColumnSpan="2" IsVisible="{Binding !InEditMode}" Text="{Binding BinName}" FontSize="20" FontWeight="Bold" Height="30"/>
 
 								<!-- Edit mode -->
 								<TextBox IsVisible="{Binding InEditMode}" Background="#A0000000"
@@ -76,12 +88,7 @@
 								</Button>
 							</Grid>
 							<Separator Height="5"/>
-							<ListBox Items="{Binding Tasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
-								<ListBox.Styles>
-									<Style Selector="ListBoxItem">
-										<Setter Property="Padding" Value="0"/>
-									</Style>
-								</ListBox.Styles>
+							<ListBox Classes="tasksbox" Items="{Binding Tasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
 								<ListBox.ItemTemplate>
 									<DataTemplate DataType="vm:ProjectTaskViewModel">
 										<Border Background="Transparent">
@@ -104,7 +111,7 @@
 													</MenuItem>
 												</MenuFlyout>
 											</Border.ContextFlyout>
-											<controls:ProjectTaskControl Padding="10"/>
+											<controls:ProjectTaskControl Padding="5"/>
 										</Border>
 									</DataTemplate>
 								</ListBox.ItemTemplate>

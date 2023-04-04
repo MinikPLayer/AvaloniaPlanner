@@ -4,17 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 xmlns:vm="using:AvaloniaPlanner.ViewModels"
+			 xmlns:conv="using:AvaloniaPlanner.Converters"
              mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
-             x:Class="AvaloniaPlanner.Controls.ProjectControl">
-	<!--<Design.DataContext>
-		<vm:ProjectViewModel/>
-	</Design.DataContext>-->
-
+             x:Class="AvaloniaPlanner.Controls.ProjectControl"
+			 VerticalAlignment="Top"
+			 Margin="0, 5, 5, 0">
 	<UserControl.Styles>
 		<Style Selector="Button">
 			<Setter Property="Padding" Value="0"/>
 			<Setter Property="HorizontalContentAlignment" Value="Left"/>
 			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
 		</Style>
 		<Style Selector="Button:not(:pressed):not(:pointerover)">
 			<Setter Property="Background" Value="Transparent"/>
@@ -22,6 +22,10 @@
 	</UserControl.Styles>
 	
 	<Button Command="{Binding ProjectClickedCommand}">
+		<Button.Resources>
+			<conv:DeadlineVisibilityConverter x:Key="DeadlineVisibilityConverter"/>
+			<conv:DeadlineToColorConverter x:Key="DeadlineColorConverter"/>
+		</Button.Resources>
 		<Button.ContextFlyout>
 			<MenuFlyout>
 				<MenuItem Header="Edit" Click="EditProjectClick">
@@ -36,16 +40,21 @@
 				</MenuItem>
 			</MenuFlyout>
 		</Button.ContextFlyout>
-		<Border Background="#40000000" CornerRadius="5" Margin="5">
+		<Border Background="#40000000" CornerRadius="5">
 			<StackPanel Margin="15" Spacing="5">
 				<TextBlock Text="{Binding Name}"
 						   FontSize="30" FontWeight="ExtraBlack"
 						   HorizontalAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" IsVisible="{Binding Deadline, Converter={StaticResource DeadlineVisibilityConverter}}">
+					<TextBlock Text="Deadline:" Foreground="{Binding Deadline, Converter={StaticResource DeadlineColorConverter}}"/>
+					<TextBlock Text="{Binding Deadline}" Foreground="{Binding Deadline, Converter={StaticResource DeadlineColorConverter}}"/>
+				</StackPanel>
+
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">
 					<icons:MaterialIcon Kind="{Binding StatusModel.Icon}"/>
 					<TextBlock Text="{Binding Owner}"/>
 				</StackPanel>
-
+				
 				<Separator Height="10" />
 				<TextBlock Text="{Binding Description}" HorizontalAlignment="Center" TextAlignment="Center" MaxWidth="300" TextWrapping="Wrap"/>
 			</StackPanel>

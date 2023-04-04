@@ -7,14 +7,14 @@
 			 xmlns:controls="using:AvaloniaPlanner.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.ProjectsPage">
-	<Grid RowDefinitions="30, *">
+	<Grid RowDefinitions="30, *" Margin="5">
 		<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
 			<controls:SearchControl x:Name="SearchInputControl" Width="200" SearchRequested="ProjectSearchRequested"/>
-			<Button ClickMode="Press" Click="AddProjectButtonClicked">
+			<Button ClickMode="Press" Click="AddProjectButtonClicked" VerticalAlignment="Top">
 				<icons:MaterialIcon Kind="Add"/>
 			</Button>
 		</StackPanel>
-		<ScrollViewer Grid.Row="1"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+		<ScrollViewer Grid.Row="1"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0, 5">
 			<WrapPanel x:Name="ProjectsPanel" Orientation="Horizontal"/>
 		</ScrollViewer>
 	</Grid>

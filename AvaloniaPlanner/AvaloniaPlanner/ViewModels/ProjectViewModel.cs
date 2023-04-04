@@ -50,6 +50,16 @@ namespace AvaloniaPlanner.ViewModels
             }
         }
 
+        public DateTime Deadline
+        {
+            get => project.Deadline;
+            set
+            {
+                project.Deadline = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         public ProjectStatus Status => project.Status;
         public ProjectStatusModel StatusModel
         {

@@ -26,6 +26,14 @@ namespace AvaloniaPlanner.Controls
         public Material.Icons.MaterialIconKind Icon => Parent.Icon;
         public double IconSize => Parent.IconSize;
 
+        private bool isEnabled = true;
+        public bool Enabled
+        {
+            get => isEnabled;
+            set => this.RaiseAndSetIfChanged(ref isEnabled, value);
+        }
+
+
         private Brush iconBrush = new SolidColorBrush(Colors.White);
         public Brush IconBrush
         {

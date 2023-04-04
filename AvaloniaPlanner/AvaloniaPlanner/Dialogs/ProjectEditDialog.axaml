@@ -6,23 +6,23 @@
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="300"
              x:Class="AvaloniaPlanner.Dialogs.ProjectEditDialog">
-	<Grid ColumnDefinitions="*, 5, *" RowDefinitions="30, *, *, 3*, *, 10, 30">
-		<TextBlock Text="Edit project" Grid.Column="0" Grid.Row="0" FontWeight="ExtraBlack" FontSize="24"/>
-		<Button Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" Click="CloseDialog" Tag="Cancel" Margin="5, 0">
+	<Grid ColumnDefinitions="*, 5, *" RowDefinitions="40, *, *, 3*, *, *, 20, 30">
+		<TextBlock Text="Edit project" Grid.Column="0" Grid.Row="0" FontWeight="ExtraBlack" FontSize="24" />
+		<Button Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CloseDialog" Tag="Cancel">
 			<icons:MaterialIcon Kind="Close"/>
 		</Button>
 
-		<TextBlock Text="Name: " Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding	Name, Mode=TwoWay}" Grid.Column="2" Grid.Row="1"/>
+		<TextBlock Text="Name: " Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
+		<TextBox Text="{Binding	Name, Mode=TwoWay}" Grid.Column="2" Grid.Row="1" Margin="{StaticResource DialogGridSpacing}"/>
 
-		<TextBlock Text="Owner: " Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding	Owner, Mode=TwoWay}" Grid.Column="2" Grid.Row="2"/>
+		<TextBlock Text="Owner: " Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
+		<TextBox Text="{Binding	Owner, Mode=TwoWay}" Grid.Column="2" Grid.Row="2" Margin="{StaticResource DialogGridSpacing}"/>
 
-		<TextBlock Text="Description: " Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"/>
-		<TextBox Text="{Binding	Description, Mode=TwoWay}" Grid.Column="2" Grid.Row="3" TextWrapping="Wrap"/>
+		<TextBlock Text="Description: " Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
+		<TextBox Text="{Binding	Description, Mode=TwoWay}" Grid.Column="2" Grid.Row="3" TextWrapping="Wrap" Margin="{StaticResource DialogGridSpacing}"/>
 
-		<TextBlock Text="Status: " Grid.Column="0" Grid.Row="4" VerticalAlignment="Center"/>
-		<ComboBox Items="{x:Static models:ProjectStatusModel.Statuses}" SelectedItem="{Binding StatusModel}" Grid.Column="2" Grid.Row="4">
+		<TextBlock Text="Status: " Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
+		<ComboBox Items="{x:Static models:ProjectStatusModel.Statuses}" SelectedItem="{Binding StatusModel}" Grid.Column="2" Grid.Row="4" Margin="{StaticResource DialogGridSpacing}">
 			<ComboBox.ItemTemplate>
 				<DataTemplate DataType="models:ProjectStatusModel">
 					<StackPanel Orientation="Horizontal" Spacing="5">
@@ -33,7 +33,10 @@
 			</ComboBox.ItemTemplate>
 		</ComboBox>
 
-		<Separator Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5"/>
-		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" Click="CloseDialog" Tag="Save"/>
+		<TextBlock Text="Deadline: " Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
+		<DatePicker DayVisible="True" Grid.Column="2" Grid.Row="5" Margin="{StaticResource DialogGridSpacing}"/>
+		
+		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6"/>
+		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" Click="CloseDialog" Tag="Save" HorizontalAlignment="Stretch"/>
 	</Grid>
 </UserControl>

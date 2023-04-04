@@ -5,8 +5,8 @@
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
 			 xmlns:ctrls="using:AvaloniaPlanner.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="AvaloniaPlanner.Controls.PaneEntry">
-
+             x:Class="AvaloniaPlanner.Controls.PaneEntry"
+			 HorizontalAlignment="Stretch">
 	<Design.DataContext>
 		<ctrls:PaneEntryModel />
 	</Design.DataContext>
@@ -15,13 +15,19 @@
 		<Style Selector="Button">
 			<Setter Property="Padding" Value="5"/>
 			<Setter Property="HorizontalContentAlignment" Value="Left"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+		</Style>
+		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Opacity" Value="0.25"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
 		</Style>
 		<Style Selector="Button:not(:pressed):not(:pointerover)">
 			<Setter Property="Background" Value="Transparent"/>
 		</Style>
 	</UserControl.Styles>
 	
-	<Button Click="EntryClicked">
+	<Button HorizontalAlignment="Stretch" Click="EntryClicked" IsEnabled="{Binding Enabled}">
 		<StackPanel Orientation="Horizontal" Spacing="5">
 			<icons:MaterialIcon x:Name="EntryIcon" Foreground="{Binding IconBrush}" Kind="{Binding Icon}" Width="{Binding IconSize, Mode=OneWay}" Height="{Binding IconSize, Mode=OneWay}"/>
 			<TextBlock Foreground="{Binding	IconBrush}" Text="{Binding EntryName}" FontSize="20"/>

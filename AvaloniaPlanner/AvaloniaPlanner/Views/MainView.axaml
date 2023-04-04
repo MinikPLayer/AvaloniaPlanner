@@ -27,7 +27,7 @@
 						DisplayMode="CompactOverlay"
 						OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000" x:Name="NavigationViewSplitView">
 				<SplitView.Pane>
-					<Grid RowDefinitions="*, 35, 35, 35" Margin="10">
+					<Grid RowDefinitions="*, 40, 40, 40" Margin="10">
 						<StackPanel>
 							<Button Margin="0, 5" Command="{Binding PaneOpenedStateChangedCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
 								<Grid>
@@ -38,7 +38,7 @@
 							<Button Margin="0, 5" IsEnabled="{Binding CanGoBack}" Command="{Binding PaneGoBackCommand}" HorizontalAlignment="Left" VerticalAlignment="Top">
 								<icons:MaterialIcon Kind="ArrowLeft" Width="25" Height="25"/>
 							</Button>
-							<Separator Foreground="{DynamicResource PrimaryHueDarkBrush}" Height="20"/>
+							<Border Classes="separator" Height="20"/>
 							<ItemsRepeater Items="{Binding PaneEntries}"/>
 						</StackPanel>
 

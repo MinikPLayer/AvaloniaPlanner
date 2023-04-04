@@ -15,6 +15,7 @@ namespace AvaloniaPlannerLib.Data.Project
         public string Name { get; set; } = "";
         public string Description { get; set; } = "";
         public int Priority { get; set; } = 0;
+        public DateTime Deadline { get; set; } = DateTime.MaxValue;
         public ProjectStatus status { get; set; } = ProjectStatus.Unknown;
     }
 }
