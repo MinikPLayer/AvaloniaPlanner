@@ -197,7 +197,10 @@ namespace AvaloniaPlanner.Pages
             await MainView.OpenDialog(new ConfirmDialog(), handler: (s, e) =>
             {
                 if (e.Parameter is bool b && b == true)
+                {
                     bin.Tasks.Remove(task);
+                    ProjectsPage.SignalProjectsChanged(task.GetTask().Project_id);
+                }
             });
         }
 
@@ -226,6 +229,7 @@ namespace AvaloniaPlanner.Pages
 
                 bin.Tasks.Remove(SelectedTaskToMove);
                 newBin.Tasks.Add(SelectedTaskToMove);
+                ProjectsPage.SignalProjectsChanged(SelectedTaskToMove.GetTask().Project_id);
                 SelectedTaskToMove = null;
 
                 ((ProjectViewViewModel)this.DataContext!).SetNormalBackground();
