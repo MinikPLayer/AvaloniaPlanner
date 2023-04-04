@@ -50,6 +50,16 @@ namespace AvaloniaPlanner.ViewModels
             }
         }
 
+        public bool DeadlineEnabled
+        {
+            get => project.DeadlineEnabled;
+            set
+            {
+                project.DeadlineEnabled = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         public DateTime Deadline
         {
             get => project.Deadline;

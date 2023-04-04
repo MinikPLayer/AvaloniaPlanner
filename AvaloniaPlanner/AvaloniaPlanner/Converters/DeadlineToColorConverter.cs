@@ -16,23 +16,27 @@ namespace AvaloniaPlanner.Converters
         {
             if(value is DateTime dt)
             {
-                if (dt == DateTime.MaxValue)
-                    return new SolidColorBrush(defaultColor);
+                if(dt == DateTime.MaxValue)
+                    return defaultColor;
 
-                var diff = DateTime.Now - dt;
-                if (diff < TimeSpan.FromDays(7))
-                    return new SolidColorBrush(Colors.Yellow);
-
-                if (diff < TimeSpan.FromDays(1))
-                    return new SolidColorBrush(Colors.Orange);
-
-                if (diff < TimeSpan.FromHours(1))
-                    return new SolidColorBrush(Colors.Red);
-
-                if (diff < TimeSpan.Zero)
+                var now = DateTime.Now;
+                if(now > dt)
                     return new SolidColorBrush(Colors.DarkRed);
 
-                return new SolidColorBrush(defaultColor);
+                var diff = dt - now;
+                if (diff >= TimeSpan.FromDays(7))
+                    return new SolidColorBrush(defaultColor);
+
+                if (diff >= TimeSpan.FromDays(1))
+                    return new SolidColorBrush(Colors.Yellow);
+
+                if (diff >= TimeSpan.FromHours(1))
+                    return new SolidColorBrush(Colors.Orange);
+
+                if (diff >= TimeSpan.Zero)
+                    return new SolidColorBrush(Colors.Red);
+
+                return new SolidColorBrush(Colors.DarkRed);
             }
 
             throw new NotSupportedException();

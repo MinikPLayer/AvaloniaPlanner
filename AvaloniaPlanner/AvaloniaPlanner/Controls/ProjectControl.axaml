@@ -25,6 +25,7 @@
 		<Button.Resources>
 			<conv:DeadlineVisibilityConverter x:Key="DeadlineVisibilityConverter"/>
 			<conv:DeadlineToColorConverter x:Key="DeadlineColorConverter"/>
+			<conv:DeadlineTextFormatter x:Key="DeadlineFormatter"/>
 		</Button.Resources>
 		<Button.ContextFlyout>
 			<MenuFlyout>
@@ -45,9 +46,9 @@
 				<TextBlock Text="{Binding Name}"
 						   FontSize="30" FontWeight="ExtraBlack"
 						   HorizontalAlignment="Center"/>
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" IsVisible="{Binding Deadline, Converter={StaticResource DeadlineVisibilityConverter}}">
-					<TextBlock Text="Deadline:" Foreground="{Binding Deadline, Converter={StaticResource DeadlineColorConverter}}"/>
-					<TextBlock Text="{Binding Deadline}" Foreground="{Binding Deadline, Converter={StaticResource DeadlineColorConverter}}"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" IsVisible="{Binding DeadlineEnabled}">
+					<TextBlock Text="Deadline:"/>
+					<TextBlock Text="{Binding Deadline, Converter={StaticResource DeadlineFormatter}}" Foreground="{Binding Deadline, Converter={StaticResource DeadlineColorConverter}}"/>
 				</StackPanel>
 
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">

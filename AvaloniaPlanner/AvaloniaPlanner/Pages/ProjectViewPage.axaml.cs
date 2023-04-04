@@ -151,7 +151,9 @@ namespace AvaloniaPlanner.Pages
                     if (dialog.DataContext is not ProjectTaskViewModel newTask)
                         throw new Exception("Dialog data context is an invalid type");
 
+                    // Replace have to be called twice, otherwise the task bin will not be updated
                     bin.Tasks.Replace(task, newTask);
+                    bin.Tasks.Replace(newTask, newTask);
                     ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
                 }
             });

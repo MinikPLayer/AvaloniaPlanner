@@ -18,6 +18,9 @@ namespace AvaloniaPlanner.Dialogs
             if (sender is Control c && this.DataContext is ProjectViewModel vm && c.Tag is string s && s == "Save")
             {
                 // Copy new data to the new project
+                if(DeadlineDatePicker.SelectedDate.HasValue && DeadlineTimePicker.SelectedTime.HasValue)
+                    vm.Deadline = DeadlineDatePicker.SelectedDate.Value.Date + DeadlineTimePicker.SelectedTime.Value;
+
                 ClassCopier.Copy(vm.GetProject(), ogProject);
                 Save = true;
             }
@@ -33,7 +36,11 @@ namespace AvaloniaPlanner.Dialogs
         {
             InitializeComponent();
             this.ogProject = ogProject;
-            this.DataContext = new ProjectViewModel(ClassCopier.Create<ApiProject>(ogProject));
+            var vm = new ProjectViewModel(ClassCopier.Create<ApiProject>(ogProject));
+            this.DataContext = vm;
+
+            DeadlineDatePicker.SelectedDate = vm.Deadline;
+            DeadlineTimePicker.SelectedTime = vm.Deadline.TimeOfDay;
         }
     }
 }
