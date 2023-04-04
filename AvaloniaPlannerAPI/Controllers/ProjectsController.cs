@@ -33,7 +33,7 @@ namespace AvaloniaPlannerAPI.Controllers
         [ProducesResponseType(511)]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        public ActionResult UpdateUserResults(string data)
+        public ActionResult UpdateUserProjects([FromBody] string data)
         {
             var authData = AuthController.AuthUser(Request);
             if (!authData.IsOk())
