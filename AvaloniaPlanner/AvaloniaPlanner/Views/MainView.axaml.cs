@@ -76,7 +76,12 @@ namespace AvaloniaPlanner.Views
             if (RuntimePlatformInfo.IsMobile)
                 return;
 
-            var posY = e.GetPosition(this).Y;
+            var pos = e.GetPosition(this);
+            var vis = Avalonia.VisualTree.VisualExtensions.GetVisualAt(this, pos);
+            if (sender != vis)
+                return;
+
+            var posY = pos.Y;
             if (MainWindow.Singleton != null && posY < 30 && posY != 0) // In comboBox posY == 0, it won't in MainWindow
             {
                 if(e.ClickCount == 2)

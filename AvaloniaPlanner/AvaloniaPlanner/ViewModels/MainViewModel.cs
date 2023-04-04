@@ -22,7 +22,7 @@ namespace AvaloniaPlanner.ViewModels
 
         public string Greeting => "Welcome to Avalonia!";
 
-        private object currentPage = new HomePage();
+        private object currentPage = new ProjectsPage();
         public object CurrentPage
         {
             get => currentPage;
@@ -68,7 +68,7 @@ namespace AvaloniaPlanner.ViewModels
             PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
             PaneOpenedStateChangedCommand2 = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
             PaneGoBackCommand = ReactiveCommand.Create(PageManager.GoBack);
-            PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage)));
+            //PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage)));
             PaneEntries.Add(new PaneEntry("Projects", Material.Icons.MaterialIconKind.Package, typeof(ProjectsPage)));
         }
     }

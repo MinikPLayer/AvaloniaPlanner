@@ -7,14 +7,59 @@
 			 xmlns:controls="using:AvaloniaPlanner.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.ProjectsPage">
-	<Grid RowDefinitions="30, *" Margin="5">
-		<StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5">
+	<Grid RowDefinitions="30, *" ColumnDefinitions="*, *" Margin="5">
+		<StackPanel DockPanel.Dock="Left" Grid.Row="0" Orientation="Horizontal" Spacing="5">
 			<controls:SearchControl x:Name="SearchInputControl" Width="200" SearchRequested="ProjectSearchRequested"/>
 			<Button ClickMode="Press" Click="AddProjectButtonClicked" VerticalAlignment="Top">
 				<icons:MaterialIcon Kind="Add"/>
 			</Button>
+			<ComboBox Width="150" SelectionChanged="ProjectsOrderMethodChanged" SelectedIndex="0">
+				<ComboBox.Items>
+					<ComboBoxItem Tag="deadline">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<icons:MaterialIcon Kind="ClockTimeEight"/>
+							<TextBlock Text="Deadline"/>
+						</StackPanel>
+					</ComboBoxItem>
+					<ComboBoxItem Tag="update">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<icons:MaterialIcon Kind="Update"/>
+							<TextBlock Text="Last update"/>
+						</StackPanel>
+					</ComboBoxItem>
+					<ComboBoxItem Tag="creation">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<icons:MaterialIcon Kind="Calendar"/>
+							<TextBlock Text="Creation date"/>
+						</StackPanel>
+					</ComboBoxItem>
+					<ComboBoxItem Tag="name">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<icons:MaterialIcon Kind="FormatTextVariant"/>
+							<TextBlock Text="Name"/>
+						</StackPanel>
+					</ComboBoxItem>
+				</ComboBox.Items>
+			</ComboBox>
+			<ComboBox SelectionChanged="ProjectsOrderDirectionChanged" SelectedIndex="1">
+				<ComboBox.Items>
+					<ComboBoxItem Tag="asc">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<icons:MaterialIcon Kind="SortVariant"/>
+							<TextBlock Text="Ascending"/>
+						</StackPanel>
+					</ComboBoxItem>
+					<ComboBoxItem Tag="desc">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<icons:MaterialIcon Kind="SortReverseVariant"/>
+							<TextBlock Text="Descending"/>
+						</StackPanel>
+					</ComboBoxItem>
+				</ComboBox.Items>
+			</ComboBox>
 		</StackPanel>
-		<ScrollViewer Grid.Row="1"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0, 5">
+
+		<ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0, 5">
 			<WrapPanel x:Name="ProjectsPanel" Orientation="Horizontal"/>
 		</ScrollViewer>
 	</Grid>

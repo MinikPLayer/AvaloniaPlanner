@@ -115,7 +115,11 @@ namespace AvaloniaPlanner.Controls
             remove => RemoveHandler(ClickedEvent, value);
         }
 
-        public void EntryClicked(object sender, RoutedEventArgs e) => RaiseEvent(new RoutedEventArgs(ClickedEvent));
+        public void EntryClicked(object sender, RoutedEventArgs e)
+        {
+            MainView.Singleton.ViewModel.IsPaneOpened = false;
+            RaiseEvent(new RoutedEventArgs(ClickedEvent));
+        }
 
         public PaneEntry() 
         {

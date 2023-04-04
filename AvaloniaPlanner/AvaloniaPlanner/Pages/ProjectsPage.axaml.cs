@@ -57,10 +57,13 @@ namespace AvaloniaPlanner.Pages
                     Pages.ForEach(p => p.SearchInputControl.ResetSearch(null, null));
 
                 Pages.ForEach(p => p.SearchInputControl.RaiseSearchEvent());
-
             };
         }
 
+        Func<ApiProject, object> ProjectOrderArg = x => x.LastUpdate;
+        Func<ApiProject, bool> ProjectPriorityOrderWhereFunc = x => true;
+
+        Func<IEnumerable<ApiProject>, Func<ApiProject, object>, IOrderedEnumerable<ApiProject>> ProjectOrderFunc = (data, orderArg) => data.OrderByDescending(orderArg);
         public void ApplySearchFilter(string? term)
         {
             ProjectsPanel.Children.Clear();
@@ -72,7 +75,66 @@ namespace AvaloniaPlanner.Pages
                 projects = projects.Where(p => p.Name.ToLower().Contains(term));
             }
 
-            ProjectsPanel.Children.AddRange(projects.OrderByDescending(x => x.LastUpdate).Select(p => new ProjectControl(p)));
+            var priority = ProjectOrderFunc(projects.Where(ProjectPriorityOrderWhereFunc), ProjectOrderArg);
+            var rest = ProjectOrderFunc(projects.Except(priority), ProjectOrderArg);
+
+            ProjectsPanel.Children.AddRange(priority.Concat(rest).Select(p => new ProjectControl(p)));
+        }
+
+        public void ProjectsOrderMethodChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0 || e.AddedItems[0] is not Control c || c.Tag is not string tag || string.IsNullOrEmpty(tag))
+                return;
+
+            ProjectPriorityOrderWhereFunc = x => true;
+            switch(tag)
+            {
+                case "deadline":
+                    ProjectOrderArg = x => x.Deadline;
+                    ProjectPriorityOrderWhereFunc = x => x.DeadlineEnabled;
+                    break;
+
+                case "name":
+                    ProjectOrderArg = x => x.Name;
+                    break;
+
+                case "update":
+                    ProjectOrderArg = x => x.LastUpdate;
+                    break;
+
+                case "created":
+                    ProjectOrderArg = x => x.CreationDate;
+                    break;
+
+                default:
+                    return;
+            }
+
+            if(SearchInputControl != null)
+                SearchInputControl.RaiseSearchEvent();
+        }
+
+        public void ProjectsOrderDirectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0 || e.AddedItems[0] is not Control c || c.Tag is not string tag || string.IsNullOrEmpty(tag))
+                return;
+
+            switch (tag)
+            {
+                case "asc":
+                    ProjectOrderFunc = (data, orderArg) => data.OrderBy(orderArg);
+                    break;
+
+                case "desc":
+                    ProjectOrderFunc = (data, orderArg) => data.OrderByDescending(orderArg);
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (SearchInputControl != null)
+                SearchInputControl.RaiseSearchEvent();
         }
 
         public static void RemoveProject(ApiProject project)

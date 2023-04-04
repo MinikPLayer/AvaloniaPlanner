@@ -41,8 +41,11 @@ namespace AvaloniaPlanner.Pages
             ChangePage(instance);
         }
 
-        public static void Navigate(Type t)
+        public static void Navigate(Type t, bool force = false)
         {
+            if (MainView.Singleton.ViewModel.CurrentPage.GetType() == t && !force)
+                return;
+
             var instance = Activator.CreateInstance(t);
             if (instance is not UserControl uc)
                 throw new ArgumentNullException($"Instance of type {t} cannot be created or is not a UserControl type");
@@ -50,6 +53,6 @@ namespace AvaloniaPlanner.Pages
             Navigate(uc);
         }
 
-        public static void Navigate<T>() where T : UserControl => Navigate(typeof(T));
+        public static void Navigate<T>(bool force = false) where T : UserControl => Navigate(typeof(T), force);
     }
 }

@@ -24,7 +24,7 @@
 		</controls:MessageDialog.DialogContent>
 		<controls:MessageDialog.Child>
 			<SplitView IsPaneOpen="{Binding	IsPaneOpened, Mode=TwoWay}"
-						DisplayMode="CompactOverlay"
+						DisplayMode="CompactInline"
 						OpenPaneLength="300" CompactPaneLength="55" PaneBackground="#40000000" x:Name="NavigationViewSplitView">
 				<SplitView.Pane>
 					<Grid RowDefinitions="*, 40, 40, 40" Margin="10">
