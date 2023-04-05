@@ -77,7 +77,7 @@ namespace AvaloniaPlanner.Views
                 return;
 
             var pos = e.GetPosition(this);
-            var vis = Avalonia.VisualTree.VisualExtensions.GetVisualAt(this, pos);
+            var vis = Avalonia.VisualTree.VisualExtensions.GetVisualAt(this, pos, x => x is Control c && c.IsHitTestVisible);
             if (sender != vis)
                 return;
 
