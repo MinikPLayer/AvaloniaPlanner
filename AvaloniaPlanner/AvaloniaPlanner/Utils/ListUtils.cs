@@ -18,13 +18,19 @@ namespace AvaloniaPlanner.Utils
 
         public static void FillToList<Tin, Tout>(this NotifyCollectionChangedEventArgs e, List<Tout> list, Func<Tin, Tout> conversionFunc)
         {
-            if (e.NewItems != null)
-                foreach (var item in e.NewItems.OfType<Tin>())
-                    list.Add(conversionFunc(item));
-
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                list.Clear();
+                return;
+            }
+            
             if (e.OldItems != null)
                 foreach (var item in e.OldItems.OfType<Tin>())
                     list.Remove(conversionFunc(item));
+            
+            if (e.NewItems != null)
+                foreach (var item in e.NewItems.OfType<Tin>())
+                    list.Add(conversionFunc(item));
         }
     }
 }

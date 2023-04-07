@@ -6,7 +6,7 @@
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="300"
              x:Class="AvaloniaPlanner.Dialogs.ProjectTaskEditDialog">
-	<Grid ColumnDefinitions="*, 5, *" RowDefinitions="40, *, *, 20, 30">
+	<Grid ColumnDefinitions="*, 5, 2*" RowDefinitions="40, *, *, *, 20, 30">
 		<TextBlock Text="Edit task" Grid.Column="0" Grid.Row="0" FontWeight="ExtraBlack" FontSize="24"/>
 		<Button Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CloseDialog" Tag="Cancel">
 			<icons:MaterialIcon Kind="Close"/>
@@ -26,8 +26,14 @@
 				</DataTemplate>
 			</ComboBox.ItemTemplate>
 		</ComboBox>
+
+		<TextBlock Text="Priority: " Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
+		<Grid Grid.Column="2" Grid.Row="3" Margin="{StaticResource DialogGridSpacing}" ColumnDefinitions="*, 40">
+			<Slider Grid.Column="0" Value="{Binding	Priority, Mode=TwoWay}" Minimum="0" Maximum="20" TickFrequency="1" Margin="0, 0, 10, 0"/>
+			<TextBox Grid.Column="1" Margin="10, 0, 0, 0" Height="10" Text="{Binding Priority, Mode=TwoWay}"/>
+		</Grid>
 		
-		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3"/>
-		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" HorizontalAlignment="Stretch" Click="CloseDialog" Tag="Save"/>
+		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4"/>
+		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Stretch" Click="CloseDialog" Tag="Save"/>
 	</Grid>
 </UserControl>

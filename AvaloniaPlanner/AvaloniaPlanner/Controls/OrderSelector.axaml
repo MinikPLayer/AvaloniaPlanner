@@ -1,0 +1,38 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:controls="clr-namespace:AvaloniaPlanner.Controls"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaPlanner.Controls.OrderSelector">
+	<StackPanel Orientation="Horizontal" Spacing="5">
+		<ComboBox Width="150" x:Name="ProjectsOrderMethodSelector" SelectionChanged="_OrderMethodChanged" 
+		          Items="{Binding Options}">
+			<ComboBox.ItemTemplate>
+	            <DataTemplate x:DataType="controls:OrderSelection">
+		            <StackPanel Orientation="Horizontal" Spacing="5">
+		            	<icons:MaterialIcon Kind="{Binding Icon}"/>
+		            	<TextBlock Text="{Binding Title}"/>
+		            </StackPanel>
+	            </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox x:Name="ProjectsOrderDirectionSelector" SelectionChanged="_OrderMethodChanged">
+            <ComboBox.Items>
+            	<ComboBoxItem Tag="asc">
+            		<StackPanel Orientation="Horizontal" Spacing="5">
+            			<icons:MaterialIcon Kind="SortVariant"/>
+            			<TextBlock Text="Ascending"/>
+            		</StackPanel>
+            	</ComboBoxItem>
+            	<ComboBoxItem Tag="desc">
+            		<StackPanel Orientation="Horizontal" Spacing="5">
+            			<icons:MaterialIcon Kind="SortReverseVariant"/>
+            			<TextBlock Text="Descending"/>
+            		</StackPanel>
+            	</ComboBoxItem>
+            </ComboBox.Items>
+        </ComboBox>
+	</StackPanel>
+</UserControl>

@@ -27,6 +27,16 @@ namespace AvaloniaPlanner.ViewModels
             }
         }
 
+        public int Priority
+        {
+            get => task.Priority;
+            set
+            {
+                task.Priority = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         public DateTime Deadline
         {
             get => task.Deadline;
@@ -57,6 +67,7 @@ namespace AvaloniaPlanner.ViewModels
                 task = new ApiProjectTask();
 
             this.task = task;
+            
         }
 
         public ProjectTaskViewModel() : this(null) { }

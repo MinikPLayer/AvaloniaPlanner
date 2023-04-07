@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using AvaloniaPlanner.Dialogs;
 using System;
+using DynamicData.Kernel;
 
 namespace AvaloniaPlanner.Pages
 {
@@ -81,13 +82,10 @@ namespace AvaloniaPlanner.Pages
             ProjectsPanel.Children.AddRange(priority.Concat(rest).Select(p => new ProjectControl(p)));
         }
 
-        public void ProjectsOrderMethodChanged(object sender, SelectionChangedEventArgs e)
+        private void SetProjectsOrderMethod(string method)
         {
-            if (e.AddedItems.Count == 0 || e.AddedItems[0] is not Control c || c.Tag is not string tag || string.IsNullOrEmpty(tag))
-                return;
-
             ProjectPriorityOrderWhereFunc = x => true;
-            switch(tag)
+            switch(method)
             {
                 case "deadline":
                     ProjectOrderArg = x => x.Deadline;
@@ -110,16 +108,22 @@ namespace AvaloniaPlanner.Pages
                     return;
             }
 
+            SettingsPage.Config.ProjectsOrderString = method;
             if(SearchInputControl != null)
                 SearchInputControl.RaiseSearchEvent();
         }
-
-        public void ProjectsOrderDirectionChanged(object sender, SelectionChangedEventArgs e)
+        
+        public void ProjectsOrderMethodChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0 || e.AddedItems[0] is not Control c || c.Tag is not string tag || string.IsNullOrEmpty(tag))
                 return;
 
-            switch (tag)
+            SetProjectsOrderMethod(tag);
+        }
+
+        private void SetProjectsOrderDirection(string order)
+        {
+            switch (order)
             {
                 case "asc":
                     ProjectOrderFunc = (data, orderArg) => data.OrderBy(orderArg);
@@ -133,8 +137,17 @@ namespace AvaloniaPlanner.Pages
                     return;
             }
 
+            SettingsPage.Config.ProjectsOrderDirection = order;
             if (SearchInputControl != null)
                 SearchInputControl.RaiseSearchEvent();
+        }
+        
+        public void ProjectsOrderDirectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0 || e.AddedItems[0] is not Control c || c.Tag is not string tag || string.IsNullOrEmpty(tag))
+                return;
+
+            SetProjectsOrderDirection(tag);
         }
 
         public static void RemoveProject(ApiProject project)
@@ -188,6 +201,12 @@ namespace AvaloniaPlanner.Pages
             InitializeComponent();
             Pages.Add(this);
             ApplySearchFilter(null);
+
+            ProjectsOrderDirectionSelector.SelectedItem = ProjectsOrderDirectionSelector.Items!.OfType<ComboBoxItem>()
+                .First(x => x.Tag is string s && s == SettingsPage.Config.ProjectsOrderDirection);
+            
+            ProjectsOrderMethodSelector.SelectedItem = ProjectsOrderMethodSelector.Items!.OfType<ComboBoxItem>()
+                .First(x => x.Tag is string s && s == SettingsPage.Config.ProjectsOrderString);
         }
 
         ~ProjectsPage()

@@ -10,6 +10,9 @@
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Pages.ProjectViewPage">
+	<Design.DataContext>
+		<pages:ProjectViewViewModel/>
+	</Design.DataContext>
 	
 	<Grid Margin="5">
 		<Grid.Styles>
@@ -34,10 +37,11 @@
 			<Button ClickMode="Press" Click="AddBinButtonClicked">
 				<icons:MaterialIcon Kind="Add"/>
 			</Button>
+			<controls:OrderSelector x:Name="OrderSelector" OrderMethodChanged="OrderSelector_OnOrderMethodChanged"/>
 		</StackPanel>
 
 		<ListBox Classes="binsbox" Items="{Binding VisibleBins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged"
-				 ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+		         ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<VirtualizingStackPanel Orientation="Horizontal" VerticalAlignment="Top"/>
@@ -88,7 +92,7 @@
 								</Button>
 							</Grid>
 							<Separator Height="5"/>
-							<ListBox Classes="tasksbox" Items="{Binding Tasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
+							<ListBox Items="{Binding Tasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
 								<ListBox.ItemTemplate>
 									<DataTemplate DataType="vm:ProjectTaskViewModel">
 										<Border Background="Transparent">

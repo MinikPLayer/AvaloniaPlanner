@@ -40,6 +40,50 @@ namespace AvaloniaPlanner.Pages
                 }
             }
 
+            private string _projectsOrderDirectionString = "desc";
+            public string ProjectsOrderDirection
+            {
+                get => _projectsOrderDirectionString;
+                set
+                {
+                    _projectsOrderDirectionString = value;
+                    SettingsPage.SaveConfig();
+                }
+            }
+            
+            private string _projectsOrderString = "deadline";
+            public string ProjectsOrderString
+            {
+                get => _projectsOrderString;
+                set
+                {
+                    _projectsOrderString = value;
+                    SettingsPage.SaveConfig();
+                }
+            }
+
+            private TaskOrderingModes tasksOrderMode = TaskOrderingModes.Priority;
+            public TaskOrderingModes TasksOrderMode
+            {
+                get => tasksOrderMode;
+                set
+                {
+                    tasksOrderMode = value;
+                    SettingsPage.SaveConfig();
+                }
+            }
+
+            private bool _tasksOrderAscending = false;
+            public bool TasksOrderAscending
+            {
+                get => _tasksOrderAscending;
+                set
+                {
+                    _tasksOrderAscending = value;
+                    SettingsPage.SaveConfig();
+                }
+            }
+            
             public ConfigData()
             {
                 Server = new ServerData();

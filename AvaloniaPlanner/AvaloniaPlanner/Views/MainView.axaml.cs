@@ -167,7 +167,10 @@ namespace AvaloniaPlanner.Views
         public MainView()
         {
             Singleton = this;
+            SettingsPage.LoadConfig();
+            SettingsSync.TryLoadSyncToken();
             InitializeComponent();
+            
             NavigationViewSplitView.DataContext = this.DataContext = new MainViewModel();     
 
             // If file doesn't exists, create one
@@ -184,9 +187,6 @@ namespace AvaloniaPlanner.Views
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center 
                 };
             }
-
-            SettingsPage.LoadConfig();
-            SettingsSync.TryLoadSyncToken();
 
             Api.OnTokenExpired += RefreshToken;
 #if DEBUG

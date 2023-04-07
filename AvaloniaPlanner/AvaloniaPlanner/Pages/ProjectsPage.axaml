@@ -13,7 +13,7 @@
 			<Button ClickMode="Press" Click="AddProjectButtonClicked" VerticalAlignment="Top">
 				<icons:MaterialIcon Kind="Add"/>
 			</Button>
-			<ComboBox Width="150" SelectionChanged="ProjectsOrderMethodChanged" SelectedIndex="0">
+			<ComboBox Width="150" x:Name="ProjectsOrderMethodSelector" SelectionChanged="ProjectsOrderMethodChanged">
 				<ComboBox.Items>
 					<ComboBoxItem Tag="deadline">
 						<StackPanel Orientation="Horizontal" Spacing="5">
@@ -41,7 +41,7 @@
 					</ComboBoxItem>
 				</ComboBox.Items>
 			</ComboBox>
-			<ComboBox SelectionChanged="ProjectsOrderDirectionChanged" SelectedIndex="1">
+			<ComboBox x:Name="ProjectsOrderDirectionSelector" SelectionChanged="ProjectsOrderDirectionChanged">
 				<ComboBox.Items>
 					<ComboBoxItem Tag="asc">
 						<StackPanel Orientation="Horizontal" Spacing="5">

@@ -13,16 +13,33 @@ using CSUtil.Data;
 using DynamicData;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Material.Icons;
+using Material.Icons.Avalonia;
 
 namespace AvaloniaPlanner.Pages
 {
+    public enum TaskOrderingModes
+    {
+        Priority,
+        Name,
+        Status
+    }
+    
     public class ProjectViewViewModel : ReactiveObject
     {
         private ApiProject project;
+
+        public IEnumerable<OrderSelection> Options { get; } = new ObservableCollection<OrderSelection>()
+        {
+            new("Priority", MaterialIconKind.PriorityHigh, TaskOrderingModes.Priority),
+            new("Name", MaterialIconKind.SortByAlpha, TaskOrderingModes.Name),
+            new("Status", MaterialIconKind.CheckCircle, TaskOrderingModes.Status)
+        };
 
         public string ProjectName
         {
@@ -45,8 +62,40 @@ namespace AvaloniaPlanner.Pages
         public void SetHighlightedBackground() => BinsBackground = new SolidColorBrush(Color.FromArgb(64, 255, 0, 0));
 
         public ObservableCollection<ProjectBinViewModel> VisibleBins { get; }
-        public ObservableCollection<ProjectBinViewModel> Bins { get; set; }
+        public ObservableCollection<ProjectBinViewModel> Bins { get; }
 
+        public void SetOrderingMode(TaskOrderingModes method, bool asc)
+        {
+            Func<ProjectTaskViewModel, object> selector;
+            switch (method)
+            {
+                case TaskOrderingModes.Name:
+                    selector = x => x.TaskName;
+                    break;
+                
+                case TaskOrderingModes.Priority:
+                    selector = x => x.Priority;
+                    break;
+                    
+                case TaskOrderingModes.Status:
+                    selector = x => x.Status;
+                    break;
+                    
+                default:
+                    return;
+            }
+            
+            foreach (var bin in Bins)
+            {
+                var newTasks = (asc ? bin.Tasks.OrderBy(selector) : bin.Tasks.OrderByDescending(selector)).ToList();
+                bin.Tasks.Clear();
+                bin.Tasks.AddRange(newTasks);
+            }
+
+            SettingsPage.Config.TasksOrderMode = method;
+            SettingsPage.Config.TasksOrderAscending = asc;
+        }
+        
         public ProjectViewViewModel(ApiProject? p = null)
         {
             if (p == null)
@@ -240,16 +289,25 @@ namespace AvaloniaPlanner.Pages
             lb.SelectedItem = null;
         }
 
-        public ProjectViewPage(ApiProject p)
+        
+
+        public ProjectViewPage(ApiProject? p)
         {
-            this.DataContext = new ProjectViewViewModel(p);
+            var vm = new ProjectViewViewModel(p);
+            this.DataContext = vm;
             InitializeComponent();
+
+            this.OrderSelector.SetOrderMethods(vm.Options, SettingsPage.Config.TasksOrderMode, SettingsPage.Config.TasksOrderAscending);
         }
 
-        public ProjectViewPage()
+        public ProjectViewPage() : this(null) {}
+
+        private void OrderSelector_OnOrderMethodChanged(object? sender, OrderSelectorEventArgs e)
         {
-            this.DataContext = new ProjectViewViewModel();
-            InitializeComponent();
+            if(e.Method is not TaskOrderingModes mode)
+                return;
+            
+            ((ProjectViewViewModel)this.DataContext!).SetOrderingMode(mode, e.Ascending);
         }
     }
 }

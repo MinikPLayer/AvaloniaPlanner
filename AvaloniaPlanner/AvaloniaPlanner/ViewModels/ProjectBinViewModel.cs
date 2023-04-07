@@ -59,7 +59,7 @@ namespace AvaloniaPlanner.ViewModels
         public ICommand BinEditCancelCommand { get; set; }
         public ICommand AddTaskCommand { get; set; }
 
-        public ObservableCollection<ProjectTaskViewModel> Tasks { get; set; }
+        public ObservableCollection<ProjectTaskViewModel> Tasks { get; }
 
         public ProjectBinViewModel(ApiProjectBin bin)
         {
