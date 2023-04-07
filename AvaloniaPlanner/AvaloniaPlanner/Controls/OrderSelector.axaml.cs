@@ -61,13 +61,7 @@ public partial class OrderSelector : UserControl
             ProjectsOrderDirectionSelector.SelectedIndex = ascending.Value ? 0 : 1;
     }
 
-    public OrderSelector()
-    {
-        InitializeComponent();
-        this.DataContext = this;
-    }
-
-    private void _OrderMethodChanged(object? sender, SelectionChangedEventArgs e)
+    public void ForceReorder()
     {
         var method = ProjectsOrderMethodSelector.SelectedItem;
         if (method is not OrderSelection sel)
@@ -77,4 +71,12 @@ public partial class OrderSelector : UserControl
         var ev = new OrderSelectorEventArgs(OrderMethodChangedEvent, sel.Value, ascending);
         RaiseEvent(ev);
     }
+
+    public OrderSelector()
+    {
+        InitializeComponent();
+        this.DataContext = this;
+    }
+
+    private void _OrderMethodChanged(object? sender, SelectionChangedEventArgs e) => ForceReorder();
 }

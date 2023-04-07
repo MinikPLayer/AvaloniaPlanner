@@ -186,6 +186,7 @@ namespace AvaloniaPlanner.Pages
             var task = new ApiProjectTask() { Name = "New task" }.Populate();
             var newTask = new ProjectTaskViewModel(task);
             vm.Tasks.Add(newTask);
+            this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
 
             await EditTask(newTask, vm);
@@ -201,9 +202,8 @@ namespace AvaloniaPlanner.Pages
                     if (dialog.DataContext is not ProjectTaskViewModel newTask)
                         throw new Exception("Dialog data context is an invalid type");
 
-                    // Replace have to be called twice, otherwise the task bin will not be updated
                     bin.Tasks.Replace(task, newTask);
-                    bin.Tasks.Replace(newTask, newTask);
+                    this.OrderSelector.ForceReorder();
                     ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
                 }
             });
@@ -251,6 +251,7 @@ namespace AvaloniaPlanner.Pages
                 if (e.Parameter is bool b && b == true)
                 {
                     bin.Tasks.Remove(task);
+                    this.OrderSelector.ForceReorder();
                     ProjectsPage.SignalProjectsChanged(task.GetTask().Project_id);
                 }
             });
@@ -281,6 +282,7 @@ namespace AvaloniaPlanner.Pages
 
                 bin.Tasks.Remove(SelectedTaskToMove);
                 newBin.Tasks.Add(SelectedTaskToMove);
+                this.OrderSelector.ForceReorder();
                 ProjectsPage.SignalProjectsChanged(SelectedTaskToMove.GetTask().Project_id);
                 SelectedTaskToMove = null;
 
@@ -329,6 +331,7 @@ namespace AvaloniaPlanner.Pages
                 default:
                     return;
             }
+            this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
         }
         
@@ -341,11 +344,13 @@ namespace AvaloniaPlanner.Pages
             if (props.IsXButton2Pressed)
             {
                 vm.StatusModel = vm.StatusModel.Next();
+                this.OrderSelector.ForceReorder();
                 ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
             }
             else if (props.IsXButton1Pressed)
             {
                 vm.StatusModel = vm.StatusModel.Prev();
+                this.OrderSelector.ForceReorder();
                 ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
             }
         }
