@@ -16,7 +16,7 @@ namespace AvaloniaPlanner.Utils
             source.CollectionChanged += (s, e) => e.FillToList(list, conversionFunc);
         }
 
-        public static void FillToList<Tin, Tout>(this NotifyCollectionChangedEventArgs e, List<Tout> list, Func<Tin, Tout> conversionFunc)
+        private static void FillToList<Tin, Tout>(this NotifyCollectionChangedEventArgs e, List<Tout> list, Func<Tin, Tout> conversionFunc)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
