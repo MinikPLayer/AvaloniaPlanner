@@ -24,6 +24,14 @@ namespace AvaloniaPlanner.Models
             new ProjectStatusModel(ProjectStatus.Unknown, MaterialIconKind.QuestionMark),
         };
 
+        private static List<ProjectStatusModel> StatusLifecycle = new List<ProjectStatusModel>()
+        {
+            Get(ProjectStatus.Idea),
+            Get(ProjectStatus.Defined),
+            Get(ProjectStatus.InProgress),
+            Get(ProjectStatus.Completed)
+        };
+        
         private ProjectStatus _status = ProjectStatus.Unknown;
         public ProjectStatus Status
         {
@@ -38,6 +46,32 @@ namespace AvaloniaPlanner.Models
             set => this.RaiseAndSetIfChanged(ref _icon, value);
         }
 
+        public ProjectStatusModel Next()
+        {
+            var index = StatusLifecycle.IndexOf(this);
+            if(index == -1)
+                return this;
+
+            index++;
+            if (index >= StatusLifecycle.Count)
+                index = StatusLifecycle.Count - 1;
+            
+            return StatusLifecycle[index];
+        }
+        
+        public ProjectStatusModel Prev()
+        {
+            var index = StatusLifecycle.IndexOf(this);
+            if(index == -1)
+                return this;
+
+            index--;
+            if (index < 0)
+                index = 0;
+            
+            return StatusLifecycle[index];
+        }
+        
         public static ProjectStatusModel Get(ProjectStatus status)
         {
             var ret = Statuses.Find(x => x.Status == status);

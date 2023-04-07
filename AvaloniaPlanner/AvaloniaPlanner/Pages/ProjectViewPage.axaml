@@ -115,7 +115,7 @@
 													</MenuItem>
 												</MenuFlyout>
 											</Border.ContextFlyout>
-											<controls:ProjectTaskControl Padding="5"/>
+											<controls:ProjectTaskControl Padding="5" PointerPressed="TaskPointerPressed"/>
 										</Border>
 									</DataTemplate>
 								</ListBox.ItemTemplate>

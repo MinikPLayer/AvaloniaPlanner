@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using AvaloniaPlanner.Models;
 using Material.Icons;
 using Material.Icons.Avalonia;
 
@@ -308,6 +309,24 @@ namespace AvaloniaPlanner.Pages
                 return;
             
             ((ProjectViewViewModel)this.DataContext!).SetOrderingMode(mode, e.Ascending);
+        }
+
+        private void TaskPointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            if (sender is not ProjectTaskControl { DataContext: ProjectTaskViewModel vm })
+                return;
+            
+            var props = e.GetCurrentPoint(null).Properties;
+            if (props.IsXButton2Pressed)
+            {
+                vm.StatusModel = vm.StatusModel.Next();
+                ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
+            }
+            else if (props.IsXButton1Pressed)
+            {
+                vm.StatusModel = vm.StatusModel.Prev();
+                ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
+            }
         }
     }
 }
