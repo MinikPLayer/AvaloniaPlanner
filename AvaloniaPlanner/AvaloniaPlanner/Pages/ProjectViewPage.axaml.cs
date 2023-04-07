@@ -311,6 +311,27 @@ namespace AvaloniaPlanner.Pages
             ((ProjectViewViewModel)this.DataContext!).SetOrderingMode(mode, e.Ascending);
         }
 
+        private void TaskLifecycleChangeClicked(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not Control { Tag: string s, DataContext: ProjectTaskViewModel vm })
+                return;
+
+            switch (s)
+            {
+                case "next":
+                    vm.StatusModel = vm.StatusModel.Next();
+                    break;
+                
+                case "prev":
+                    vm.StatusModel = vm.StatusModel.Prev();
+                    break;
+                
+                default:
+                    return;
+            }
+            ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
+        }
+        
         private void TaskPointerPressed(object? sender, PointerPressedEventArgs e)
         {
             if (sender is not ProjectTaskControl { DataContext: ProjectTaskViewModel vm })

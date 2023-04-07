@@ -108,6 +108,16 @@
 															<icons:MaterialIcon Kind="MoveResize" Width="25" Height="25"/>
 														</MenuItem.Icon>
 													</MenuItem>
+													<MenuItem Header="Next Status" Click="TaskLifecycleChangeClicked" Tag="next">
+														<MenuItem.Icon>
+															<icons:MaterialIcon Kind="ArrowRight" Width="25" Height="25"/>
+														</MenuItem.Icon>
+													</MenuItem>
+													<MenuItem Header="Prev Status" Click="TaskLifecycleChangeClicked" Tag="prev">
+														<MenuItem.Icon>
+															<icons:MaterialIcon Kind="ArrowLeft" Width="25" Height="25"/>
+														</MenuItem.Icon>
+													</MenuItem>
 													<MenuItem Header="Delete" Click="DeleteTaskClicked">
 														<MenuItem.Icon>
 															<icons:MaterialIcon Kind="Delete" Width="25" Height="25"/>
