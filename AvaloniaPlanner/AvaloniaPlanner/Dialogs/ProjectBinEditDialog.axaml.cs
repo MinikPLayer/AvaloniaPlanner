@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using AvaloniaPlanner.ViewModels;
@@ -9,6 +11,9 @@ namespace AvaloniaPlanner.Dialogs
 {
     public partial class ProjectBinEditDialog : UserControl
     {
+        public static TaskOrderingModes[] TaskOrderingModes { get; } =
+            Enum.GetValues<TaskOrderingModes>();
+
         private ApiProjectBin ogBin { get; set; }
         public bool Save { get; set; } = false;
 

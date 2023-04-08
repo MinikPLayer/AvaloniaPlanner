@@ -16,12 +16,33 @@ namespace AvaloniaPlanner.ViewModels
     public class ProjectTaskViewModel : ReactiveObject
     {
         private ApiProjectTask task;
+        
+        public void SignalModified()
+        {
+            LastUpdate = DateTime.Now;
+        }
 
+        public DateTime LastUpdate
+        {
+            get => task.LastUpdate;
+            set
+            {
+                if (task.LastUpdate == value)
+                    return;
+                
+                task.LastUpdate = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        
         public string TaskName
         {
             get => task.Name;
             set
             {
+                if (task.Name == value)
+                    return;
+                
                 task.Name = value;
                 this.RaisePropertyChanged();
             }
@@ -32,16 +53,32 @@ namespace AvaloniaPlanner.ViewModels
             get => task.Priority;
             set
             {
+                if (task.Priority == value)
+                    return;
+                
                 task.Priority = value;
                 this.RaisePropertyChanged();
             }
         }
-
+        
+        public string Description
+        {
+            get => task.Description;
+            set
+            {
+                task.Description = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        
         public DateTime Deadline
         {
             get => task.Deadline;
             set
             {
+                if (task.Deadline == value)
+                    return;
+                
                 task.Deadline = value;
                 this.RaisePropertyChanged();
             }
@@ -56,6 +93,9 @@ namespace AvaloniaPlanner.ViewModels
             get => ProjectStatusModel.Get(Status);
             set
             {
+                if (task.status == value.Status)
+                    return;
+                
                 task.status = value.Status;
                 this.RaisePropertyChanged();
             }

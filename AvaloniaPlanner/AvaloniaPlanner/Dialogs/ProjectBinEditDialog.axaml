@@ -5,13 +5,14 @@
 			 xmlns:models="using:AvaloniaPlanner.Models"
 			 xmlns:vm="using:AvaloniaPlanner.ViewModels"
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="300"
+			 xmlns:controls="clr-namespace:AvaloniaPlanner.Dialogs"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="300"
              x:Class="AvaloniaPlanner.Dialogs.ProjectBinEditDialog">
 	<Design.DataContext>
 		<vm:ProjectBinViewModel/>
 	</Design.DataContext>
 	
-	<Grid ColumnDefinitions="*, 5, 2*" RowDefinitions="40, *, *, *, 20, 30">
+	<Grid ColumnDefinitions="*, 5, 2*" RowDefinitions="40, *, *, *, *, 20, 30">
 		<TextBlock Text="Edit bin" Grid.Column="0" Grid.Row="0" FontWeight="ExtraBlack" FontSize="24"/>
 		<Button Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CloseDialog" Tag="Cancel">
 			<icons:MaterialIcon Kind="Close"/>
@@ -39,7 +40,13 @@
 		         IsEnabled="{Binding #ShownTasksCB.IsChecked}" 
 		         Text="{Binding TaskCountToShow, Mode=TwoWay}"/>
 		
-		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4"/>
-		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" HorizontalAlignment="Stretch" Click="CloseDialog" Tag="Save"/>
+		<CheckBox IsChecked="{Binding CustomOrderingOverrideEnabled, Mode=TwoWay}" Content="Custom ordering: " 
+		          Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
+		<ComboBox Items="{x:Static controls:ProjectBinEditDialog.TaskOrderingModes}" SelectedItem="{Binding CustomOrderingOverride}" 
+		          IsEnabled="{Binding CustomOrderingOverrideEnabled}"
+		          Grid.Column="2" Grid.Row="4" Margin="{StaticResource DialogGridSpacing}"/>
+		
+		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5"/>
+		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" HorizontalAlignment="Stretch" Click="CloseDialog" Tag="Save"/>
 	</Grid>
 </UserControl>

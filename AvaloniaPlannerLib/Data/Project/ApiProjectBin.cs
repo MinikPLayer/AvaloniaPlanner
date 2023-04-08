@@ -15,6 +15,9 @@ namespace AvaloniaPlannerLib.Data.Project
         public bool Archived { get; set; } = false;
         public int Position { get; set; } = 0;
         public int ShownTaskCount { get; set; } = -1;
+
+        public bool CustomOrderingOverrideEnabled { get; set; } = false;
+        public TaskOrderingModes CustomOrderingOverride { get; set; } = TaskOrderingModes.LastUpdate;
         public bool DefaultStatusEnabled { get; set; } = false;
         public ProjectStatus DefaultStatus { get; set; } = ProjectStatus.Unknown;
         

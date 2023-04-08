@@ -20,6 +20,26 @@ namespace AvaloniaPlanner.ViewModels
     {
         private ApiProjectBin bin;
 
+        public bool CustomOrderingOverrideEnabled
+        {
+            get => bin.CustomOrderingOverrideEnabled;
+            set
+            {
+                bin.CustomOrderingOverrideEnabled = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public TaskOrderingModes CustomOrderingOverride
+        {
+            get => bin.CustomOrderingOverride;
+            set
+            {
+                bin.CustomOrderingOverride = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        
         public string Id
         {
             get => bin.Id;
@@ -116,6 +136,32 @@ namespace AvaloniaPlanner.ViewModels
             }
         }
 
+        private Func<ProjectTaskViewModel, object>? GetOrderingSelector(TaskOrderingModes method)
+        {
+            return method switch
+            {
+                TaskOrderingModes.Name => x => x.TaskName,
+                TaskOrderingModes.Priority => x => x.Priority,
+                TaskOrderingModes.Status => x => x.Status,
+                TaskOrderingModes.LastUpdate => x => x.LastUpdate,
+                _ => null
+            };
+        }
+        
+        public void Reorder(TaskOrderingModes method, bool asc)
+        {
+            if (CustomOrderingOverrideEnabled)
+                method = CustomOrderingOverride;
+            
+            var selector = GetOrderingSelector(method);
+            if (selector == null)
+                return;
+            
+            var newTasks = (asc ? Tasks.OrderBy(selector) : Tasks.OrderByDescending(selector)).ToList();
+            Tasks.Clear();
+            Tasks.AddRange(newTasks);
+        }
+        
         public void Collapse()
         {
             _taskShowingCount = TaskCountToShow;

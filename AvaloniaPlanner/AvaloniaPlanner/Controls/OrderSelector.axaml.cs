@@ -50,6 +50,16 @@ public partial class OrderSelector : UserControl
         remove => RemoveHandler(OrderMethodChangedEvent, value);
     }
 
+    public bool GetAscending() => ProjectsOrderDirectionSelector.SelectedItem is Control { Tag: string and "asc" };
+    
+    public object? GetOrderMethod()
+    {
+        if(ProjectsOrderMethodSelector.SelectedItem is OrderSelection sel)
+            return sel.Value;
+
+        return null;
+    }
+    
     public void SetOrderMethods(IEnumerable<OrderSelection> methods, object? curSelection = null, bool? ascending = null)
     {
         var orderSelections = methods.ToList();

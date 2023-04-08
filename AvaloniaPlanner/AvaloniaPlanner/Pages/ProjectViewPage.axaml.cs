@@ -25,13 +25,6 @@ using Material.Icons.Avalonia;
 
 namespace AvaloniaPlanner.Pages
 {
-    public enum TaskOrderingModes
-    {
-        Priority,
-        Name,
-        Status
-    }
-    
     public class ProjectViewViewModel : ReactiveObject
     {
         private ApiProject project;
@@ -40,7 +33,8 @@ namespace AvaloniaPlanner.Pages
         {
             new("Priority", MaterialIconKind.PriorityHigh, TaskOrderingModes.Priority),
             new("Name", MaterialIconKind.SortByAlpha, TaskOrderingModes.Name),
-            new("Status", MaterialIconKind.CheckCircle, TaskOrderingModes.Status)
+            new("Status", MaterialIconKind.CheckCircle, TaskOrderingModes.Status),
+            new("Last update", MaterialIconKind.Update, TaskOrderingModes.LastUpdate)
         };
 
         public string ProjectName
@@ -70,31 +64,9 @@ namespace AvaloniaPlanner.Pages
 
         public void SetOrderingMode(TaskOrderingModes method, bool asc)
         {
-            Func<ProjectTaskViewModel, object> selector;
-            switch (method)
-            {
-                case TaskOrderingModes.Name:
-                    selector = x => x.TaskName;
-                    break;
-                
-                case TaskOrderingModes.Priority:
-                    selector = x => x.Priority;
-                    break;
-                    
-                case TaskOrderingModes.Status:
-                    selector = x => x.Status;
-                    break;
-                    
-                default:
-                    return;
-            }
-            
             foreach (var bin in Bins)
-            {
-                var newTasks = (asc ? bin.Tasks.OrderBy(selector) : bin.Tasks.OrderByDescending(selector)).ToList();
-                bin.Tasks.Clear();
-                bin.Tasks.AddRange(newTasks);
-            }
+                bin.Reorder(method, asc);
+            
 
             SettingsPage.Config.TasksOrderMode = method;
             SettingsPage.Config.TasksOrderAscending = asc;
@@ -140,7 +112,7 @@ namespace AvaloniaPlanner.Pages
             Bins = new();
             VisibleBins = new();
             Bins.ConnectToList(VisibleBins, x => x);
-            
+
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
             Bins.ConnectToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
         }
@@ -228,6 +200,7 @@ namespace AvaloniaPlanner.Pages
                 newTask.StatusModel = vm.DefaultStatusModel;
             
             vm.Tasks.Add(newTask);
+            SignalTaskModified(newTask, false);
             this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
 
@@ -245,6 +218,7 @@ namespace AvaloniaPlanner.Pages
                 if (b)
                 {
                     bin.Tasks.Replace(task, newTask);
+                    SignalTaskModified(newTask, false);
                     this.OrderSelector.ForceReorder();
                     ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
                 }
@@ -287,6 +261,7 @@ namespace AvaloniaPlanner.Pages
                 throw new Exception("Internal error, cannot find task's bin");
 
             bin.Tasks.Remove(task);
+            SignalTaskModified(task, false);
             this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(task.GetTask().Project_id);
         }
@@ -333,6 +308,7 @@ namespace AvaloniaPlanner.Pages
             if (targetBin.DefaultStatusEnabled)
                 task.StatusModel = targetBin.DefaultStatusModel;
                 
+            SignalTaskModified(task, false);
             this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(task.GetTask().Project_id);
         }
@@ -359,6 +335,13 @@ namespace AvaloniaPlanner.Pages
             InitializeComponent();
 
             this.OrderSelector.SetOrderMethods(vm.Options, SettingsPage.Config.TasksOrderMode, SettingsPage.Config.TasksOrderAscending);
+        }
+
+        private void SignalTaskModified(ProjectTaskViewModel obj, bool reorder)
+        {
+            obj.SignalModified();
+            if(reorder && this.OrderSelector.GetOrderMethod() is TaskOrderingModes.LastUpdate)
+                this.OrderSelector.ForceReorder();
         }
 
         public ProjectViewPage() : this(null) {}
@@ -389,6 +372,7 @@ namespace AvaloniaPlanner.Pages
                 default:
                     return;
             }
+            SignalTaskModified(vm, false);
             this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
         }
@@ -416,6 +400,7 @@ namespace AvaloniaPlanner.Pages
             else if (props.IsXButton2Pressed)
             {
                 vm.StatusModel = vm.StatusModel.Next();
+                SignalTaskModified(vm, false);
                 this.OrderSelector.ForceReorder();
                 ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
             }
@@ -423,6 +408,7 @@ namespace AvaloniaPlanner.Pages
             {
                 vm.StatusModel = vm.StatusModel.Prev();
                 this.OrderSelector.ForceReorder();
+                SignalTaskModified(vm, false);
                 ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
             }
         }
