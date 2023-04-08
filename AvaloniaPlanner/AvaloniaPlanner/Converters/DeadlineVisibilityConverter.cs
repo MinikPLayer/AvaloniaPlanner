@@ -30,7 +30,7 @@ namespace AvaloniaPlanner.Converters
                     throw new ArgumentException("Value must be of type ProjectViewModel or ProjectTaskViewModel");
             }
             
-            return status is not (ProjectStatus.Completed or ProjectStatus.Abandoned or ProjectStatus.Archived) && enabled;     
+            return !ApiProject.DisabledStatuses.Contains(status) && enabled;     
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

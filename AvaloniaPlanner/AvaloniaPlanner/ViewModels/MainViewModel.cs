@@ -56,8 +56,7 @@ namespace AvaloniaPlanner.ViewModels
             get => _canGoBack;
             set => this.RaiseAndSetIfChanged(ref _canGoBack, value);
         }
-
-
+        
         public ObservableCollection<PaneEntry> PaneEntries { get; } = new ObservableCollection<PaneEntry>();
         public ICommand PaneOpenedStateChangedCommand { get; init; }
         public ICommand PaneOpenedStateChangedCommand2 { get; init; }
@@ -68,9 +67,8 @@ namespace AvaloniaPlanner.ViewModels
             PaneOpenedStateChangedCommand = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
             PaneOpenedStateChangedCommand2 = ReactiveCommand.Create(() => IsPaneOpened = !IsPaneOpened);
             PaneGoBackCommand = ReactiveCommand.Create(PageManager.GoBack);
-            //PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage)));
             PaneEntries.Add(new PaneEntry("Projects", Material.Icons.MaterialIconKind.Package, typeof(ProjectsPage)));
-            PaneEntries.Add(new PaneEntry("Tests", Material.Icons.MaterialIconKind.TestTube, typeof(TestPage)));
+            //PaneEntries.Add(new PaneEntry("Tests", Material.Icons.MaterialIconKind.TestTube, typeof(TestPage)));
         }
     }
 }

@@ -98,7 +98,7 @@ namespace AvaloniaPlanner.Pages
             {
                 case ProjectsOrderTypes.Deadline:
                     ProjectOrderArg = x => x.Deadline;
-                    ProjectPriorityOrderWhereFunc = x => x.DeadlineEnabled;
+                    ProjectPriorityOrderWhereFunc = x => x.IsDeadlineApplicable;
                     break;
 
                 case ProjectsOrderTypes.Name:
