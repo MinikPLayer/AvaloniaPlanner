@@ -231,22 +231,26 @@ namespace AvaloniaPlanner.Pages
             this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
 
-            await EditTask(newTask, vm);
+            await EditTask(newTask, vm, true);
         }
 
-        async Task EditTask(ProjectTaskViewModel task, ProjectBinViewModel bin)
+        async Task EditTask(ProjectTaskViewModel task, ProjectBinViewModel bin, bool isNewTask = false)
         {
-            await MainView.OpenDialog(new ProjectTaskEditDialog(task.GetTask()), (s, e) =>
+            await MainView.OpenDialog(new ProjectTaskEditDialog(task.GetTask(), isNewTask), (s, e) =>
             {
                 var result = e.Parameter;
-                if (result is bool b && b == true && e.Content is ProjectTaskEditDialog dialog)
+                if (result is not bool b || e.Content is not ProjectTaskEditDialog { DataContext: ProjectTaskViewModel newTask } dialog) 
+                    return;
+                
+                if (b)
                 {
-                    if (dialog.DataContext is not ProjectTaskViewModel newTask)
-                        throw new Exception("Dialog data context is an invalid type");
-
                     bin.Tasks.Replace(task, newTask);
                     this.OrderSelector.ForceReorder();
                     ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
+                }
+                else if (dialog.NewTask)
+                {
+                    ForceDeleteTask(task);
                 }
             });
         }
@@ -276,6 +280,17 @@ namespace AvaloniaPlanner.Pages
             SelectedTaskToMove = task;
         }
 
+        void ForceDeleteTask(ProjectTaskViewModel task)
+        {
+            var bin = GetBinByTask(task);
+            if (bin == null)
+                throw new Exception("Internal error, cannot find task's bin");
+
+            bin.Tasks.Remove(task);
+            this.OrderSelector.ForceReorder();
+            ProjectsPage.SignalProjectsChanged(task.GetTask().Project_id);
+        }
+        
         async void DeleteTaskClicked(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
@@ -290,12 +305,8 @@ namespace AvaloniaPlanner.Pages
 
             await MainView.OpenDialog(new ConfirmDialog(), handler: (s, e) =>
             {
-                if (e.Parameter is bool b && b == true)
-                {
-                    bin.Tasks.Remove(task);
-                    this.OrderSelector.ForceReorder();
-                    ProjectsPage.SignalProjectsChanged(task.GetTask().Project_id);
-                }
+                if (e.Parameter is true)
+                    ForceDeleteTask(task);
             });
         }
 

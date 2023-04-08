@@ -11,6 +11,7 @@ namespace AvaloniaPlanner.Dialogs
     {
         private ApiProjectTask ogTask { get; set; }
         public bool Save { get; set; } = false;
+        public bool NewTask { get; set; } = false;
 
         public void CloseDialog(object sender, RoutedEventArgs e)
         {
@@ -28,11 +29,12 @@ namespace AvaloniaPlanner.Dialogs
             MainView.Singleton.MainDialog.CloseDialogCommand.Execute(Save);
         }
 
-        public ProjectTaskEditDialog(ApiProjectTask task)
+        public ProjectTaskEditDialog(ApiProjectTask task, bool isNewTask = false)
         {
             InitializeComponent();
             this.ogTask = task;
-            this.DataContext = new ProjectTaskViewModel(ClassCopier.Create<ApiProjectTask>(task));           
+            this.DataContext = new ProjectTaskViewModel(ClassCopier.Create<ApiProjectTask>(task));
+            this.NewTask = isNewTask;
         }
     }
 }
