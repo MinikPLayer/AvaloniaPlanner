@@ -9,6 +9,7 @@ using CSUtil.Web;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace AvaloniaPlanner.Pages
 {
@@ -125,6 +126,9 @@ namespace AvaloniaPlanner.Pages
 
         public static bool SaveConfig(string? filePath = null)
         {
+            if (CSUtil.OS.ProcessUtils.IsAvalonia().Result)
+                return false;
+            
             if (filePath == null)
                 filePath = DefaultConfigSavePath;
             

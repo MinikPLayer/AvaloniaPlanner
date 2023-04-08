@@ -12,6 +12,7 @@
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Dialogs/ProjectTaskEditDialog.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Pages/ProjectViewPage.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Pages/ProjectsPage.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
+        <entry key="AvaloniaPlanner/AvaloniaPlanner/Views/MainView.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Views/MainWindow.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
       </map>
     </option>
