@@ -9,6 +9,10 @@
              x:Class="AvaloniaPlanner.Controls.ProjectControl"
 			 VerticalAlignment="Top"
 			 Margin="0, 5, 5, 0">
+	<Design.DataContext>
+		<vm:ProjectViewModel/>
+	</Design.DataContext>
+	
 	<UserControl.Styles>
 		<Style Selector="Button">
 			<Setter Property="Padding" Value="0"/>
@@ -46,9 +50,11 @@
 				<TextBlock Text="{Binding Name}"
 						   FontSize="30" FontWeight="ExtraBlack"
 						   HorizontalAlignment="Center"/>
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" IsVisible="{Binding DeadlineEnabled}">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5" 
+				            IsVisible="{Binding ., Converter={StaticResource DeadlineVisibilityConverter}}">
 					<TextBlock Text="Deadline:"/>
-					<TextBlock Text="{Binding Deadline, Converter={StaticResource DeadlineFormatter}}" Foreground="{Binding Deadline, Converter={StaticResource DeadlineColorConverter}}"/>
+					<TextBlock Text="{Binding Deadline, Converter={StaticResource DeadlineFormatter}}" 
+					           Foreground="{Binding Deadline, Converter={StaticResource DeadlineColorConverter}}"/>
 				</StackPanel>
 
 				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="5">

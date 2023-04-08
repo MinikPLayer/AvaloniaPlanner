@@ -70,6 +70,16 @@ namespace AvaloniaPlanner.ViewModels
                 this.RaisePropertyChanged();
             }
         }
+
+        public bool DeadlineEnabled
+        {
+            get => task.DeadlineEnabled;
+            set
+            {
+                task.DeadlineEnabled = value;
+                this.RaisePropertyChanged();
+            }
+        }
         
         public DateTime Deadline
         {
