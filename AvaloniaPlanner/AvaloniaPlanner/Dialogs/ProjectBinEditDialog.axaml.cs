@@ -16,6 +16,9 @@ namespace AvaloniaPlanner.Dialogs
         {
             if (sender is Control c && this.DataContext is ProjectBinViewModel vm && c.Tag is string s && s == "Save")
             {
+                if (ShownTasksCB.IsChecked.HasValue && ShownTasksCB.IsChecked.Value == false)
+                    (this.DataContext as ProjectBinViewModel)!.TaskCountToShow = -1;
+                
                 // Copy new data to the new task
                 ClassCopier.Copy(vm.GetBin(), ogBin);
                 Save = true;
@@ -31,6 +34,16 @@ namespace AvaloniaPlanner.Dialogs
         public ProjectBinEditDialog(ApiProjectBin bin)
         {
             InitializeComponent();
+            if (bin.ShownTaskCount == -1)
+            {
+                ShownTasksCB.IsChecked = false;
+                bin.ShownTaskCount = 0;
+            }
+            else
+            {
+                ShownTasksCB.IsChecked = true;
+            }
+
             this.ogBin = bin;
             this.DataContext = new ProjectBinViewModel(ClassCopier.Create<ApiProjectBin>(bin));           
         }

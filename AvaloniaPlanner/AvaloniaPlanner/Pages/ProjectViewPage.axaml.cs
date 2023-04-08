@@ -114,6 +114,18 @@ namespace AvaloniaPlanner.Pages
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
             Bins.ConnectToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
         }
+
+        public void ExpandAllBins()
+        {
+            foreach (var bin in Bins)
+                bin.Expand();
+        }
+
+        public void CollapseAllBins()
+        {
+            foreach (var bin in Bins)
+                bin.Collapse();
+        }
     }
 
     public partial class ProjectViewPage : UserControl
@@ -170,18 +182,6 @@ namespace AvaloniaPlanner.Pages
                 var term = e.SearchTerm.ToLower();
                 pVm.VisibleBins.AddRange(pVm.Bins.Where(x => x.BinName.ToLower().Contains(term) || x.Tasks.Any(x => x.TaskName.ToLower().Contains(term))));
             }
-        }
-
-        void StatusComboBoxPointerPressed(object sender, PointerPressedEventArgs e)
-        {
-            if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
-            {
-                e.Handled = true;
-                foreach (var cb in this.GetVisualDescendants().OfType<ComboBox>())
-                    cb.IsDropDownOpen = true;
-            }
-
-            base.OnPointerPressed(e);
         }
 
         async void DeleteBinClicked(object sender, RoutedEventArgs e)
@@ -386,6 +386,22 @@ namespace AvaloniaPlanner.Pages
                 this.OrderSelector.ForceReorder();
                 ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
             }
+        }
+
+        private void ExpandAllBins_Clicked(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not Control c || c.DataContext is not ProjectViewViewModel vm)
+                return;
+
+            vm.ExpandAllBins();
+        }
+        
+        private void CollapseAllBins_Clicked(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not Control c || c.DataContext is not ProjectViewViewModel vm)
+                return;
+
+            vm.CollapseAllBins();
         }
     }
 }

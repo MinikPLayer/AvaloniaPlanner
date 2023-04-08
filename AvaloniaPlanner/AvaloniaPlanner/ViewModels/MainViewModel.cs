@@ -70,6 +70,7 @@ namespace AvaloniaPlanner.ViewModels
             PaneGoBackCommand = ReactiveCommand.Create(PageManager.GoBack);
             //PaneEntries.Add(new PaneEntry("Home", Material.Icons.MaterialIconKind.Home, typeof(HomePage)));
             PaneEntries.Add(new PaneEntry("Projects", Material.Icons.MaterialIconKind.Package, typeof(ProjectsPage)));
+            PaneEntries.Add(new PaneEntry("Tests", Material.Icons.MaterialIconKind.TestTube, typeof(TestPage)));
         }
     }
 }

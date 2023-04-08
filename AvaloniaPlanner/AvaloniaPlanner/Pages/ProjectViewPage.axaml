@@ -39,9 +39,23 @@
 			</Button>
 			<controls:OrderSelector x:Name="OrderSelector" OrderMethodChanged="OrderSelector_OnOrderMethodChanged"/>
 		</StackPanel>
-
+		
 		<ListBox Classes="binsbox" Items="{Binding VisibleBins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged"
 		         ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+			<ListBox.ContextFlyout>
+				<MenuFlyout>
+					<MenuItem Header="Expand All" Click="ExpandAllBins_Clicked">
+						<MenuItem.Icon>
+							<icons:MaterialIcon Kind="ExpandAll"/>
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Header="Collapse All" Click="CollapseAllBins_Clicked">
+						<MenuItem.Icon>
+							<icons:MaterialIcon Kind="CollapseAll"/>
+						</MenuItem.Icon>
+					</MenuItem>
+				</MenuFlyout>
+			</ListBox.ContextFlyout>
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<VirtualizingStackPanel Orientation="Horizontal" VerticalAlignment="Top"/>
@@ -69,7 +83,7 @@
 								</MenuItem>
 							</MenuFlyout>
 						</Border.ContextFlyout>
-						<StackPanel Margin="10" PointerPressed="StatusComboBoxPointerPressed">
+						<StackPanel Margin="10">
 							<Grid ColumnDefinitions="*, 20, 60" Margin="5, 5, 5, 0">
 								<StackPanel Grid.Column="0" Spacing="5" Orientation="Horizontal">
 									<icons:MaterialIcon Kind="{Binding DefaultStatusIcon}" IsVisible="{Binding DefaultStatusEnabled}"
@@ -78,7 +92,7 @@
 								</StackPanel>
 								<StackPanel Orientation="Horizontal" Grid.Column="2" Margin="0, 0, 5, 0">
 									<TextBlock FontSize="20" Text="Tasks: " Foreground="#60FFFFFF"/>
-									<TextBlock IsHitTestVisible="False" Text="{Binding Tasks.Count, Mode=OneWay}" 
+									<TextBlock IsHitTestVisible="False" Text="{Binding Tasks.Count, Mode=OneWay}"
 									           FontSize="20" Foreground="#60FFFFFF"/>
 								</StackPanel>
 							</Grid>
@@ -121,7 +135,22 @@
 									</DataTemplate>
 								</ListBox.ItemTemplate>
 							</ListBox>
-							<Button Content="5 more..." Foreground="#60FFFFFF" Click="RevealTasksClicked"/>
+							<Button Content="{Binding CollapseButtonText}" 
+							        IsVisible="{Binding CollapseButtonVisible}"
+							        Command="{Binding CollapseButtonCommand}"
+							        Foreground="#60FFFFFF" Click="RevealTasksClicked">
+								<Button.Styles>
+									<Style Selector="Button">
+										<Setter Property="Background" Value="Transparent"/>
+										<Setter Property="BorderBrush" Value="Transparent"/>
+										<Setter Property="Padding" Value="5, 0"/>
+									</Style>
+									<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+										<Setter Property="Background" Value="Transparent"/>
+										<Setter Property="BorderBrush" Value="Transparent"/>
+									</Style>
+								</Button.Styles>
+							</Button>
 						</StackPanel>
 					</Border>
 				</DataTemplate>

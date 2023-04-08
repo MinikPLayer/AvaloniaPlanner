@@ -64,42 +64,88 @@ namespace AvaloniaPlanner.ViewModels
         
         public ApiProjectBin GetBin() => bin;
 
-        private int _visibleTasksCount = -1;
-        public int VisibleTasksCount
+        public int TaskCountToShow
         {
-            get => _visibleTasksCount;
+            get => bin.ShownTaskCount;
             set
             {
-                if (_visibleTasksCount == value) 
+                if (bin.ShownTaskCount == value) 
                     return;
                 
-                _visibleTasksCount = value;
+                bin.ShownTaskCount = value;
+                _taskShowingCount = value;
                 this.RaisePropertyChanged();
-                this.RaisePropertyChanged(nameof(VisibleTasks));
+                UpdateShownTasks();
             } 
         }
+        private int _taskShowingCount;
+
+        private void UpdateShownTasks()
+        {
+            this.RaisePropertyChanged(nameof(CollapseButtonText));
+            this.RaisePropertyChanged(nameof(VisibleTasks));
+            this.RaisePropertyChanged(nameof(CollapseButtonVisible));
+        }
+        
+        public bool CollapseButtonVisible => TaskCountToShow != -1 && TaskCountToShow < Tasks.Count;
+
+        public string CollapseButtonText
+        {
+            get
+            {
+                if (_taskShowingCount == -1)
+                    return "Collapse";
+
+                return (Tasks.Count - _taskShowingCount) + " more...";
+            }
+        }
+
+        public ICommand CollapseButtonCommand { get; }
+
         public ObservableCollection<ProjectTaskViewModel> Tasks { get; }
 
         public List<ProjectTaskViewModel> VisibleTasks
         {
             get
             {
-                if (VisibleTasksCount == -1)
+                if (_taskShowingCount == -1)
                     return Tasks.ToList();
                 
                 var i = 0;
-                return Tasks.TakeWhile(task => i++ < VisibleTasksCount).ToList();
+                return Tasks.TakeWhile(task => i++ < _taskShowingCount).ToList();
             }
+        }
+
+        public void Collapse()
+        {
+            _taskShowingCount = TaskCountToShow;
+            UpdateShownTasks();
+        }
+
+        public void Expand()
+        {
+            _taskShowingCount = -1;
+            UpdateShownTasks();
         }
         
         public ProjectBinViewModel(ApiProjectBin bin)
         {
+            this.bin = bin;
+            CollapseButtonCommand = ReactiveCommand.Create(() =>
+            {
+                if (_taskShowingCount == -1)
+                    Collapse();
+                else
+                    Expand();
+            });
+            
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
             Tasks.ConnectToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
             Tasks.CollectionChanged += (s, e) => this.RaisePropertyChanged(nameof(VisibleTasks));
-            
-            this.bin = bin;
+
+            _taskShowingCount = TaskCountToShow;
+            UpdateShownTasks();
         }
     }
 }
