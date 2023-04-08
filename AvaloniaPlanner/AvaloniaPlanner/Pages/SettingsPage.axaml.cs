@@ -142,7 +142,7 @@ namespace AvaloniaPlanner.Pages
             {
                 File.WriteAllText(filePath, Newtonsoft.Json.JsonConvert.SerializeObject(Config));
                 return true;
-            }
+            } 
             catch (Exception ex)
             {
                 Debug.WriteLine("Cannot save config to file - " + ex.Message);
