@@ -100,6 +100,36 @@ namespace AvaloniaPlanner.Pages
             SettingsPage.Config.TasksOrderAscending = asc;
         }
         
+        public void ExpandAllBins()
+        {
+            foreach (var bin in Bins)
+                bin.Expand();
+        }
+
+        public void CollapseAllBins()
+        {
+            foreach (var bin in Bins)
+                bin.Collapse();
+        }
+
+        public ProjectBinViewModel? GetNextBin(ProjectBinViewModel bin)
+        {
+            var binIndex = Bins.IndexOf(bin);
+            if (binIndex == Bins.Count - 1)
+                return null;
+
+            return Bins[binIndex + 1];
+        }
+        
+        public ProjectBinViewModel? GetPrevBin(ProjectBinViewModel bin)
+        {
+            var binIndex = Bins.IndexOf(bin);
+            if (binIndex == 0)
+                return null;
+
+            return Bins[binIndex - 1];
+        }
+        
         public ProjectViewViewModel(ApiProject? p = null)
         {
             if (p == null)
@@ -113,18 +143,6 @@ namespace AvaloniaPlanner.Pages
             
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
             Bins.ConnectToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
-        }
-
-        public void ExpandAllBins()
-        {
-            foreach (var bin in Bins)
-                bin.Expand();
-        }
-
-        public void CollapseAllBins()
-        {
-            foreach (var bin in Bins)
-                bin.Collapse();
         }
     }
 
@@ -288,7 +306,25 @@ namespace AvaloniaPlanner.Pages
                 return;
 
             lb.SelectedItem = null;
-        }        
+        }
+
+        void MoveTaskToBin(ProjectTaskViewModel task, ProjectBinViewModel targetBin)
+        {
+            var bin = GetBinByTask(task);
+            if (bin == null)
+            {
+                _ = MainView.OpenDialog(new ErrorDialog("Internal error, cannot find task's bin"));
+                return;
+            }
+
+            bin.Tasks.Remove(task);
+            targetBin.Tasks.Add(task);
+            if (targetBin.DefaultStatusEnabled)
+                task.StatusModel = targetBin.DefaultStatusModel;
+                
+            this.OrderSelector.ForceReorder();
+            ProjectsPage.SignalProjectsChanged(task.GetTask().Project_id);
+        }
         
         void BinSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -297,34 +333,12 @@ namespace AvaloniaPlanner.Pages
 
             if(SelectedTaskToMove != null && e.AddedItems.Count > 0 && e.AddedItems[0] is ProjectBinViewModel newBin)
             {
-                var bin = GetBinByTask(SelectedTaskToMove);
-                if (bin == null)
-                {
-                    _ = MainView.OpenDialog(new ErrorDialog("Internal error, cannot find task's bin"));
-                    return;
-                }
-
-                bin.Tasks.Remove(SelectedTaskToMove);
-                newBin.Tasks.Add(SelectedTaskToMove);
-                if (newBin.DefaultStatusEnabled)
-                    SelectedTaskToMove.StatusModel = newBin.DefaultStatusModel;
-                
-                this.OrderSelector.ForceReorder();
-                ProjectsPage.SignalProjectsChanged(SelectedTaskToMove.GetTask().Project_id);
+                MoveTaskToBin(SelectedTaskToMove, newBin);
                 SelectedTaskToMove = null;
-
                 ((ProjectViewViewModel)this.DataContext!).SetNormalBackground();
             }
 
             lb.SelectedItem = null;
-        }
-
-        void RevealTasksClicked(object sender, RoutedEventArgs e)
-        {
-            if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
-                return;
-
-            //vm.VisibleTasks = vm.Tasks;
         }
 
         public ProjectViewPage(ApiProject? p)
@@ -374,7 +388,21 @@ namespace AvaloniaPlanner.Pages
                 return;
             
             var props = e.GetCurrentPoint(null).Properties;
-            if (props.IsXButton2Pressed)
+            if ((e.ClickCount == 2 && props.IsLeftButtonPressed) || props.IsMiddleButtonPressed)
+            {
+                var lVm = (this.DataContext as ProjectViewViewModel)!;
+                var bin = GetBinByTask(vm);
+                if (bin == null)
+                    return;
+
+                var targetBin = props.IsMiddleButtonPressed ? lVm.GetPrevBin(bin) : lVm.GetNextBin(bin);
+                if (targetBin == null)
+                    return;
+                
+                MoveTaskToBin(vm, targetBin);
+                ProjectsPage.SignalProjectsChanged(vm.GetTask().Project_id);
+            }
+            else if (props.IsXButton2Pressed)
             {
                 vm.StatusModel = vm.StatusModel.Next();
                 this.OrderSelector.ForceReorder();

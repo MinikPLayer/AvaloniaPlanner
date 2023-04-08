@@ -138,7 +138,7 @@
 							<Button Content="{Binding CollapseButtonText}" 
 							        IsVisible="{Binding CollapseButtonVisible}"
 							        Command="{Binding CollapseButtonCommand}"
-							        Foreground="#60FFFFFF" Click="RevealTasksClicked">
+							        Foreground="#60FFFFFF">
 								<Button.Styles>
 									<Style Selector="Button">
 										<Setter Property="Background" Value="Transparent"/>
