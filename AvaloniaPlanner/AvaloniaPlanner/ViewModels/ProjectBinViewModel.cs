@@ -142,7 +142,7 @@ namespace AvaloniaPlanner.ViewModels
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
             Tasks.ConnectToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
-            Tasks.CollectionChanged += (s, e) => this.RaisePropertyChanged(nameof(VisibleTasks));
+            Tasks.CollectionChanged += (s, e) => UpdateShownTasks();
 
             _taskShowingCount = TaskCountToShow;
             UpdateShownTasks();

@@ -1,0 +1,15 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaPlanner.Dialogs.ImportProjectsDialog">
+	<Grid ColumnDefinitions="*, *, *" RowDefinitions="*, *, 3*, 10, 35">
+		<TextBlock Text="{Binding Message}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Center"/>
+
+		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3"/>
+		<Button Content="Open selected" Grid.Column="0" Grid.Row="4" Click="CloseDialog" Tag="0" Margin="5, 0" HorizontalAlignment="Stretch"/>
+		<Button Content="Overwrite local" Grid.Column="1" Grid.Row="4" Click="CloseDialog" Tag="1" Margin="5, 0" HorizontalAlignment="Stretch"/>
+		<Button Content="Cancel" Grid.Column="2" Grid.Row="4" Click="CloseDialog" Tag="2" Margin="5, 0" HorizontalAlignment="Stretch"/>
+	</Grid>
+</UserControl>

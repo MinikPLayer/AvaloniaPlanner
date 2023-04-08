@@ -10,6 +10,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Material.Icons;
 
 namespace AvaloniaPlanner.Pages
 {
@@ -182,6 +183,67 @@ namespace AvaloniaPlanner.Pages
             ((SettingsViewModel)this.DataContext).IsLocked = false;
         }
 
+        private async void ExportProjectsButton_Clicked(object? sender, RoutedEventArgs e)
+        {
+            var fileDialog = new SaveFileDialog();
+            fileDialog.DefaultExtension = "json";
+            fileDialog.Title = "Select a file to export projects to";
+            fileDialog.Filters.Add(new FileDialogFilter() { Name = "JSON", Extensions = { "json" } });
+
+            var result = await fileDialog.ShowAsync(MainWindow.Singleton);
+            if (string.IsNullOrEmpty(result))
+                return;
+
+            var ret = MainView.Singleton.SaveFile(result, true, false);
+            await MainView.OpenDialog(ret == null
+                ? new ErrorDialog("Exported successfully", MaterialIconKind.Check, Colors.Lime)
+                : new ErrorDialog("Cannot save file - " + ret, MaterialIconKind.Error, Colors.Red));
+        }
+        
+        private async void ImportProjectsButton_Clicked(object? sender, RoutedEventArgs _)
+        {
+            var fileDialog = new OpenFileDialog();
+            fileDialog.AllowMultiple = false;
+            fileDialog.Title = "Select a file to import projects from";
+            fileDialog.Filters.Add(new FileDialogFilter() { Name = "JSON", Extensions = { "json" } });
+
+            var result = await fileDialog.ShowAsync(MainWindow.Singleton);
+            if (result == null || result.Length == 0 || string.IsNullOrEmpty(result[0]))
+                return;
+            
+            var filePath = result[0];
+
+            await MainView.OpenDialog(new ImportProjectsDialog(), (o, e) =>
+            {
+                if (e.Parameter is not ImportProjectsDialogResults dialogRet) 
+                    return;
+
+                string? ret;
+                switch (dialogRet)
+                {
+                    case ImportProjectsDialogResults.OpenSelected:
+                        ret = MainView.Singleton.LoadFile(filePath, true);
+                        break;
+                    
+                    case ImportProjectsDialogResults.OverwriteLocal:
+                        ret = MainView.Singleton.LoadFile(filePath, false);
+                        if (ret != null)
+                            break;
+
+                        ret = MainView.Singleton.SaveFile();
+                        break;
+
+                    case ImportProjectsDialogResults.Cancel:
+                    default:
+                        return;
+                }
+
+                MainView.OpenDialog(ret != null
+                    ? new ErrorDialog("Cannot import projects - " + ret, MaterialIconKind.Error, Colors.Red)
+                    : new ErrorDialog("Imported successfully", MaterialIconKind.Check, Colors.Lime));
+            });
+        }
+        
         public SettingsPage()
         {
             InitializeComponent();

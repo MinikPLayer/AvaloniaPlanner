@@ -104,7 +104,7 @@ namespace AvaloniaPlanner.Views
 
         public void SaveProjectClick(object sender, RoutedEventArgs e)
         {
-            if (!SaveFile())
+            if (SaveFile() != null)
             {
                 MainView.OpenDialog(new ErrorDialog("Cannot save the output file"));
                 return;
@@ -113,49 +113,82 @@ namespace AvaloniaPlanner.Views
         }
 
         public string LastSaveData = "";
-        public bool LoadFile(string? path = null)
+        public string? LoadFile(string? path = null, bool changeCurrentPath = true)
         {
-            if (path == null)
-                path = DefaultSavePath;
-
-            if (!File.Exists(path))
-                return false;
-
-            var data = File.ReadAllText(path);
-            var projects = ProjectsPage.LoadProjectsFromString(data);
-            if(projects != null)
+            try
             {
+                if (path == null)
+                    path = DefaultSavePath;
+
+                if (!File.Exists(path))
+                    return $"File \"{path}\" doesn't exist";
+
+                var data = File.ReadAllText(path);
+                var projects = ProjectsPage.LoadProjectsFromString(data);
+                if (projects == null) 
+                    return "Cannot parse projects from file";
+                
                 ProjectsPage.Projects.Clear();
                 ProjectsPage.Projects.AddRange(projects);
 
                 LastSaveData = data;
-                _currentFilePath = path;
-                return true;
-            }
+                if(changeCurrentPath)
+                    _currentFilePath = path;
+                return null;
 
-            return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Debug.WriteLine(e);
+#if DEBUG
+                return e.Message + " in " + e.Source + " : " + e.TargetSite;
+#endif
+                return e.Message;
+            }
         }
 
-        public bool SaveFile(string? path = null, bool overwrite = true)
+        /// <summary>
+        /// Saves file to disk
+        /// </summary>
+        /// <param name="path">Target file path, leave null to use the last used path</param>
+        /// <param name="overwrite">True to overwrite already existing files</param>
+        /// <param name="changeCurrentPath">Set "last path" to the value of path</param>
+        /// <returns>Null if success, error string otherwise</returns>
+        public string? SaveFile(string? path = null, bool overwrite = true, bool changeCurrentPath = true)
         {
-            if (path == null)
-                path = _currentFilePath;
+            try
+            {
+                if (path == null)
+                    path = _currentFilePath;
 
-            if (!overwrite && File.Exists(path))
-                return false;
+                if (!overwrite && File.Exists(path))
+                    return "File exists";
 
-            var dir = Path.GetDirectoryName(path);
-            if (dir == null)
-                return false;
+                var dir = Path.GetDirectoryName(path);
+                if (dir == null)
+                    return "Directory doesn't exist";
 
-            Directory.CreateDirectory(dir);
+                Directory.CreateDirectory(dir);
 
-            var data = ProjectsPage.SerializeProjects();
-            LastSaveData = data;
-            File.WriteAllText(path, data);
+                var data = ProjectsPage.SerializeProjects();
+                LastSaveData = data;
+                File.WriteAllText(path, data);
 
-            _currentFilePath = path;
-            return true;
+                if(changeCurrentPath)
+                    _currentFilePath = path;
+                
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Debug.WriteLine(e);
+#if DEBUG
+                return e.Message + " in " + e.Source + " : " + e.TargetSite;
+#endif
+                return e.Message;
+            }
         }
 
         void TestStartup()
@@ -175,11 +208,12 @@ namespace AvaloniaPlanner.Views
 
             // If file doesn't exists, create one
             SaveFile(path: DefaultSavePath, overwrite: false);
-            if(!LoadFile())
+            var loadRet = LoadFile();
+            if(loadRet != null)
             {
                 this.Content = new TextBlock
                 {
-                    Text = "Cannot create or load file from path: " + DefaultSavePath,
+                    Text = "Cannot create or load file - " + loadRet,
                     Foreground = new SolidColorBrush(Colors.Red),
                     FontWeight = FontWeight.ExtraBlack,
                     TextWrapping = TextWrapping.Wrap,
