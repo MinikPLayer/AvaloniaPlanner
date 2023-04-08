@@ -6,6 +6,8 @@
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Controls/OrderSelector.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Controls/ProjectTaskControl.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Controls/SearchControl.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
+        <entry key="AvaloniaPlanner/AvaloniaPlanner/Dialogs/ProjectBinEditDialog.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
+        <entry key="AvaloniaPlanner/AvaloniaPlanner/Dialogs/ProjectEditDialog.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Dialogs/ProjectTaskEditDialog.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Pages/ProjectViewPage.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />
         <entry key="AvaloniaPlanner/AvaloniaPlanner/Pages/ProjectsPage.axaml" value="AvaloniaPlanner/AvaloniaPlanner.Desktop/AvaloniaPlanner.Desktop.csproj" />

@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AvaloniaPlanner.Models;
+using Material.Icons;
 
 namespace AvaloniaPlanner.ViewModels
 {
@@ -38,47 +40,34 @@ namespace AvaloniaPlanner.ViewModels
             }
         }
 
-        private string _tempBinName = "";
-        public string TempBinName
+        public bool DefaultStatusEnabled
         {
-            get => _tempBinName;
-            set => this.RaiseAndSetIfChanged(ref _tempBinName, value);
+            get => bin.DefaultStatusEnabled;
+            set
+            {
+                bin.DefaultStatusEnabled = value;
+                this.RaisePropertyChanged();
+            }
         }
 
-
-        private bool _inEditMode = false;
-        public bool InEditMode
+        public MaterialIconKind DefaultStatusIcon => DefaultStatusModel.Icon;
+        
+        public ProjectStatusModel DefaultStatusModel
         {
-            get => _inEditMode;
-            set => this.RaiseAndSetIfChanged(ref _inEditMode, value);
+            get => ProjectStatusModel.Get(bin.DefaultStatus);
+            set
+            {
+                bin.DefaultStatus = value.Status;
+                this.RaisePropertyChanged();
+            }
         }
-
+        
         public ApiProjectBin GetBin() => bin;
-
-        public ICommand BinEditCommand { get; set; }
-        public ICommand BinEditCancelCommand { get; set; }
-        public ICommand AddTaskCommand { get; set; }
 
         public ObservableCollection<ProjectTaskViewModel> Tasks { get; }
 
         public ProjectBinViewModel(ApiProjectBin bin)
         {
-            BinEditCommand = ReactiveCommand.Create(() =>
-            {
-                if (InEditMode)
-                {
-                    BinName = TempBinName;
-                    ProjectsPage.SignalProjectsChanged(bin.Project_id);
-                }
-                else
-                {
-                    TempBinName = BinName;
-                }
-
-                InEditMode = !InEditMode;
-            });
-            BinEditCancelCommand = ReactiveCommand.Create(() => InEditMode = false);
-
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
             Tasks.ConnectToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());

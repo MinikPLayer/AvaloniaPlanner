@@ -39,5 +39,9 @@
     <Compile Update="Controls\ProjectTaskControl.axaml.cs">
       <DependentUpon>ProjectTaskControl.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Dialogs\ProjectBinEditDialog.axaml.cs">
+      <DependentUpon>ProjectBinEditDialog.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

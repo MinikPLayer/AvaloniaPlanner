@@ -16,21 +16,39 @@ namespace AvaloniaPlanner.Utils
             source.CollectionChanged += (s, e) => e.FillToList(list, conversionFunc);
         }
 
-        private static void FillToList<Tin, Tout>(this NotifyCollectionChangedEventArgs e, List<Tout> list, Func<Tin, Tout> conversionFunc)
+        private static void FillToList<Tin, Tout>(this NotifyCollectionChangedEventArgs e, List<Tout> list,
+            Func<Tin, Tout> conversionFunc)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 list.Clear();
                 return;
             }
-            
+
             if (e.OldItems != null)
+            {
+                var index = e.OldStartingIndex;
                 foreach (var item in e.OldItems.OfType<Tin>())
-                    list.Remove(conversionFunc(item));
-            
+                {
+                    if(index != -1)
+                        list.RemoveAt(index++);
+                    else
+                        list.Remove(conversionFunc(item));
+                }
+            }
+
             if (e.NewItems != null)
+            {
+                var index = e.NewStartingIndex;
                 foreach (var item in e.NewItems.OfType<Tin>())
-                    list.Add(conversionFunc(item));
+                {
+                    if(index != -1)
+                        list.Insert(index++, conversionFunc(item));
+                    else
+                        list.Add(conversionFunc(item));
+                }
+                
+            }
         }
     }
 }

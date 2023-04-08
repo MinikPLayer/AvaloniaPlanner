@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using AvaloniaPlanner.Models;
 using Material.Icons;
 using Material.Icons.Avalonia;
@@ -51,6 +52,8 @@ namespace AvaloniaPlanner.Pages
                 this.RaisePropertyChanged();
             }
         }
+
+        public ApiProject GetProject() => project;
 
         private SolidColorBrush binsBackground = new SolidColorBrush(Color.FromArgb(0x40, 0, 0, 0));
         public SolidColorBrush BinsBackground
@@ -123,19 +126,47 @@ namespace AvaloniaPlanner.Pages
 
     public partial class ProjectViewPage : UserControl
     {
-        public void AddBinButtonClicked(object sender, RoutedEventArgs e)
+        async Task EditBin(ProjectBinViewModel bin)
+        {
+            await MainView.OpenDialog(new ProjectBinEditDialog(bin.GetBin()), async (s, e) =>
+            {
+                var result = e.Parameter;
+                if (result is bool b && b == true && e.Content is ProjectBinEditDialog dialog)
+                {
+                    if (dialog.DataContext is not ProjectBinViewModel newBin)
+                        throw new Exception("Dialog data context is an invalid type");
+
+                    var vm = (this.DataContext as ProjectViewViewModel)!;
+                    vm.Bins.Replace(bin, newBin);
+
+                    // Reload the page as a workaround to avoid ObseravbleCollection incorrectly reordering
+                    PageManager.ReplaceCurrentPage(new ProjectViewPage(vm.GetProject()));
+                    ProjectsPage.SignalProjectsChanged(newBin.GetBin().Project_id);
+                }
+            });
+        }
+        
+        void EditBinClicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Control { DataContext: ProjectBinViewModel vm })
+                return;
+
+            _ = EditBin(vm);
+        }
+        
+        void AddBinButtonClicked(object sender, RoutedEventArgs e)
         {
             var pVm = (ProjectViewViewModel)this.DataContext!;
             var bin = new ApiProjectBin() { Name = "New bin" }.Populate();
 
             var newBin = new ProjectBinViewModel(bin);
-            newBin.BinEditCommand.Execute(null);
+            _ = EditBin(newBin);
             pVm.Bins.Add(newBin);
 
             ProjectsPage.SignalProjectsChanged(newBin.GetBin().Project_id);
         }
 
-        public void BinSearchRequested(object sender, SearchEventArgs e)
+        void BinSearchRequested(object sender, SearchEventArgs e)
         {
             var pVm = (ProjectViewViewModel)this.DataContext!;
             pVm.VisibleBins.Clear();
@@ -151,7 +182,7 @@ namespace AvaloniaPlanner.Pages
             }
         }
 
-        public void StatusComboBoxPointerPressed(object sender, PointerPressedEventArgs e)
+        void StatusComboBoxPointerPressed(object sender, PointerPressedEventArgs e)
         {
             if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
             {
@@ -163,7 +194,7 @@ namespace AvaloniaPlanner.Pages
             base.OnPointerPressed(e);
         }
 
-        public async void DeleteBinClicked(object sender, RoutedEventArgs e)
+        async void DeleteBinClicked(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
                 return;
@@ -176,9 +207,9 @@ namespace AvaloniaPlanner.Pages
             }
         }
 
-        public ProjectBinViewModel? GetBinByTask(ProjectTaskViewModel task) => ((ProjectViewViewModel)this.DataContext!).Bins.Where(b => b.Tasks.Contains(task)).FirstOrDefault();
+        ProjectBinViewModel? GetBinByTask(ProjectTaskViewModel task) => ((ProjectViewViewModel)this.DataContext!).Bins.Where(b => b.Tasks.Contains(task)).FirstOrDefault();
 
-        public async void AddTaskClicked(object sender, RoutedEventArgs e)
+        async void AddTaskClicked(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
                 return;
@@ -192,7 +223,7 @@ namespace AvaloniaPlanner.Pages
             await EditTask(newTask, vm);
         }
 
-        public async Task EditTask(ProjectTaskViewModel task, ProjectBinViewModel bin)
+        async Task EditTask(ProjectTaskViewModel task, ProjectBinViewModel bin)
         {
             await MainView.OpenDialog(new ProjectTaskEditDialog(task.GetTask()), (s, e) =>
             {
@@ -209,7 +240,7 @@ namespace AvaloniaPlanner.Pages
             });
         }
 
-        public async void EditTaskClicked(object sender, RoutedEventArgs e)
+        async void EditTaskClicked(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
                 return;
@@ -225,7 +256,7 @@ namespace AvaloniaPlanner.Pages
         }
 
         private ProjectTaskViewModel? SelectedTaskToMove = null;
-        public void MoveTaskClicked(object sender, RoutedEventArgs e)
+        void MoveTaskClicked(object sender, RoutedEventArgs e)
         {
             if(sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
                 return;
@@ -234,7 +265,7 @@ namespace AvaloniaPlanner.Pages
             SelectedTaskToMove = task;
         }
 
-        public async void DeleteTaskClicked(object sender, RoutedEventArgs e)
+        async void DeleteTaskClicked(object sender, RoutedEventArgs e)
         {
             if (sender is not Control c || c.DataContext is not ProjectTaskViewModel task)
                 return;
@@ -258,7 +289,7 @@ namespace AvaloniaPlanner.Pages
         }
 
         // Mitigate animation getting stuck in ListBox ripple effect
-        public void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
+        void TasksListSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is not ListBox lb)
                 return;
@@ -266,7 +297,7 @@ namespace AvaloniaPlanner.Pages
             lb.SelectedItem = null;
         }        
         
-        public void BinSelectionChanged(object sender, SelectionChangedEventArgs e)
+        void BinSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is not ListBox lb)
                 return;
@@ -282,6 +313,9 @@ namespace AvaloniaPlanner.Pages
 
                 bin.Tasks.Remove(SelectedTaskToMove);
                 newBin.Tasks.Add(SelectedTaskToMove);
+                if (newBin.DefaultStatusEnabled)
+                    SelectedTaskToMove.StatusModel = newBin.DefaultStatusModel;
+                
                 this.OrderSelector.ForceReorder();
                 ProjectsPage.SignalProjectsChanged(SelectedTaskToMove.GetTask().Project_id);
                 SelectedTaskToMove = null;

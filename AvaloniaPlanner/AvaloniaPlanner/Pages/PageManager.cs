@@ -33,6 +33,11 @@ namespace AvaloniaPlanner.Pages
             return instance;
         }
 
+        public static void ReplaceCurrentPage(UserControl instance)
+        {
+            ChangePage(instance);
+        }
+
         public static void Navigate(UserControl instance)
         {
             var curPage = MainView.Singleton.ViewModel.CurrentPage as UserControl;
