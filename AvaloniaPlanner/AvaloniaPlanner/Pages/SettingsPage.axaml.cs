@@ -40,35 +40,38 @@ namespace AvaloniaPlanner.Pages
                 }
             }
 
-            private string _projectsOrderDirectionString = "desc";
-            public string ProjectsOrderDirection
+            private ProjectsOrderTypes _projectsOrderType = ProjectsOrderTypes.Deadline;
+
+            public ProjectsOrderTypes ProjectsOrderType
             {
-                get => _projectsOrderDirectionString;
+                get => _projectsOrderType;
                 set
                 {
-                    _projectsOrderDirectionString = value;
-                    SettingsPage.SaveConfig();
-                }
-            }
-            
-            private string _projectsOrderString = "deadline";
-            public string ProjectsOrderString
-            {
-                get => _projectsOrderString;
-                set
-                {
-                    _projectsOrderString = value;
+                    _projectsOrderType = value;
                     SettingsPage.SaveConfig();
                 }
             }
 
-            private TaskOrderingModes tasksOrderMode = TaskOrderingModes.Priority;
+            private bool _projectsOrderAscending = false;
+
+            public bool ProjectsOrderAscending
+            {
+                get => _projectsOrderAscending;
+                set 
+                {
+                    _projectsOrderAscending = value;
+                    SettingsPage.SaveConfig();
+                }
+            }
+
+            private TaskOrderingModes _tasksOrderMode = TaskOrderingModes.Priority;
+
             public TaskOrderingModes TasksOrderMode
             {
-                get => tasksOrderMode;
+                get => _tasksOrderMode;
                 set
                 {
-                    tasksOrderMode = value;
+                    _tasksOrderMode = value;
                     SettingsPage.SaveConfig();
                 }
             }
@@ -83,7 +86,7 @@ namespace AvaloniaPlanner.Pages
                     SettingsPage.SaveConfig();
                 }
             }
-            
+
             public ConfigData()
             {
                 Server = new ServerData();

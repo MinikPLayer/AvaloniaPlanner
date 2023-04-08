@@ -319,7 +319,13 @@ namespace AvaloniaPlanner.Pages
             lb.SelectedItem = null;
         }
 
-        
+        void RevealTasksClicked(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Control c || c.DataContext is not ProjectBinViewModel vm)
+                return;
+
+            //vm.VisibleTasks = vm.Tasks;
+        }
 
         public ProjectViewPage(ApiProject? p)
         {

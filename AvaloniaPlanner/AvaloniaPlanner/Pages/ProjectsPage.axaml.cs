@@ -17,10 +17,19 @@ using System.Collections.Specialized;
 using AvaloniaPlanner.Dialogs;
 using System;
 using DynamicData.Kernel;
+using Material.Icons;
 
 namespace AvaloniaPlanner.Pages
 {
 
+    public enum ProjectsOrderTypes
+    {
+        Name,
+        Deadline,
+        CreationDate,
+        LastUpdate
+    }
+    
     public partial class ProjectsPage : UserControl
     {
         public static ObservableCollection<ApiProject> Projects { get; set; }
@@ -82,25 +91,25 @@ namespace AvaloniaPlanner.Pages
             ProjectsPanel.Children.AddRange(priority.Concat(rest).Select(p => new ProjectControl(p)));
         }
 
-        private void SetProjectsOrderMethod(string method)
+        private void SetProjectsOrderMethod(ProjectsOrderTypes method)
         {
             ProjectPriorityOrderWhereFunc = x => true;
             switch(method)
             {
-                case "deadline":
+                case ProjectsOrderTypes.Deadline:
                     ProjectOrderArg = x => x.Deadline;
                     ProjectPriorityOrderWhereFunc = x => x.DeadlineEnabled;
                     break;
 
-                case "name":
+                case ProjectsOrderTypes.Name:
                     ProjectOrderArg = x => x.Name;
                     break;
 
-                case "update":
+                case ProjectsOrderTypes.LastUpdate:
                     ProjectOrderArg = x => x.LastUpdate;
                     break;
 
-                case "created":
+                case ProjectsOrderTypes.CreationDate:
                     ProjectOrderArg = x => x.CreationDate;
                     break;
 
@@ -108,46 +117,27 @@ namespace AvaloniaPlanner.Pages
                     return;
             }
 
-            SettingsPage.Config.ProjectsOrderString = method;
+            SettingsPage.Config.ProjectsOrderType = method;
             if(SearchInputControl != null)
                 SearchInputControl.RaiseSearchEvent();
         }
-        
-        public void ProjectsOrderMethodChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count == 0 || e.AddedItems[0] is not Control c || c.Tag is not string tag || string.IsNullOrEmpty(tag))
-                return;
 
-            SetProjectsOrderMethod(tag);
-        }
-
-        private void SetProjectsOrderDirection(string order)
+        private void SetProjectsOrderDirection(bool ascending)
         {
-            switch (order)
+            switch (ascending)
             {
-                case "asc":
+                case true:
                     ProjectOrderFunc = (data, orderArg) => data.OrderBy(orderArg);
                     break;
 
-                case "desc":
+                case false:
                     ProjectOrderFunc = (data, orderArg) => data.OrderByDescending(orderArg);
                     break;
-
-                default:
-                    return;
             }
 
-            SettingsPage.Config.ProjectsOrderDirection = order;
+            SettingsPage.Config.ProjectsOrderAscending = ascending;
             if (SearchInputControl != null)
                 SearchInputControl.RaiseSearchEvent();
-        }
-        
-        public void ProjectsOrderDirectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count == 0 || e.AddedItems[0] is not Control c || c.Tag is not string tag || string.IsNullOrEmpty(tag))
-                return;
-
-            SetProjectsOrderDirection(tag);
         }
 
         public static void RemoveProject(ApiProject project)
@@ -201,17 +191,27 @@ namespace AvaloniaPlanner.Pages
             InitializeComponent();
             Pages.Add(this);
             ApplySearchFilter(null);
-
-            ProjectsOrderDirectionSelector.SelectedItem = ProjectsOrderDirectionSelector.Items!.OfType<ComboBoxItem>()
-                .First(x => x.Tag is string s && s == SettingsPage.Config.ProjectsOrderDirection);
             
-            ProjectsOrderMethodSelector.SelectedItem = ProjectsOrderMethodSelector.Items!.OfType<ComboBoxItem>()
-                .First(x => x.Tag is string s && s == SettingsPage.Config.ProjectsOrderString);
+            OrderSelector.SetOrderMethods(new List<OrderSelection>() {
+                new OrderSelection("Name", MaterialIconKind.SortAlphabetically, ProjectsOrderTypes.Name),
+                new OrderSelection("Deadline", MaterialIconKind.CalendarClock, ProjectsOrderTypes.Deadline),
+                new OrderSelection("Last update", MaterialIconKind.Update, ProjectsOrderTypes.LastUpdate),
+                new OrderSelection("Creation date", MaterialIconKind.Calendar, ProjectsOrderTypes.CreationDate),
+            }, SettingsPage.Config.ProjectsOrderType, SettingsPage.Config.ProjectsOrderAscending);
         }
 
         ~ProjectsPage()
         {
             Pages.Remove(this);
+        }
+
+        private void OrderSelector_OnOrderMethodChanged(object? sender, OrderSelectorEventArgs e)
+        {
+            if(e.Method is not ProjectsOrderTypes type)
+                return;
+            
+            SetProjectsOrderMethod(type);
+            SetProjectsOrderDirection(e.Ascending);
         }
     }
 }

@@ -64,14 +64,41 @@ namespace AvaloniaPlanner.ViewModels
         
         public ApiProjectBin GetBin() => bin;
 
+        private int _visibleTasksCount = -1;
+        public int VisibleTasksCount
+        {
+            get => _visibleTasksCount;
+            set
+            {
+                if (_visibleTasksCount == value) 
+                    return;
+                
+                _visibleTasksCount = value;
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(VisibleTasks));
+            } 
+        }
         public ObservableCollection<ProjectTaskViewModel> Tasks { get; }
 
+        public List<ProjectTaskViewModel> VisibleTasks
+        {
+            get
+            {
+                if (VisibleTasksCount == -1)
+                    return Tasks.ToList();
+                
+                var i = 0;
+                return Tasks.TakeWhile(task => i++ < VisibleTasksCount).ToList();
+            }
+        }
+        
         public ProjectBinViewModel(ApiProjectBin bin)
         {
             Tasks = new ObservableCollection<ProjectTaskViewModel>();
             Tasks.AddRange(bin.Tasks.Select(x => new ProjectTaskViewModel(x)));
             Tasks.ConnectToList(bin.Tasks, (ProjectTaskViewModel vm) => vm.GetTask());
-
+            Tasks.CollectionChanged += (s, e) => this.RaisePropertyChanged(nameof(VisibleTasks));
+            
             this.bin = bin;
         }
     }

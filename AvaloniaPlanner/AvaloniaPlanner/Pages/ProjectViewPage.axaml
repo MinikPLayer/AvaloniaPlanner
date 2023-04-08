@@ -70,13 +70,20 @@
 							</MenuFlyout>
 						</Border.ContextFlyout>
 						<StackPanel Margin="10" PointerPressed="StatusComboBoxPointerPressed">
-							<StackPanel Spacing="5" Orientation="Horizontal"  Margin="5, 5, 5, 0">
-								<TextBlock IsHitTestVisible="False" Text="{Binding BinName}" FontSize="20" FontWeight="Bold" Height="30"/>
-								<icons:MaterialIcon Kind="{Binding DefaultStatusIcon}" IsVisible="{Binding DefaultStatusEnabled}"
-								                    Width="25" Height="25"/>
-							</StackPanel>
+							<Grid ColumnDefinitions="*, 20, 60" Margin="5, 5, 5, 0">
+								<StackPanel Grid.Column="0" Spacing="5" Orientation="Horizontal">
+									<icons:MaterialIcon Kind="{Binding DefaultStatusIcon}" IsVisible="{Binding DefaultStatusEnabled}"
+									                    Width="25" Height="25"/>
+									<TextBlock IsHitTestVisible="False" Text="{Binding BinName}" FontSize="20" FontWeight="Bold" Height="30"/>
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" Grid.Column="2" Margin="0, 0, 5, 0">
+									<TextBlock FontSize="20" Text="Tasks: " Foreground="#60FFFFFF"/>
+									<TextBlock IsHitTestVisible="False" Text="{Binding Tasks.Count, Mode=OneWay}" 
+									           FontSize="20" Foreground="#60FFFFFF"/>
+								</StackPanel>
+							</Grid>
 							<Separator Height="5"/>
-							<ListBox Items="{Binding Tasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
+							<ListBox Items="{Binding VisibleTasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
 								<ListBox.ItemTemplate>
 									<DataTemplate DataType="vm:ProjectTaskViewModel">
 										<Border Background="Transparent">
@@ -114,12 +121,13 @@
 									</DataTemplate>
 								</ListBox.ItemTemplate>
 							</ListBox>
+							<Button Content="5 more..." Foreground="#60FFFFFF" Click="RevealTasksClicked"/>
 						</StackPanel>
 					</Border>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		<TextBlock IsHitTestVisible="False" Text="{Binding ProjectName}" Grid.Row="1" HorizontalAlignment="Right" FontSize="24" VerticalAlignment="Bottom" FontWeight="ExtraBold" Margin="10"/>
+		<TextBlock Text="{Binding ProjectName}" Grid.Row="1" HorizontalAlignment="Right" FontSize="24" VerticalAlignment="Bottom" FontWeight="ExtraBold" Margin="10"/>
 	</Grid>
 
 </UserControl>
