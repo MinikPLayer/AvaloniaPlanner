@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlanner.Android", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlanner.Desktop", "AvaloniaPlanner\AvaloniaPlanner.Desktop\AvaloniaPlanner.Desktop.csproj", "{F9440CA3-5AF0-42AA-8D86-E6E874A51ABF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvaloniaPlanner.iOS", "AvaloniaPlanner\AvaloniaPlanner.iOS\AvaloniaPlanner.iOS.csproj", "{77CF8E56-2EEE-4A6C-A19D-301FC8C0042C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlanner.Web", "AvaloniaPlanner\AvaloniaPlanner.Web\AvaloniaPlanner.Web.csproj", "{874BB2FC-3AD5-4336-B6D8-0043E804EC6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvaloniaPlannerAPI", "AvaloniaPlannerAPI\AvaloniaPlannerAPI.csproj", "{BDA2B0B3-997C-4797-A2CD-FC36A2DC3DEF}"
@@ -41,10 +39,6 @@ Global
 		{F9440CA3-5AF0-42AA-8D86-E6E874A51ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9440CA3-5AF0-42AA-8D86-E6E874A51ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9440CA3-5AF0-42AA-8D86-E6E874A51ABF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{77CF8E56-2EEE-4A6C-A19D-301FC8C0042C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{77CF8E56-2EEE-4A6C-A19D-301FC8C0042C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{77CF8E56-2EEE-4A6C-A19D-301FC8C0042C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{77CF8E56-2EEE-4A6C-A19D-301FC8C0042C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{874BB2FC-3AD5-4336-B6D8-0043E804EC6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{874BB2FC-3AD5-4336-B6D8-0043E804EC6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{874BB2FC-3AD5-4336-B6D8-0043E804EC6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
