@@ -1,5 +1,6 @@
 ﻿using DynamicData;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -11,12 +12,12 @@ namespace AvaloniaPlanner.Utils
 {
     public static class ListUtils
     {
-        public static void ConnectToList<Tin, Tout>(this ObservableCollection<Tin> source, List<Tout> list, Func<Tin, Tout> conversionFunc)
+        public static void ConnectToList<Tin, Tout>(this ObservableCollection<Tin> source, IList<Tout> list, Func<Tin, Tout> conversionFunc)
         {
             source.CollectionChanged += (s, e) => e.FillToList(list, conversionFunc);
         }
 
-        private static void FillToList<Tin, Tout>(this NotifyCollectionChangedEventArgs e, List<Tout> list,
+        private static void FillToList<Tin, Tout>(this NotifyCollectionChangedEventArgs e, IList<Tout> list,
             Func<Tin, Tout> conversionFunc)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset)

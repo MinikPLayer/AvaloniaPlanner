@@ -109,16 +109,8 @@ namespace AvaloniaPlanner.Pages
 
             Bins = new();
             VisibleBins = new();
-            Bins.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                    VisibleBins.AddRange(e.NewItems.OfType<ProjectBinViewModel>());
-
-                if (e.OldItems != null)
-                    foreach (var item in e.OldItems.OfType<ProjectBinViewModel>())
-                        VisibleBins.Remove(item);
-            };
-
+            Bins.ConnectToList(VisibleBins, x => x);
+            
             Bins.AddRange(p.Bins.Select(b => new ProjectBinViewModel(b)));
             Bins.ConnectToList(project.Bins, (ProjectBinViewModel bin) => bin.GetBin());
         }
@@ -138,9 +130,7 @@ namespace AvaloniaPlanner.Pages
 
                     var vm = (this.DataContext as ProjectViewViewModel)!;
                     vm.Bins.Replace(bin, newBin);
-
-                    // Reload the page as a workaround to avoid ObseravbleCollection incorrectly reordering
-                    PageManager.ReplaceCurrentPage(new ProjectViewPage(vm.GetProject()));
+                    
                     ProjectsPage.SignalProjectsChanged(newBin.GetBin().Project_id);
                 }
             });
@@ -216,6 +206,9 @@ namespace AvaloniaPlanner.Pages
 
             var task = new ApiProjectTask() { Name = "New task" }.Populate();
             var newTask = new ProjectTaskViewModel(task);
+            if (vm.DefaultStatusEnabled)
+                newTask.StatusModel = vm.DefaultStatusModel;
+            
             vm.Tasks.Add(newTask);
             this.OrderSelector.ForceReorder();
             ProjectsPage.SignalProjectsChanged(newTask.GetTask().Project_id);
