@@ -8,6 +8,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <PublishAot>true</PublishAot>
     <SelfContained>true</SelfContained>
+    <TrimMode>partial</TrimMode>
   </PropertyGroup>
 
   <PropertyGroup>
