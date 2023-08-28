@@ -20,7 +20,7 @@ namespace AvaloniaPlanner.Pages
             MainView.Singleton.ViewModel.CurrentPage = instance;
 
             // Bug on android preventing the switch
-            if (MainView.RuntimePlatformInfo.IsMobile)
+            if (MainView.IsMobile)
                 MainView.Singleton.MainContent.Content = instance;
 
             MainView.Singleton.ViewModel.CanGoBack = CanGoBack();

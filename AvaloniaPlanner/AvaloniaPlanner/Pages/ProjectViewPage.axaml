@@ -40,7 +40,7 @@
 			<controls:OrderSelector x:Name="OrderSelector" OrderMethodChanged="OrderSelector_OnOrderMethodChanged"/>
 		</StackPanel>
 		
-		<ListBox Classes="binsbox" Items="{Binding VisibleBins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged"
+		<ListBox Classes="binsbox" ItemsSource="{Binding VisibleBins}" Grid.Row="1" Margin="0, 5, 0, 0" SelectionChanged="BinSelectionChanged"
 		         ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
 			<ListBox.ContextFlyout>
 				<MenuFlyout>
@@ -97,7 +97,7 @@
 								</StackPanel>
 							</Grid>
 							<Separator Height="5"/>
-							<ListBox Items="{Binding VisibleTasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
+							<ListBox ItemsSource="{Binding VisibleTasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
 								<ListBox.ItemTemplate>
 									<DataTemplate DataType="vm:ProjectTaskViewModel">
 										<Border Background="Transparent">

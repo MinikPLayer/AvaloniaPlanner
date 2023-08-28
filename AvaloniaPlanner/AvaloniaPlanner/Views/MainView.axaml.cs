@@ -70,10 +70,10 @@ namespace AvaloniaPlanner.Views
         public static Task OpenDialog(object content, Action<object, MessageDialogEventArgs>? handler = null) 
             => Singleton._OpenDialog(content, handler);
 
-        public static RuntimePlatformInfo RuntimePlatformInfo { get; } = AvaloniaLocator.Current.GetService<IRuntimePlatform>().GetRuntimeInfo();
+        public static bool IsMobile => OperatingSystem.IsAndroid() || OperatingSystem.IsIOS();
         public void TestPP(object sender, PointerPressedEventArgs e)
         {
-            if (RuntimePlatformInfo.IsMobile)
+            if (IsMobile)
                 return;
 
             var pos = e.GetPosition(this);

@@ -63,7 +63,7 @@ public partial class OrderSelector : UserControl
     public void SetOrderMethods(IEnumerable<OrderSelection> methods, object? curSelection = null, bool? ascending = null)
     {
         var orderSelections = methods.ToList();
-        ProjectsOrderMethodSelector.Items = orderSelections;
+        ProjectsOrderMethodSelector.ItemsSource = orderSelections;
         if (curSelection != null)
             ProjectsOrderMethodSelector.SelectedItem = orderSelections.FirstOrDefault(x => x.Value != null && x.Value.Equals(curSelection));
 

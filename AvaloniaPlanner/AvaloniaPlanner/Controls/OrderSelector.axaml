@@ -7,8 +7,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="AvaloniaPlanner.Controls.OrderSelector">
 	<StackPanel Orientation="Horizontal" Spacing="5">
-		<ComboBox Width="150" x:Name="ProjectsOrderMethodSelector" SelectionChanged="_OrderMethodChanged" 
-		          Items="{Binding Options}">
+		<ComboBox Width="150" x:Name="ProjectsOrderMethodSelector" SelectionChanged="_OrderMethodChanged"
+		          ItemsSource="{Binding Options}">
 			<ComboBox.ItemTemplate>
 	            <DataTemplate x:DataType="controls:OrderSelection">
 		            <StackPanel Orientation="Horizontal" Spacing="5">

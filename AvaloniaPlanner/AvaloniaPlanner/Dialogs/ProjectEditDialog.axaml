@@ -22,7 +22,7 @@
 		<TextBox Text="{Binding	Description, Mode=TwoWay}" Grid.Column="2" Grid.Row="3" TextWrapping="Wrap" Margin="{StaticResource DialogGridSpacing}"/>
 
 		<TextBlock Text="Status: " Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
-		<ComboBox Items="{x:Static models:ProjectStatusModel.Statuses}" SelectedItem="{Binding StatusModel}" Grid.Column="2" Grid.Row="4" Margin="{StaticResource DialogGridSpacing}">
+		<ComboBox ItemsSource="{x:Static models:ProjectStatusModel.Statuses}" SelectedItem="{Binding StatusModel}" Grid.Column="2" Grid.Row="4" Margin="{StaticResource DialogGridSpacing}">
 			<ComboBox.ItemTemplate>
 				<DataTemplate DataType="models:ProjectStatusModel">
 					<StackPanel Orientation="Horizontal" Spacing="5">

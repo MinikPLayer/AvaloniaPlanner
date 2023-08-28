@@ -3,7 +3,8 @@
              xmlns:local="using:AvaloniaPlanner"
 			 xmlns:sty="using:FluentAvalonia.Styling"
              x:Class="AvaloniaPlanner.App"
-			 RequestedThemeVariant="Dark">
+			 RequestedThemeVariant="Dark"
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
@@ -15,7 +16,7 @@
 	<Application.Styles>
 		<!--<FluentTheme />-->
 		<sty:FluentAvaloniaTheme />
-		<StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"/>
+		<materialIcons:MaterialIconStyles />
 
 		<Style Selector="Border.separator">
 			<Setter Property="Background" Value="#40606060"/>

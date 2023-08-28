@@ -22,7 +22,7 @@
 		<TextBox Text="{Binding	BinName, Mode=TwoWay}" Grid.Column="2" Grid.Row="1" Margin="{StaticResource DialogGridSpacing}"/>
 		
 		<CheckBox IsChecked="{Binding DefaultStatusEnabled, Mode=TwoWay}" Content="Auto status: " Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
-		<ComboBox Items="{x:Static models:ProjectStatusModel.Statuses}" SelectedItem="{Binding DefaultStatusModel}" 
+		<ComboBox ItemsSource="{x:Static models:ProjectStatusModel.Statuses}" SelectedItem="{Binding DefaultStatusModel}" 
 		          IsEnabled="{Binding DefaultStatusEnabled}"
 		          Grid.Column="2" Grid.Row="2" Margin="{StaticResource DialogGridSpacing}">
 			<ComboBox.ItemTemplate>
@@ -42,7 +42,7 @@
 		
 		<CheckBox IsChecked="{Binding CustomOrderingOverrideEnabled, Mode=TwoWay}" Content="Custom ordering: " 
 		          Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
-		<ComboBox Items="{x:Static controls:ProjectBinEditDialog.TaskOrderingModes}" SelectedItem="{Binding CustomOrderingOverride}" 
+		<ComboBox ItemsSource="{x:Static controls:ProjectBinEditDialog.TaskOrderingModes}" SelectedItem="{Binding CustomOrderingOverride}" 
 		          IsEnabled="{Binding CustomOrderingOverrideEnabled}"
 		          Grid.Column="2" Grid.Row="4" Margin="{StaticResource DialogGridSpacing}"/>
 		

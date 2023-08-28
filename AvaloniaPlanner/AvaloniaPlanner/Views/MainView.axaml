@@ -39,7 +39,7 @@
 								<icons:MaterialIcon Kind="ArrowLeft" Width="25" Height="25"/>
 							</Button>
 							<Border Classes="separator" Height="20"/>
-							<ItemsRepeater Items="{Binding PaneEntries}"/>
+							<ItemsRepeater ItemsSource="{Binding PaneEntries}"/>
 						</StackPanel>
 
 						<controls:PaneEntry Grid.Row="1"
