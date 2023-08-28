@@ -6,9 +6,9 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-    <PublishAot>true</PublishAot>
-    <SelfContained>true</SelfContained>
-    <TrimMode>partial</TrimMode>
+    <!--<PublishAot>true</PublishAot>-->
+    <!--<SelfContained>true</SelfContained>-->
+    <!--<TrimMode>partial</TrimMode>-->
   </PropertyGroup>
 
   <PropertyGroup>
