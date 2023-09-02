@@ -96,7 +96,7 @@
 									           FontSize="20" Foreground="#60FFFFFF"/>
 								</StackPanel>
 							</Grid>
-							<Separator Height="5"/>
+							<Separator Height="2" Margin="0, 5"/>
 							<ListBox ItemsSource="{Binding VisibleTasks, Mode=OneWay}" SelectionChanged="TasksListSelectionChanged">
 								<ListBox.ItemTemplate>
 									<DataTemplate DataType="vm:ProjectTaskViewModel">

@@ -13,20 +13,6 @@
 		ExtendClientAreaChromeHints="PreferSystemChrome"
 		ExtendClientAreaToDecorationsHint="True">
 
-	<Panel>
-		<ExperimentalAcrylicBorder IsHitTestVisible="False">
-			<ExperimentalAcrylicBorder.Material>
-				<ExperimentalAcrylicMaterial
-					 BackgroundSource="Digger"
-					 TintColor="Black"
-					 TintOpacity="1"
-					 MaterialOpacity="0.80" />
-			</ExperimentalAcrylicBorder.Material>
-		</ExperimentalAcrylicBorder>
-
-		<Grid>
-			<views:MainView />
-		</Grid>
-	</Panel>
+	<views:MainView/>
 
 </Window>

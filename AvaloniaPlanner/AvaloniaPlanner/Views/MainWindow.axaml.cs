@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -15,6 +16,10 @@ namespace AvaloniaPlanner.Views
             Singleton = this;
             this.DataContext = new MainWindowViewModel();
             InitializeComponent();
+
+#if DEBUG
+            this.AttachDevTools();
+#endif
         }
     }
 }

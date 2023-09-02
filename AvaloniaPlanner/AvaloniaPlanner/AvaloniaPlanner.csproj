@@ -23,6 +23,7 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5" />
+	<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AvaloniaPlannerLib\AvaloniaPlannerLib.csproj" />
