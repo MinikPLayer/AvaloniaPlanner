@@ -59,9 +59,11 @@ public partial class OrderSelector : UserControl
 
         return null;
     }
-    
+
+    bool disableForceReoder = false;
     public void SetOrderMethods(IEnumerable<OrderSelection> methods, object? curSelection = null, bool? ascending = null)
     {
+        disableForceReoder = true;
         var orderSelections = methods.ToList();
         ProjectsOrderMethodSelector.ItemsSource = orderSelections;
         if (curSelection != null)
@@ -69,6 +71,9 @@ public partial class OrderSelector : UserControl
 
         if (ascending.HasValue)
             ProjectsOrderDirectionSelector.SelectedIndex = ascending.Value ? 0 : 1;
+
+        disableForceReoder = false;
+        ForceReorder();
     }
 
     public void ForceReorder()
@@ -88,5 +93,9 @@ public partial class OrderSelector : UserControl
         this.DataContext = this;
     }
 
-    private void _OrderMethodChanged(object? sender, SelectionChangedEventArgs e) => ForceReorder();
+    private void _OrderMethodChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (!disableForceReoder)
+            ForceReorder();
+    }
 }

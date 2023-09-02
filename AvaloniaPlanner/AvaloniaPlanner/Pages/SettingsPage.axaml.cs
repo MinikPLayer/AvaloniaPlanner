@@ -51,7 +51,7 @@ namespace AvaloniaPlanner.Pages
                 set
                 {
                     _projectsOrderType = value;
-                    SettingsPage.SaveConfig();
+                    _ = SettingsPage.SaveConfig();
                 }
             }
 
@@ -63,7 +63,7 @@ namespace AvaloniaPlanner.Pages
                 set 
                 {
                     _projectsOrderAscending = value;
-                    SettingsPage.SaveConfig();
+                    _ = SettingsPage.SaveConfig();
                 }
             }
 
@@ -75,7 +75,7 @@ namespace AvaloniaPlanner.Pages
                 set
                 {
                     _tasksOrderMode = value;
-                    SettingsPage.SaveConfig();
+                    _ = SettingsPage.SaveConfig();
                 }
             }
 
@@ -86,7 +86,7 @@ namespace AvaloniaPlanner.Pages
                 set
                 {
                     _tasksOrderAscending = value;
-                    SettingsPage.SaveConfig();
+                    _ = SettingsPage.SaveConfig();
                 }
             }
 
@@ -101,10 +101,16 @@ namespace AvaloniaPlanner.Pages
 
         public static void LoadConfig()
         {
+#if DEBUG
+            Config = new ConfigData();
+            Config.Server = new ConfigData.ServerData() { IP = "127.0.0.1", Port = 25110 };
+#else
+
             var config = DeserializeConfigFromFile();
             if (config != null)
                 Config = config;
-        }
+#endif
+          }
 
         public static ConfigData? DeserializeConfigFromFile(string? filePath = null)
         {
@@ -126,29 +132,33 @@ namespace AvaloniaPlanner.Pages
             }
         }
 
-        public static bool SaveConfig(string? filePath = null)
+        static object configSaveMutex = new object();
+        public static async Task<bool> SaveConfig(string? filePath = null)
         {
-            if (CSUtil.OS.ProcessUtils.IsAvalonia().Result)
+            if (await CSUtil.OS.ProcessUtils.IsAvalonia())
                 return false;
-            
-            if (filePath == null)
-                filePath = DefaultConfigSavePath;
-            
-            var path = Path.GetDirectoryName(filePath);
-            if (path == null)
-                throw new Exception("Invalid path, cannot extract a directory - " + filePath);
 
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            try
+            lock (configSaveMutex)
             {
-                File.WriteAllText(filePath, Newtonsoft.Json.JsonConvert.SerializeObject(Config));
-                return true;
-            } 
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Cannot save config to file - " + ex.Message);
-                return false;
+                if (filePath == null)
+                    filePath = DefaultConfigSavePath;
+
+                var path = Path.GetDirectoryName(filePath);
+                if (path == null)
+                    throw new Exception("Invalid path, cannot extract a directory - " + filePath);
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                try
+                {
+                    File.WriteAllText(filePath, Newtonsoft.Json.JsonConvert.SerializeObject(Config));
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Cannot save config to file - " + ex.Message);
+                    return false;
+                }
             }
         }
 
@@ -178,7 +188,7 @@ namespace AvaloniaPlanner.Pages
             {
                 _ = MainView.OpenDialog(new ErrorDialog("Connected to the server", Material.Icons.MaterialIconKind.Check, Colors.LightGreen));
                 ((SettingsViewModel)this.DataContext).ConnectionStatus = true.ToString();
-                SaveConfig();
+                await SaveConfig();
             }
 
             ((SettingsViewModel)this.DataContext).IsLocked = false;
