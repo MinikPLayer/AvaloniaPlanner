@@ -153,9 +153,9 @@ namespace AvaloniaPlanner.Pages
             });
         }
 
-        public static void EditProject(ApiProject project)
+        public static void EditProject(ApiProject project, bool isNewProject = false)
         {
-            MainView.OpenDialog(new ProjectEditDialog(project), (s, e) =>
+            MainView.OpenDialog(new ProjectEditDialog(project, isNewProject), (s, e) =>
             {
                 var result = e.Parameter;
                 if (result is bool b && b == true && e.Content is ProjectEditDialog dialog)
@@ -169,6 +169,15 @@ namespace AvaloniaPlanner.Pages
                     Projects.Replace(project, newProject);
                     Projects.Replace(newProject, newProject);
                     SignalProjectsChanged(newProject.Id);
+
+                    if(isNewProject && newProjectVm.CreateDefaultBins)
+                    {
+                        newProject.Bins.Add(new ApiProjectBin() { Name = "Ideas", DefaultStatus = ProjectStatus.Idea, Project_id = newProject.Id, DefaultStatusEnabled = true });
+                        newProject.Bins.Add(new ApiProjectBin() { Name = "To-Do", DefaultStatus = ProjectStatus.Defined, Project_id = newProject.Id, DefaultStatusEnabled = true });
+                        newProject.Bins.Add(new ApiProjectBin() { Name = "In progress", DefaultStatus = ProjectStatus.InProgress, Project_id = newProject.Id, DefaultStatusEnabled = true });
+                        newProject.Bins.Add(new ApiProjectBin() { Name = "Completed", DefaultStatus = ProjectStatus.Completed, Project_id = newProject.Id, DefaultStatusEnabled = true });
+                        newProject.Bins.Add(new ApiProjectBin() { Name = "Abandoned", DefaultStatus = ProjectStatus.Abandoned, Project_id = newProject.Id, DefaultStatusEnabled = true });
+                    }
                 }
             });
         }
@@ -181,7 +190,7 @@ namespace AvaloniaPlanner.Pages
             Projects.Add(project);
             SignalProjectsChanged(project.Id);
 
-            EditProject(project);
+            EditProject(project, true);
         }
 
         public void ProjectSearchRequested(object sender, SearchEventArgs e) => ApplySearchFilter(e.SearchTerm);

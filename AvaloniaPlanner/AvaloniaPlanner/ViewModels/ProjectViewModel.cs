@@ -21,6 +21,19 @@ namespace AvaloniaPlanner.ViewModels
     {
         private ApiProject project { get; set; }
 
+        private bool createDefaultBins = true;
+        public bool CreateDefaultBins
+        {
+            get => createDefaultBins;
+            set
+            {
+                createDefaultBins = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public bool CreateDefaultBinsEnabled { get; set; } = true;
+
         public string Name
         {
             get => project.Name;
@@ -87,12 +100,12 @@ namespace AvaloniaPlanner.ViewModels
         public ApiProject GetProject() => project;
         public bool IsProject(ApiProject p) => p == project;
 
-        public ProjectViewModel(ApiProject? p = null)
+        public ProjectViewModel(ApiProject? p = null, bool newProject = false)
         {
-
             if (p == null)
                 p = new ApiProject();
 
+            CreateDefaultBinsEnabled = newProject;
             project = p;
 
             ProjectClickedCommand = ReactiveCommand.Create(() => PageManager.Navigate(new ProjectViewPage(project)));

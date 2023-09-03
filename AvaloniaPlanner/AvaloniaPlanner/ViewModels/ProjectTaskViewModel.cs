@@ -22,6 +22,19 @@ namespace AvaloniaPlanner.ViewModels
             LastUpdate = DateTime.Now;
         }
 
+        public bool IsNewTask = false;
+
+        private bool createDefaultBins = false;
+        public bool CreateDefaultBins
+        {
+            get => createDefaultBins;
+            set
+            {
+                createDefaultBins = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
         public DateTime LastUpdate
         {
             get => task.LastUpdate;

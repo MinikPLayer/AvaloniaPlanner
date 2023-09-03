@@ -32,11 +32,11 @@ namespace AvaloniaPlanner.Dialogs
             MainView.Singleton.MainDialog.CloseDialogCommand.Execute(Save);
         }
 
-        public ProjectEditDialog(ApiProject ogProject)
+        public ProjectEditDialog(ApiProject ogProject, bool newProject = false)
         {
             InitializeComponent();
             this.ogProject = ogProject;
-            var vm = new ProjectViewModel(ClassCopier.Create<ApiProject>(ogProject));
+            var vm = new ProjectViewModel(ClassCopier.Create<ApiProject>(ogProject), newProject);
             this.DataContext = vm;
 
             DeadlineDatePicker.SelectedDate = vm.Deadline;

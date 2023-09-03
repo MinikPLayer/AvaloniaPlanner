@@ -151,7 +151,7 @@ namespace AvaloniaPlanner.Controls
 
                 ApiResult<object>? uploadResult = null;
                 if(continueUpload)
-                    uploadResult = await Api.PostContent<object>("api/project/update_user_projects", data);
+                    uploadResult = await Api.PostContent<object, string>("api/project/update_user_projects", data);
                 
                 isWaiting = false;
 

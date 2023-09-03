@@ -96,21 +96,20 @@ namespace AvaloniaPlanner.Pages
             }
         }
 
+#if DEBUG
+        static string DefaultConfigSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AvPlanner", "config_debug.json");
+#else
         static string DefaultConfigSavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AvPlanner", "config.json");
+#endif
+
         public static ConfigData Config { get; set; } = new ConfigData();
 
         public static void LoadConfig()
         {
-#if DEBUG
-            Config = new ConfigData();
-            Config.Server = new ConfigData.ServerData() { IP = "127.0.0.1", Port = 25110 };
-#else
-
             var config = DeserializeConfigFromFile();
             if (config != null)
                 Config = config;
-#endif
-          }
+        }
 
         public static ConfigData? DeserializeConfigFromFile(string? filePath = null)
         {

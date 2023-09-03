@@ -6,7 +6,7 @@
 			 xmlns:icons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" MinWidth="300"
              x:Class="AvaloniaPlanner.Dialogs.ProjectEditDialog">
-	<Grid ColumnDefinitions="*, 5, *" RowDefinitions="40, *, *, 3*, *, *, 20, 30">
+	<Grid ColumnDefinitions="*, 5, *" RowDefinitions="40, *, *, 3*, *, *, *, 20, 30">
 		<TextBlock Text="Edit project" Grid.Column="0" Grid.Row="0" FontWeight="ExtraBlack" FontSize="24" />
 		<Button Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CloseDialog" Tag="Cancel">
 			<icons:MaterialIcon Kind="Close"/>
@@ -39,8 +39,9 @@
 			<TimePicker x:Name="DeadlineTimePicker" IsEnabled="{Binding DeadlineEnabled}"/>
 		</StackPanel>
 
+		<CheckBox IsVisible="{Binding CreateDefaultBinsEnabled}" IsChecked="{Binding CreateDefaultBins, Mode=TwoWay}" Content="Create default bins" Grid.Column="0" Grid.Row="6" VerticalAlignment="Center" Margin="{StaticResource DialogGridSpacing}"/>
 
-		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6"/>
-		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" Click="CloseDialog" Tag="Save" HorizontalAlignment="Stretch"/>
+		<Border Classes="separator" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7"/>
+		<Button Content="Save" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="8" Click="CloseDialog" Tag="Save" HorizontalAlignment="Stretch"/>
 	</Grid>
 </UserControl>
